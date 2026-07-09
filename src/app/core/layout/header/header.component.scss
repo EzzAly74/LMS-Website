@@ -1,31 +1,50 @@
 @use 'mixins' as *;
 
-.site-header {
-  background: var(--elevation-surface-default);
-  border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
+.app-nav {
+  position: fixed;
+  inset-block-start: var(--spacing-7xs);
+  inset-inline: 0;
+  z-index: 100;
+  padding-inline: var(--spacing-13xs);
+  pointer-events: none;
 
-  &__inner {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    padding: var(--spacing-13xs) var(--spacing-3xs);
-  }
-
-  &__logo {
-    font-weight: var(--font-weight-extra-bold);
-    color: var(--color-primary-1000);
-    @include typography("h1-small", "bold");
-  }
-
-  &__nav {
+  &__bar {
+    pointer-events: auto;
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1248px;
+    height: var(--size-64);
     display: flex;
     align-items: center;
     gap: var(--spacing-11xs);
-    flex: 1;
+    padding-inline: var(--spacing-3xs);
+    background: var(--color-essential-primary);
+    border-bottom: var(--stroke-width-default) solid var(--color-neutral-300);
+    border-radius: var(--radius-control-sm);
+    box-shadow: var(--elevation-shadow-sm);
+  }
+
+  &__logo {
+    display: inline-flex;
+    align-items: center;
+
+    img {
+      height: 33px;
+      width: auto;
+    }
+  }
+
+  &__links {
+    flex: 1 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-13xs);
 
     a {
+      padding: var(--spacing-15xs) var(--spacing-8xs);
       color: var(--color-essential-secondary);
-      @include typography("body", "medium");
+      @include typography('body-small', 'medium');
 
       &.is-active {
         color: var(--color-primary-700);
@@ -37,28 +56,46 @@
   &__actions {
     display: flex;
     align-items: center;
-    gap: var(--spacing-13xs);
+    gap: var(--spacing-14xs);
   }
 
   &__lang {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--size-36);
+    height: var(--size-36);
+    border: var(--stroke-width-default) solid var(--color-neutral-400);
+    border-radius: var(--radius-pill);
     background: none;
-    border: none;
     color: var(--color-essential-secondary);
-    @include typography("body", "medium");
+
+    .pi {
+      font-size: var(--size-18);
+    }
   }
 
-  &__login,
+  &__login {
+    padding: var(--spacing-15xs) var(--spacing-13xs);
+    border: var(--stroke-width-default) solid var(--color-essential-tertiary);
+    border-radius: var(--radius-control-sm);
+    color: var(--color-essential-tertiary);
+    box-shadow: var(--elevation-shadow-sm);
+    @include typography('body-small', 'medium');
+  }
+
   &__profile {
     color: var(--color-primary-700);
-    @include typography("body", "bold");
+    @include typography('body-small', 'bold');
   }
 
   &__cta {
-    background: var(--color-essential-tertiary);
-    color: var(--color-grey-0);
+    height: var(--size-40);
+    padding-inline: var(--spacing-9xs);
     border: none;
-    padding: var(--spacing-15xs) var(--spacing-11xs);
-    border-radius: var(--radius-pill);
-    @include typography("button", "bold");
+    border-radius: var(--radius-control-sm);
+    background: var(--color-essential-tertiary);
+    color: var(--color-essential-primary);
+    @include typography('body-small', 'medium');
   }
 }

@@ -43,7 +43,9 @@
   --color-accent-sky-400-24: rgba(117, 222, 255, 0.24);
 
   // Essential primitives
-  --color-essential-background: #fdfdfd;
+  // NOTE: Figma variable Colors/Essential/Primary resolves to #fcfcfc; the design
+  // doc's #FDFDFD is superseded per the "Figma wins" rule.
+  --color-essential-background: #fcfcfc;
   --color-essential-text: #171819;
   --color-essential-cta: #0c2427;
   --color-essential-additional: #0c2427;
@@ -170,7 +172,9 @@
   --radius-2xl: 20px;
   --radius-3xl: 22px;
   --radius-4xl: 24px;
-  --radius-pill: 9999px;
+  // Named --radius-full (not --radius-pill) to avoid colliding with the semantic
+  // --radius-pill token, which would make the alias self-referential/invalid.
+  --radius-full: 9999px;
 
   // Radius — rounded set (+4 per step, min 4)
   --radius-rounded-none: 0;

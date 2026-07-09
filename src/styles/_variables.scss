@@ -170,7 +170,7 @@ $nas-type-weights: (
   --radius-container-lg: var(--radius-xl);
   --radius-container-xl: var(--radius-2xl);
   --radius-dialog: var(--radius-2xl);
-  --radius-pill: var(--radius-pill);
+  --radius-pill: var(--radius-full);
 
   // ---------------------------------------------------------------------------
   // ELEVATION — surface + shadow
@@ -205,15 +205,19 @@ $nas-type-weights: (
   // ---------------------------------------------------------------------------
   // TYPOGRAPHY — generated tokens
   // ---------------------------------------------------------------------------
+  // NOTE: the Figma text styles (Eng/*) all resolve to letterSpacing 0, so every
+  // semantic type style uses neutral tracking — this supersedes the design doc's
+  // per-heading negative tracking, per the "Figma wins" rule. The negative
+  // font-tracking primitives remain available for the few components that set an
+  // explicit letter-spacing (e.g. nav labels).
   @each $style, $keys in $nas-type-styles {
     $size: nth($keys, 1);
     $height: nth($keys, 2);
-    $track: nth($keys, 3);
 
     @each $weight, $weight-val in $nas-type-weights {
       --typography-#{$style}-#{$weight}-font-size: var(--font-size-#{$size});
       --typography-#{$style}-#{$weight}-line-height: var(--font-height-#{$height});
-      --typography-#{$style}-#{$weight}-letter-spacing: var(--font-tracking-#{$track});
+      --typography-#{$style}-#{$weight}-letter-spacing: var(--font-tracking-neutral);
       --typography-#{$style}-#{$weight}-font-weight: #{$weight-val};
     }
   }

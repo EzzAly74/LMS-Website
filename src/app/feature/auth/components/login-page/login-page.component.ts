@@ -1,6 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
+import {
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -10,10 +19,6 @@ import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_UNPROCESSABLE = 422;
 
-/**
- * Learner login. Interim visuals; form logic (validation, submit, error mapping,
- * return-url navigation) is final and carries into the Figma pixel pass.
- */
 @Component({
   selector: 'app-login-page',
   standalone: true,
@@ -31,11 +36,16 @@ export class LoginPageComponent {
 
   protected readonly loading = signal(false);
   protected readonly serverError = signal<string | null>(null);
+  protected readonly showPassword = signal(false);
 
   protected readonly form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
+
+  protected togglePassword(): void {
+    this.showPassword.update((visible) => !visible);
+  }
 
   protected submit(): void {
     if (this.form.invalid) {
@@ -65,12 +75,17 @@ export class LoginPageComponent {
       return this.translate.instant('feature.auth.login.invalid_credentials');
     }
     if (error.status === HTTP_UNPROCESSABLE) {
-      return error.error?.message ?? this.translate.instant('common.error_generic');
+      return (
+        error.error?.message ?? this.translate.instant('common.error_generic')
+      );
     }
     return this.translate.instant('common.error_generic');
   }
 
   private returnUrl(): string {
-    return this.route.snapshot.queryParamMap.get('returnUrl') ?? `/${LmsRoutes.Catalogue}`;
+    return (
+      this.route.snapshot.queryParamMap.get('returnUrl') ??
+      `/${LmsRoutes.Catalogue}`
+    );
   }
 }

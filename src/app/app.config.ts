@@ -14,7 +14,7 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { localeInterceptor } from './core/interceptors/locale.interceptor';
 import { PageTitleStrategy } from './core/services/page-title.strategy';
-import { AppLanguage } from './core/enums/language.enum';
+import { AppLanguage, DEFAULT_LANGUAGE } from './core/enums/language.enum';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,10 +24,11 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor, localeInterceptor, errorInterceptor]),
     ),
     provideAnimationsAsync(),
-    provideTranslateService({
-      loader: provideTranslateHttpLoader({ prefix: '/assets/i18n/', suffix: '.json' }),
-      fallbackLang: AppLanguage.En,
-    }),
+    provideTranslateService({ fallbackLang: AppLanguage.En, lang: DEFAULT_LANGUAGE }),
+    // useHttpBackend bypasses the HTTP interceptors for translation files: the
+    // i18n fetch must NOT run localeInterceptor (which injects LanguageService ->
+    // TranslateService), otherwise the loader creates a circular DI (NG0200).
+    provideTranslateHttpLoader({ prefix: '/assets/i18n/', suffix: '.json', useHttpBackend: true }),
     providePrimeNG({ theme: { preset: Aura } }),
     MessageService,
     { provide: TitleStrategy, useClass: PageTitleStrategy },

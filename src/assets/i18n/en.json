@@ -52,12 +52,17 @@
     "auth": {
       "login": {
         "title": "Welcome back",
-        "subtitle": "Sign in to continue your learning",
-        "email_label": "Email",
-        "email_ph": "you@company.com",
+        "subtitle": "Sign in to your LMS account to continue.",
+        "email_label": "Email address",
+        "email_ph": "Email address",
         "password_label": "Password",
-        "password_ph": "Enter your password",
-        "submit": "Sign in",
+        "password_ph": "Password",
+        "submit": "Sign In",
+        "helper": "Having trouble? Contact your system administrator.",
+        "show_password": "Show password",
+        "hide_password": "Hide password",
+        "brand_title": "Track your skills progress",
+        "brand_subtitle": "NAS Learning Management System",
         "invalid_credentials": "The email or password you entered is incorrect.",
         "email_invalid": "Enter a valid email address."
       }

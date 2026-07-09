@@ -4,9 +4,9 @@
 // Application code must consume semantic tokens only (see styles/_variables).
 // =============================================================================
 
-@use "styles/primitives";
-@use "styles/variables";
-@use "styles/mixins" as *;
+@use "styles/_primitives";
+@use "styles/_variables";
+@use "styles/_mixins" as *;
 
 // Third-party primitives (behaviour/layout only; visuals are tokenised).
 @import "primeicons/primeicons.css";

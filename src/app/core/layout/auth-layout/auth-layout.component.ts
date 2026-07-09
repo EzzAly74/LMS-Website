@@ -1,24 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-/** Minimal shell for guest/auth screens (no header/footer). */
+import { HeaderComponent } from '../header/header.component';
+
+/** Full-bleed shell for guest/auth screens: floating header over routed content. */
 @Component({
   selector: 'app-auth-layout',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, HeaderComponent],
   template: `
-    <main class="auth-shell">
-      <router-outlet />
-    </main>
-  `,
-  styles: `
-    .auth-shell {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--elevation-surface-sunken);
-    }
+    <app-header />
+    <router-outlet />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

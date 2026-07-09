@@ -1,8 +1,10 @@
-<header class="site-header">
-  <div class="site-header__inner">
-    <a class="site-header__logo" [routerLink]="'/' + routes.Catalogue">2B Academy</a>
+<header class="app-nav">
+  <div class="app-nav__bar">
+    <a class="app-nav__logo" [routerLink]="'/' + routes.Catalogue" aria-label="NAS">
+      <img src="assets/brand/nas-logo-on-light.svg" alt="NAS" width="100" height="33" />
+    </a>
 
-    <nav class="site-header__nav" aria-label="Primary">
+    <nav class="app-nav__links" aria-label="Primary">
       <a [routerLink]="'/' + routes.Catalogue" routerLinkActive="is-active">
         {{ 'core.nav.catalogue' | translate }}
       </a>
@@ -19,24 +21,25 @@
       </a>
     </nav>
 
-    <div class="site-header__actions">
-      <button type="button" class="site-header__lang" (click)="toggleLanguage()">
-        {{ otherLanguageLabel | translate }}
+    <div class="app-nav__actions">
+      <button
+        type="button"
+        class="app-nav__lang"
+        (click)="toggleLanguage()"
+        [attr.aria-label]="'core.nav.language' | translate"
+      >
+        <i class="pi pi-globe"></i>
       </button>
 
       @if (auth.isAuthenticated()) {
-        <a class="site-header__profile" [routerLink]="'/' + routes.Profile" aria-label="Profile">
-          {{ auth.user()?.name }}
-        </a>
+        <a class="app-nav__profile" [routerLink]="'/' + routes.Profile">{{ auth.user()?.name }}</a>
       } @else {
-        <a class="site-header__login" [routerLink]="'/' + routes.Login">
+        <a class="app-nav__login" [routerLink]="'/' + routes.Login">
           {{ 'core.nav.login' | translate }}
         </a>
       }
 
-      <button type="button" class="site-header__cta">
-        {{ 'core.nav.request_demo' | translate }}
-      </button>
+      <button type="button" class="app-nav__cta">{{ 'core.nav.request_demo' | translate }}</button>
     </div>
   </div>
 </header>
