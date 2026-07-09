@@ -12,29 +12,7 @@ import { TranslatePipe } from '@ngx-translate/core';
       <p class="coming-soon__text">{{ 'common.coming_soon' | translate }}</p>
     </div>
   `,
-  styles: `
-    @use 'mixins' as *;
-
-    .coming-soon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-15xs);
-      padding: var(--spacing-12xl) var(--spacing-3xs);
-      text-align: center;
-
-      &__title {
-        @include typography('large-heading', 'bold');
-        color: var(--color-essential-secondary);
-      }
-
-      &__text {
-        @include typography('body', 'regular');
-        color: var(--color-neutral-750);
-      }
-    }
-  `,
+  styleUrl: './coming-soon.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComingSoonComponent {
