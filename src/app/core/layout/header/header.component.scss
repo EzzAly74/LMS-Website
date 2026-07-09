@@ -1,0 +1,64 @@
+@use 'mixins' as *;
+
+.site-header {
+  background: var(--elevation-surface-default);
+  border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-13xs) var(--spacing-3xs);
+  }
+
+  &__logo {
+    font-weight: var(--font-weight-extra-bold);
+    color: var(--color-primary-1000);
+    @include typography("h1-small", "bold");
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-11xs);
+    flex: 1;
+
+    a {
+      color: var(--color-essential-secondary);
+      @include typography("body", "medium");
+
+      &.is-active {
+        color: var(--color-primary-700);
+        font-weight: var(--font-weight-bold);
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-13xs);
+  }
+
+  &__lang {
+    background: none;
+    border: none;
+    color: var(--color-essential-secondary);
+    @include typography("body", "medium");
+  }
+
+  &__login,
+  &__profile {
+    color: var(--color-primary-700);
+    @include typography("body", "bold");
+  }
+
+  &__cta {
+    background: var(--color-essential-tertiary);
+    color: var(--color-grey-0);
+    border: none;
+    padding: var(--spacing-15xs) var(--spacing-11xs);
+    border-radius: var(--radius-pill);
+    @include typography("button", "bold");
+  }
+}

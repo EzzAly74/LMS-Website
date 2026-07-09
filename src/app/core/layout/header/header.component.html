@@ -1,0 +1,42 @@
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-header__logo" [routerLink]="'/' + routes.Catalogue">2B Academy</a>
+
+    <nav class="site-header__nav" aria-label="Primary">
+      <a [routerLink]="'/' + routes.Catalogue" routerLinkActive="is-active">
+        {{ 'core.nav.catalogue' | translate }}
+      </a>
+      @if (auth.isAuthenticated()) {
+        <a [routerLink]="'/' + routes.MyLearnings" routerLinkActive="is-active">
+          {{ 'core.nav.my_learnings' | translate }}
+        </a>
+      }
+      <a [routerLink]="'/' + routes.WhoWeAre" routerLinkActive="is-active">
+        {{ 'core.nav.who_we_are' | translate }}
+      </a>
+      <a [routerLink]="'/' + routes.Blogs" routerLinkActive="is-active">
+        {{ 'core.nav.blogs' | translate }}
+      </a>
+    </nav>
+
+    <div class="site-header__actions">
+      <button type="button" class="site-header__lang" (click)="toggleLanguage()">
+        {{ otherLanguageLabel | translate }}
+      </button>
+
+      @if (auth.isAuthenticated()) {
+        <a class="site-header__profile" [routerLink]="'/' + routes.Profile" aria-label="Profile">
+          {{ auth.user()?.name }}
+        </a>
+      } @else {
+        <a class="site-header__login" [routerLink]="'/' + routes.Login">
+          {{ 'core.nav.login' | translate }}
+        </a>
+      }
+
+      <button type="button" class="site-header__cta">
+        {{ 'core.nav.request_demo' | translate }}
+      </button>
+    </div>
+  </div>
+</header>

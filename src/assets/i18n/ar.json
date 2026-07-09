@@ -1,0 +1,66 @@
+{
+  "common": {
+    "loading": "جارٍ التحميل…",
+    "retry": "أعد المحاولة",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "save": "حفظ",
+    "close": "إغلاق",
+    "search": "بحث",
+    "clear_all": "مسح الكل",
+    "load_more": "تحميل المزيد",
+    "results": "نتيجة",
+    "no_results": "لا توجد نتائج",
+    "error_generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "required": "هذا الحقل مطلوب.",
+    "coming_soon": "هذه الصفحة قريبًا."
+  },
+  "core": {
+    "nav": {
+      "catalogue": "الدورات",
+      "my_learnings": "تعلّمي",
+      "who_we_are": "من نحن",
+      "blogs": "المدونة",
+      "login": "تسجيل الدخول",
+      "request_demo": "اطلب عرضًا توضيحيًا",
+      "notifications": "الإشعارات",
+      "language": "اللغة"
+    },
+    "language": {
+      "en": "English",
+      "ar": "العربية"
+    },
+    "profile_menu": {
+      "profile": "الملف الشخصي",
+      "settings": "الإعدادات",
+      "logout": "تسجيل الخروج"
+    },
+    "footer": {
+      "newsletter": {
+        "title": "ابقَ على اطلاع",
+        "email_label": "البريد الإلكتروني",
+        "email_ph": "أدخل بريدك الإلكتروني",
+        "subscribe": "اشتراك"
+      },
+      "legal": {
+        "terms": "الشروط والأحكام",
+        "privacy": "سياسة الخصوصية"
+      }
+    }
+  },
+  "feature": {
+    "auth": {
+      "login": {
+        "title": "مرحبًا بعودتك",
+        "subtitle": "سجّل الدخول لمواصلة تعلّمك",
+        "email_label": "البريد الإلكتروني",
+        "email_ph": "you@company.com",
+        "password_label": "كلمة المرور",
+        "password_ph": "أدخل كلمة المرور",
+        "submit": "تسجيل الدخول",
+        "invalid_credentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+        "email_invalid": "أدخل بريدًا إلكترونيًا صالحًا."
+      }
+    }
+  }
+}

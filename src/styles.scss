@@ -1,1 +1,82 @@
-/* You can add global styles to this file, and also import other style files */
+// =============================================================================
+// Global stylesheet — NAS LMS Learner Website
+// Token layers first, then third-party primitives, then base/reset.
+// Application code must consume semantic tokens only (see styles/_variables).
+// =============================================================================
+
+@use "styles/primitives";
+@use "styles/variables";
+@use "styles/mixins" as *;
+
+// Third-party primitives (behaviour/layout only; visuals are tokenised).
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
+
+// -----------------------------------------------------------------------------
+// Base reset
+// -----------------------------------------------------------------------------
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-english);
+  color: var(--color-essential-secondary);
+  background-color: var(--elevation-surface-default);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @include typography("body", "regular");
+}
+
+// RTL: Arabic content uses Almarai; layout direction flips via [dir].
+[dir="rtl"] body {
+  font-family: var(--font-family-arabic);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+// Accessible focus ring — visible on light and brand surfaces.
+:focus-visible {
+  outline: var(--stroke-width-focus) solid var(--color-primary-600);
+  outline-offset: var(--size-2);
+}
+
+// Shared field wrapper (see LMS-Architecture "Forms").
+.our-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16xs);
+}

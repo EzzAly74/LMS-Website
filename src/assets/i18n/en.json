@@ -1,0 +1,66 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "close": "Close",
+    "search": "Search",
+    "clear_all": "Clear all",
+    "load_more": "Load more",
+    "results": "results",
+    "no_results": "No results found",
+    "error_generic": "Something went wrong. Please try again.",
+    "required": "This field is required.",
+    "coming_soon": "This page is coming soon."
+  },
+  "core": {
+    "nav": {
+      "catalogue": "Catalogue",
+      "my_learnings": "My Learnings",
+      "who_we_are": "Who we are",
+      "blogs": "Blogs",
+      "login": "Login",
+      "request_demo": "Request a Demo",
+      "notifications": "Notifications",
+      "language": "Language"
+    },
+    "language": {
+      "en": "English",
+      "ar": "العربية"
+    },
+    "profile_menu": {
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Logout"
+    },
+    "footer": {
+      "newsletter": {
+        "title": "Stay in the loop",
+        "email_label": "Email address",
+        "email_ph": "Enter your email",
+        "subscribe": "Subscribe"
+      },
+      "legal": {
+        "terms": "Terms & Conditions",
+        "privacy": "Privacy Policy"
+      }
+    }
+  },
+  "feature": {
+    "auth": {
+      "login": {
+        "title": "Welcome back",
+        "subtitle": "Sign in to continue your learning",
+        "email_label": "Email",
+        "email_ph": "you@company.com",
+        "password_label": "Password",
+        "password_ph": "Enter your password",
+        "submit": "Sign in",
+        "invalid_credentials": "The email or password you entered is incorrect.",
+        "email_invalid": "Enter a valid email address."
+      }
+    }
+  }
+}

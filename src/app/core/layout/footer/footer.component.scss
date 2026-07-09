@@ -1,0 +1,28 @@
+@use 'mixins' as *;
+
+.site-footer {
+  background: var(--color-primary-1000);
+  color: var(--color-grey-0);
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-11xs);
+    padding: var(--spacing-3xs);
+  }
+
+  &__brand {
+    @include typography("h2", "bold");
+  }
+
+  &__legal {
+    display: flex;
+    gap: var(--spacing-11xs);
+
+    a {
+      color: var(--color-grey-300);
+      @include typography("body-small", "regular");
+    }
+  }
+}

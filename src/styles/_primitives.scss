@@ -1,0 +1,294 @@
+// =============================================================================
+// NAS Design System — PRIMITIVE TOKENS (internal source values only)
+// -----------------------------------------------------------------------------
+// Source of truth: NAS_DesignSystem.md (Phase 1).
+// Primitives are the raw palette/scale. DO NOT use these directly in components,
+// pages, or application styles — consume the SEMANTIC tokens in _variables.scss.
+// Raw values are permitted here (and only here).
+// =============================================================================
+
+:root {
+  // ---------------------------------------------------------------------------
+  // A) COLOR
+  // ---------------------------------------------------------------------------
+
+  // Deep Teal ramp
+  --color-deep-teal-100: #f2fbfa;
+  --color-deep-teal-200: #d5f2f0;
+  --color-deep-teal-300: #aae5e1;
+  --color-deep-teal-400: #78d0ce;
+  --color-deep-teal-500: #4cb4b5;
+  --color-deep-teal-600: #339699;
+  --color-deep-teal-700: #26787b;
+  --color-deep-teal-800: #225f63;
+  --color-deep-teal-900: #1f4c50;
+  --color-deep-teal-950: #1e4043;
+  --color-deep-teal-1000: #0c2427;
+  --color-deep-teal-1000-08: rgba(12, 36, 39, 0.08);
+  --color-deep-teal-1000-16: rgba(12, 36, 39, 0.16);
+
+  // Accent Sky ramp
+  --color-accent-sky-100: #f1fcff;
+  --color-accent-sky-200: #eafaff;
+  --color-accent-sky-300: #d4f5ff;
+  --color-accent-sky-400: #75deff;
+  --color-accent-sky-500: #69c8e6;
+  --color-accent-sky-600: #5eb2cc;
+  --color-accent-sky-700: #58a7bf;
+  --color-accent-sky-800: #468599;
+  --color-accent-sky-900: #356473;
+  --color-accent-sky-1000: #294e59;
+  --color-accent-sky-400-08: rgba(117, 222, 255, 0.08);
+  --color-accent-sky-400-16: rgba(117, 222, 255, 0.16);
+  --color-accent-sky-400-24: rgba(117, 222, 255, 0.24);
+
+  // Essential primitives
+  --color-essential-background: #fdfdfd;
+  --color-essential-text: #171819;
+  --color-essential-cta: #0c2427;
+  --color-essential-additional: #0c2427;
+
+  // Grey ramp
+  --color-grey-0: #ffffff;
+  --color-grey-50: #fafafa;
+  --color-grey-100: #fffbf7;
+  --color-grey-100-20: rgba(255, 251, 247, 0.2);
+  --color-grey-200: #fcfcfc;
+  --color-grey-250: #f7f7f7;
+  --color-grey-300: #f5f5f5;
+  --color-grey-300-40: rgba(245, 245, 245, 0.4);
+  --color-grey-350: #f3f4f4;
+  --color-grey-400: #e6e7e8;
+  --color-grey-400-60: rgba(230, 231, 232, 0.6);
+  --color-grey-400-40: rgba(230, 231, 232, 0.4);
+  --color-grey-450: #eff1f5;
+  --color-grey-500: #cfd0d1;
+  --color-grey-550: #d0d1d3;
+  --color-grey-600: #b8b9ba;
+  --color-grey-700: #8c8c8c;
+  --color-grey-750: #676e76;
+  --color-grey-800: #595959;
+  --color-grey-900: #454545;
+  --color-grey-1000: #171819;
+  --color-grey-1000-20: rgba(23, 24, 25, 0.2);
+  --color-grey-1000-10: rgba(23, 24, 25, 0.1);
+  --color-grey-2000: #000000;
+  --color-grey-700-08: rgba(140, 140, 140, 0.08);
+  --color-grey-750-08: rgba(103, 110, 118, 0.08);
+  --color-grey-750-16: rgba(103, 110, 118, 0.16);
+  --color-grey-2000-12: rgba(0, 0, 0, 0.12);
+  --color-grey-2000-64: rgba(0, 0, 0, 0.64);
+
+  // Status — Green
+  --color-status-green-50: #e7f8f0;
+  --color-status-green-500: #0fb86a;
+  --color-status-green-500-08: rgba(15, 184, 106, 0.08);
+  --color-status-green-500-10: rgba(15, 184, 106, 0.1);
+  --color-status-green-500-16: rgba(15, 184, 106, 0.16);
+  --color-status-green-500-40: rgba(15, 184, 106, 0.4);
+
+  // Status — Orange (Warning / Hold)
+  --color-status-orange-50: #fef4e6;
+  --color-status-orange-500: #f79008;
+  --color-status-orange-500-08: rgba(247, 144, 8, 0.08);
+  --color-status-orange-500-16: rgba(247, 144, 8, 0.16);
+  --color-status-orange-500-40: rgba(247, 144, 8, 0.4);
+
+  // Status — Red (Danger / Warning)
+  --color-status-red-50: #feeceb;
+  --color-status-red-500: #f14437;
+  --color-status-red-500-08: rgba(241, 68, 55, 0.08);
+  --color-status-red-500-10: rgba(241, 68, 55, 0.1);
+  --color-status-red-500-16: rgba(241, 68, 55, 0.16);
+  --color-status-red-500-20: rgba(241, 68, 55, 0.2);
+  --color-status-red-500-40: rgba(241, 68, 55, 0.4);
+
+  // Operational / Categorical (standalone)
+  --color-status-soft-coral: #ff8b6a;
+  --color-status-harbor-blue: #496e91;
+  --color-status-dusty-lilac: #bfaae0;
+  --color-status-clay-terracotta: #ebd4a6;
+  --color-status-frosted-teal: #7baea1;
+  --color-status-blue-500: #496e91;
+  --color-status-blue-500-10: rgba(73, 110, 145, 0.1);
+  --color-status-purple-500: #bfaae0;
+
+  // Utility
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-transparent: rgba(0, 0, 0, 0);
+
+  // ---------------------------------------------------------------------------
+  // B) DIMENSION (px)
+  // ---------------------------------------------------------------------------
+  --size-0: 0;
+  --size-2: 2px;
+  --size-4: 4px;
+  --size-8: 8px;
+  --size-10: 10px;
+  --size-12: 12px;
+  --size-14: 14px;
+  --size-16: 16px;
+  --size-18: 18px;
+  --size-20: 20px;
+  --size-22: 22px;
+  --size-24: 24px;
+  --size-26: 26px;
+  --size-28: 28px;
+  --size-30: 30px;
+  --size-32: 32px;
+  --size-34: 34px;
+  --size-36: 36px;
+  --size-38: 38px;
+  --size-40: 40px;
+  --size-42: 42px;
+  --size-44: 44px;
+  --size-46: 46px;
+  --size-48: 48px;
+  --size-50: 50px;
+  --size-52: 52px;
+  --size-54: 54px;
+  --size-56: 56px;
+  --size-58: 58px;
+  --size-60: 60px;
+  --size-62: 62px;
+  --size-64: 64px;
+
+  // ---------------------------------------------------------------------------
+  // C) RADIUS (px) — default set
+  // ---------------------------------------------------------------------------
+  --radius-none: 0;
+  --radius-5xs: 2px;
+  --radius-4xs: 4px;
+  --radius-3xs: 6px;
+  --radius-2xs: 8px;
+  --radius-xs: 10px;
+  --radius-sm: 12px;
+  --radius-md: 14px;
+  --radius-lg: 16px;
+  --radius-xl: 18px;
+  --radius-2xl: 20px;
+  --radius-3xl: 22px;
+  --radius-4xl: 24px;
+  --radius-pill: 9999px;
+
+  // Radius — rounded set (+4 per step, min 4)
+  --radius-rounded-none: 0;
+  --radius-rounded-5xs: 4px;
+  --radius-rounded-4xs: 6px;
+  --radius-rounded-3xs: 8px;
+  --radius-rounded-2xs: 10px;
+  --radius-rounded-xs: 12px;
+  --radius-rounded-sm: 14px;
+  --radius-rounded-md: 16px;
+  --radius-rounded-lg: 18px;
+  --radius-rounded-xl: 20px;
+  --radius-rounded-2xl: 22px;
+  --radius-rounded-3xl: 24px;
+  --radius-rounded-4xl: 28px;
+  --radius-rounded-pill: 9999px;
+
+  // Radius — no-radius set (pill becomes a soft stub)
+  --radius-none-none: 0;
+  --radius-none-5xs: 0;
+  --radius-none-4xs: 0;
+  --radius-none-3xs: 0;
+  --radius-none-2xs: 0;
+  --radius-none-xs: 0;
+  --radius-none-sm: 0;
+  --radius-none-md: 0;
+  --radius-none-lg: 0;
+  --radius-none-xl: 0;
+  --radius-none-2xl: 0;
+  --radius-none-3xl: 0;
+  --radius-none-4xl: 0;
+  --radius-none-pill: 4px;
+
+  // ---------------------------------------------------------------------------
+  // D) TYPOGRAPHY
+  // ---------------------------------------------------------------------------
+  --font-family-english: "Fira Sans", sans-serif;
+  --font-family-arabic: "Almarai", sans-serif;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extra-bold: 800;
+
+  --font-size-3xs: 10px;
+  --font-size-2xs: 12px;
+  --font-size-xs: 14px;
+  --font-size-s: 16px;
+  --font-size-button-s: 12px;
+  --font-size-button-m: 14px;
+  --font-size-button-l: 16px;
+  --font-size-m: 18px;
+  --font-size-l: 20px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 32px;
+  --font-size-3xl: 48px;
+
+  --font-height-3xs: 12px;
+  --font-height-2xs: 14.4px;
+  --font-height-xs: 16.8px;
+  --font-height-s: 19.2px;
+  --font-height-button-s: 16.8px;
+  --font-height-button-m: 19.6px;
+  --font-height-button-l: 25.2px;
+  --font-height-m: 21.6px;
+  --font-height-l: 24px;
+  --font-height-xl: 28.8px;
+  --font-height-2xl: 38.8px;
+
+  --font-tracking-neutral: 0;
+  --font-tracking-2xs: -0.36px;
+  --font-tracking-xs: -0.42px;
+  --font-tracking-s: -0.48px;
+  --font-tracking-m: -0.54px;
+  --font-tracking-l: -0.6px;
+  --font-tracking-xl: -0.72px;
+  --font-tracking-2xl: -0.96px;
+  --font-tracking-3xl: -1.44px;
+
+  --paragraph-spacing-none: 0;
+  --paragraph-spacing-sm: 4px;
+  --paragraph-spacing-md: 8px;
+  --paragraph-spacing-lg: 12px;
+  --paragraph-indent-none: 0;
+
+  // ---------------------------------------------------------------------------
+  // E) NUMBER
+  // ---------------------------------------------------------------------------
+  --opacity-0: 0;
+  --opacity-5: 0.05;
+  --opacity-8: 0.08;
+  --opacity-10: 0.1;
+  --opacity-16: 0.16;
+  --opacity-20: 0.2;
+  --opacity-24: 0.24;
+  --opacity-30: 0.3;
+  --opacity-40: 0.4;
+  --opacity-50: 0.5;
+  --opacity-60: 0.6;
+  --opacity-64: 0.64;
+  --opacity-70: 0.7;
+  --opacity-80: 0.8;
+  --opacity-90: 0.9;
+  --opacity-100: 1;
+
+  --stroke-width-0: 0;
+  --stroke-width-1: 1px;
+  --stroke-width-2: 2px;
+  --stroke-width-3: 3px;
+  --stroke-width-4: 4px;
+
+  // ---------------------------------------------------------------------------
+  // F) SHADOW (deep-teal undertone)
+  // ---------------------------------------------------------------------------
+  --shadow-none: 0px 0px 0px 0px rgba(12, 36, 39, 0);
+  --shadow-sm: 0px 1px 2px 0px rgba(12, 36, 39, 0.08);
+  --shadow-md: 0px 2px 8px 0px rgba(12, 36, 39, 0.12), 0px 0px 1px 0px rgba(12, 36, 39, 0.08);
+  --shadow-lg: 0px 4px 16px 0px rgba(12, 36, 39, 0.12), 0px 0px 2px 0px rgba(12, 36, 39, 0.08);
+  --shadow-xl: 0px 8px 32px 0px rgba(12, 36, 39, 0.16), 0px 0px 4px 0px rgba(12, 36, 39, 0.08);
+}
