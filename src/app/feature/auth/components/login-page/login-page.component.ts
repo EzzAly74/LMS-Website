@@ -38,8 +38,11 @@ export class LoginPageComponent {
   protected readonly serverError = signal<string | null>(null);
   protected readonly showPassword = signal(false);
 
+  // The identifier field accepts an email, machine code, or system id — the
+  // backend resolves any of them (LoginRequest validates it as a plain string),
+  // so only `required` is enforced here, not email format.
   protected readonly form = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required]],
     password: ['', [Validators.required]],
   });
 

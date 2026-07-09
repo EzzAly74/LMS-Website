@@ -15,20 +15,14 @@
         <div class="login__input" [class.login__input--invalid]="form.controls.email.touched && form.controls.email.invalid">
           <input
             id="email"
-            type="email"
+            type="text"
             formControlName="email"
-            autocomplete="email"
+            autocomplete="username"
             [placeholder]="'feature.auth.login.email_ph' | translate"
           />
         </div>
-        @if (form.controls.email.touched && form.controls.email.invalid) {
-          <small class="our-field__error">
-            @if (form.controls.email.hasError('required')) {
-              {{ 'common.required' | translate }}
-            } @else {
-              {{ 'feature.auth.login.email_invalid' | translate }}
-            }
-          </small>
+        @if (form.controls.email.touched && form.controls.email.hasError('required')) {
+          <small class="our-field__error">{{ 'common.required' | translate }}</small>
         }
       </div>
 
