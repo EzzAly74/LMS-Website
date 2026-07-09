@@ -1,0 +1,46 @@
+@use 'mixins' as *;
+
+.catalogue {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3xs);
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding: var(--spacing-3xs) var(--spacing-3xs) var(--spacing-12xl);
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-13xs);
+  }
+
+  &__title {
+    @include typography('h1', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-13xs);
+    flex-wrap: wrap;
+  }
+
+  &__search {
+    flex: 1 1 320px;
+  }
+
+  &__count {
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-700);
+    margin-bottom: var(--spacing-14xs);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-3xs);
+  }
+}

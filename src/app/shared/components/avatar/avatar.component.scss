@@ -1,0 +1,22 @@
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+  overflow: hidden;
+
+  &--img {
+    object-fit: cover;
+  }
+
+  &--initials {
+    background: var(--color-primary-500);
+    color: var(--color-neutral-0);
+    font-size: var(--font-size-3xs);
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+  }
+}

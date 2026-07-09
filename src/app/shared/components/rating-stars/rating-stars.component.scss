@@ -1,0 +1,28 @@
+@use 'mixins' as *;
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-16xs);
+
+  &__stars {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-17xs);
+    color: var(--color-status-hold-500);
+
+    .pi {
+      font-size: var(--font-size-2xs);
+    }
+  }
+
+  &__score {
+    @include typography('caption', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__count {
+    @include typography('caption', 'regular');
+    color: var(--color-neutral-700);
+  }
+}

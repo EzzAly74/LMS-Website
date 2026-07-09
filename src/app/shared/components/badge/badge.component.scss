@@ -1,0 +1,34 @@
+@use 'mixins' as *;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-17xs);
+  width: fit-content;
+  white-space: nowrap;
+
+  &__icon {
+    font-size: var(--font-size-3xs);
+  }
+
+  // Level: light chip with accent border/text (sits on the card image).
+  &--level {
+    padding: var(--spacing-16xs) var(--spacing-14xs);
+    border-radius: var(--radius-container-md);
+    background: var(--color-neutral-200);
+    border: var(--stroke-width-default) solid var(--color-additionally-400-24);
+    color: var(--color-additionally-700);
+    @include typography('caption', 'medium');
+  }
+
+  // Delivery: blurred dark pill with light text (top-right on the card image).
+  &--delivery {
+    padding: var(--spacing-17xs) var(--spacing-15xs);
+    border-radius: var(--radius-pill);
+    background: var(--color-neutral-1000-20);
+    border: var(--stroke-width-default) solid var(--color-neutral-600);
+    color: var(--color-neutral-0);
+    backdrop-filter: blur(3px);
+    @include typography('caption', 'bold');
+  }
+}

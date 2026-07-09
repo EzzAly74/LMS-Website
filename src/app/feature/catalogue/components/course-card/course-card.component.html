@@ -1,0 +1,45 @@
+<article class="course-card">
+  <div class="course-card__media" [class.course-card__media--placeholder]="!course.image">
+    @if (course.image) {
+      <img class="course-card__image" [src]="course.image" [alt]="course.title" loading="lazy" />
+    }
+    <app-badge
+      class="course-card__badge course-card__badge--delivery"
+      tone="delivery"
+      icon="pi-globe"
+      [label]="deliveryKey | translate"
+    />
+  </div>
+
+  <div class="course-card__body">
+    <h3 class="course-card__title">{{ course.title }}</h3>
+
+    <div class="course-card__meta-row">
+      @if (instructor) {
+        <span class="course-card__instructor">
+          <app-avatar [name]="instructor.name" [image]="instructor.image" />
+          <span class="course-card__instructor-name">{{ instructor.name }}</span>
+        </span>
+      }
+      <app-rating-stars [score]="course.rating.avg" [count]="course.rating.count" />
+    </div>
+
+    @if (course.qualifications.length) {
+      <ul class="course-card__tags">
+        @for (tag of course.qualifications; track tag.id) {
+          <li class="course-card__tag">{{ tag.name }}</li>
+        }
+      </ul>
+    }
+
+    <div class="course-card__footer">
+      @if (course.next_cohort) {
+        <span class="course-card__date">
+          {{ 'feature.catalogue.card.starts' | translate }}
+          {{ course.next_cohort.start_date | date: 'mediumDate' }}
+        </span>
+      }
+      <button type="button" class="course-card__cta" (click)="onEnrol()">{{ ctaLabel }}</button>
+    </div>
+  </div>
+</article>

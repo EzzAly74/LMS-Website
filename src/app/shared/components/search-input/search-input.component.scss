@@ -1,0 +1,39 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+.search-input {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: var(--spacing-15xs);
+  padding: var(--spacing-14xs) var(--spacing-11xs);
+  background: var(--color-essential-primary);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-control-sm);
+
+  &:focus-within {
+    border-color: var(--color-primary-600);
+  }
+
+  &__icon {
+    color: var(--color-neutral-700);
+    font-size: var(--font-size-s);
+  }
+
+  &__field {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--color-essential-secondary);
+    @include typography('body', 'regular');
+
+    &::placeholder {
+      color: var(--color-neutral-700);
+    }
+  }
+}

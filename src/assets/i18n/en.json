@@ -66,6 +66,24 @@
         "invalid_credentials": "The email or password you entered is incorrect.",
         "email_invalid": "Enter a valid email address."
       }
+    },
+    "catalogue": {
+      "title": "Explore The Catalogue",
+      "search_ph": "Search courses, qualifications, categories…",
+      "results": "results",
+      "actions": { "enrol": "Enrol Now" },
+      "delivery": {
+        "online": "Online",
+        "offline": "Offline",
+        "hybrid": "Hybrid",
+        "external_link": "External"
+      },
+      "card": { "starts": "Starts" },
+      "empty": {
+        "title": "No courses found",
+        "message": "Try adjusting your search or filters to find more courses."
+      },
+      "enrol": { "success": "You're enrolled — find it in My Learnings." }
     }
   }
 }

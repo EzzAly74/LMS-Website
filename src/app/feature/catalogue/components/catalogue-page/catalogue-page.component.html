@@ -1,0 +1,51 @@
+<div class="catalogue">
+  <header class="catalogue__header">
+    <h1 class="catalogue__title">{{ 'feature.catalogue.title' | translate }}</h1>
+    <div class="catalogue__controls">
+      <app-search-input
+        class="catalogue__search"
+        [placeholder]="'feature.catalogue.search_ph' | translate"
+        (search)="onSearch($event)"
+      />
+      @if (scopeOptions().length) {
+        <app-toggle-tabs
+          [options]="scopeOptions()"
+          [value]="selectedScope()"
+          (valueChange)="onScopeChange($event)"
+        />
+      }
+    </div>
+  </header>
+
+  <section class="catalogue__results">
+    @if (!loading()) {
+      <p class="catalogue__count">
+        {{ totalRecords() }} {{ 'feature.catalogue.results' | translate }}
+      </p>
+    }
+
+    @if (loading()) {
+      <div class="catalogue__grid">
+        @for (s of skeletons; track $index) {
+          <app-card-skeleton />
+        }
+      </div>
+    } @else if (courses().length === 0) {
+      <app-empty-state [config]="emptyState" />
+    } @else {
+      <div class="catalogue__grid">
+        @for (course of courses(); track course.id) {
+          <app-course-card
+            [course]="course"
+            [ctaLabel]="'feature.catalogue.actions.enrol' | translate"
+            (enrol)="onEnrol($event)"
+          />
+        }
+      </div>
+
+      @if (hasMore()) {
+        <app-load-more [loading]="loadingMore()" (loadMore)="onLoadMore()" />
+      }
+    }
+  </section>
+</div>

@@ -1,7 +1,15 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { APP_INITIALIZER, ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {
+  APP_INITIALIZER,
+  ApplicationConfig,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { TitleStrategy, provideRouter, withComponentInputBinding } from '@angular/router';
+import {
+  TitleStrategy,
+  provideRouter,
+  withComponentInputBinding,
+} from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MessageService } from 'primeng/api';
@@ -24,11 +32,18 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor, localeInterceptor, errorInterceptor]),
     ),
     provideAnimationsAsync(),
-    provideTranslateService({ fallbackLang: AppLanguage.En, lang: DEFAULT_LANGUAGE }),
+    provideTranslateService({
+      fallbackLang: AppLanguage.En,
+      lang: DEFAULT_LANGUAGE,
+    }),
     // useHttpBackend bypasses the HTTP interceptors for translation files: the
     // i18n fetch must NOT run localeInterceptor (which injects LanguageService ->
     // TranslateService), otherwise the loader creates a circular DI (NG0200).
-    provideTranslateHttpLoader({ prefix: '/assets/i18n/', suffix: '.json', useHttpBackend: true }),
+    provideTranslateHttpLoader({
+      prefix: '/assets/i18n/',
+      suffix: '.json',
+      useHttpBackend: true,
+    }),
     providePrimeNG({ theme: { preset: Aura } }),
     MessageService,
     { provide: TitleStrategy, useClass: PageTitleStrategy },
