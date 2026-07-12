@@ -13,7 +13,13 @@
     "no_results": "لا توجد نتائج",
     "error_generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     "required": "هذا الحقل مطلوب.",
-    "coming_soon": "هذه الصفحة قريبًا."
+    "coming_soon": "هذه الصفحة قريبًا.",
+    "apply": "تطبيق"
+  },
+  "shared": {
+    "filter_sidebar": {
+      "title": "عوامل التصفية"
+    }
   },
   "core": {
     "nav": {
@@ -71,19 +77,101 @@
       "title": "استكشف الدورات",
       "search_ph": "ابحث عن الدورات أو المؤهلات أو الفئات…",
       "results": "نتيجة",
-      "actions": { "enrol": "سجّل الآن" },
+      "actions": {
+        "enrol": "سجّل الآن",
+        "notify_me": "التسجيل مغلق — أعلمني عند الدفعة القادمة",
+        "enrolled": "مسجَّل ✓",
+        "unavailable": "غير متاح حاليًا"
+      },
       "delivery": {
         "online": "عن بُعد",
         "offline": "حضوري",
         "hybrid": "مدمج",
         "external_link": "رابط خارجي"
       },
+      "level": {
+        "beginner": "مبتدئ",
+        "intermediate": "متوسط",
+        "professional": "احترافي"
+      },
       "card": { "starts": "يبدأ" },
       "empty": {
         "title": "لا توجد دورات",
         "message": "جرّب تعديل البحث أو عوامل التصفية للعثور على مزيد من الدورات."
       },
-      "enrol": { "success": "تم تسجيلك — ستجدها في تعلّمي." }
+      "enrol": {
+        "success": "تم تسجيلك — ستجدها في تعلّمي.",
+        "success_title": "تم التسجيل بنجاح",
+        "error_title": "حدث خطأ ما!"
+      },
+      "notify": {
+        "success": "سنُعلمك عند فتح باب التسجيل للدفعة القادمة."
+      },
+      "filters": {
+        "type": "النوع",
+        "level": "المستوى",
+        "duration": "المدة",
+        "job_role": "المسمى الوظيفي",
+        "sort_by": "الترتيب حسب",
+        "duration_options": {
+          "1_2_weeks": "1-2 أسبوع",
+          "2_4_weeks": "2-4 أسابيع",
+          "4_8_weeks": "4-8 أسابيع",
+          "8_plus_weeks": "+8 أسابيع"
+        },
+        "sort_options": {
+          "most_relevant": "الأكثر صلة",
+          "highest_rated": "الأعلى تقييمًا",
+          "soonest_start": "الأقرب بدءًا",
+          "newest": "الأحدث"
+        }
+      }
+    },
+    "course_detail": {
+      "title": "تفاصيل الدورة",
+      "tabs": {
+        "overview": "نظرة عامة",
+        "curriculum": "المنهج",
+        "instructor": "المدرّب"
+      },
+      "overview": {
+        "what_you_will_learn": "ما ستتعلمه",
+        "requirements": "المتطلبات",
+        "qualifications_earned": "المؤهلات المكتسبة"
+      },
+      "curriculum": {
+        "locked_note": "يظهر محتوى الوحدات كاملاً بعد التسجيل. أسماء الوحدات وعدد الجلسات معروضة أدناه.",
+        "modules_count": "{{count}} وحدات",
+        "sessions_count": "{{count}} جلسة إجمالاً",
+        "duration_weeks": "{{count}} أسابيع",
+        "locked": "مقفل حتى التسجيل"
+      },
+      "instructor": {
+        "rating": "تقييم"
+      },
+      "hero": {
+        "enrolled": "مسجَّل",
+        "earns": "يمنح:"
+      },
+      "card": {
+        "starts": "يبدأ",
+        "ends": "ينتهي",
+        "type": "النوع",
+        "sessions": "الجلسات",
+        "instructor": "المدرّب",
+        "includes": "تشمل هذه الدورة",
+        "remaining_seats": "{{count}} مقعد متبقٍ"
+      },
+      "includes": {
+        "sessions": "{{count}} جلسة مباشرة",
+        "reading": "مواد قراءة وموارد",
+        "assessments": "اختبارات ومهام",
+        "certificate": "شهادة عند إتمام الدورة"
+      },
+      "not_found": {
+        "title": "الدورة غير موجودة",
+        "message": "قد تكون هذه الدورة قد أُزيلت أو لم تعد متاحة."
+      }
     }
   }
 }

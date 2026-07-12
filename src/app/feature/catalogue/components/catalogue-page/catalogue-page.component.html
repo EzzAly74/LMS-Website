@@ -5,6 +5,7 @@
       <app-search-input
         class="catalogue__search"
         [placeholder]="'feature.catalogue.search_ph' | translate"
+        [value]="searchTerm"
         (search)="onSearch($event)"
       />
       @if (scopeOptions().length) {
@@ -17,35 +18,43 @@
     </div>
   </header>
 
-  <section class="catalogue__results">
-    @if (!loading()) {
-      <p class="catalogue__count">
-        {{ totalRecords() }} {{ 'feature.catalogue.results' | translate }}
-      </p>
-    }
+  <div class="catalogue-layout">
+    <aside class="filter-container">
+      <app-filter-sidebar
+        [config]="filterConfig()"
+        [selected]="filters()"
+        [resultsCount]="totalRecords()"
+        (selectedChange)="onFilterChange($event)"
+        (clearAll)="onClearAllFilters()"
+      />
+    </aside>
 
-    @if (loading()) {
-      <div class="catalogue__grid">
-        @for (s of skeletons; track $index) {
-          <app-card-skeleton />
-        }
-      </div>
-    } @else if (courses().length === 0) {
-      <app-empty-state [config]="emptyState" />
-    } @else {
-      <div class="catalogue__grid">
-        @for (course of courses(); track course.id) {
-          <app-course-card
-            [course]="course"
-            [ctaLabel]="'feature.catalogue.actions.enrol' | translate"
-            (enrol)="onEnrol($event)"
-          />
-        }
-      </div>
-
-      @if (hasMore()) {
-        <app-load-more [loading]="loadingMore()" (loadMore)="onLoadMore()" />
+    <section class="grid-container">
+      @if (!loading()) {
+        <p class="grid-container__meta">
+          {{ totalRecords() }} {{ 'feature.catalogue.results' | translate }}
+        </p>
       }
-    }
-  </section>
+
+      @if (loading()) {
+        <div class="card-grid">
+          @for (s of skeletons; track $index) {
+            <app-card-skeleton />
+          }
+        </div>
+      } @else if (courses().length === 0) {
+        <app-empty-state [config]="emptyState" />
+      } @else {
+        <div class="card-grid">
+          @for (course of courses(); track course.id) {
+            <app-course-card [course]="course" (enrol)="onEnrol($event)" (notifyMe)="onNotifyMe($event)" />
+          }
+        </div>
+
+        @if (hasMore()) {
+          <app-load-more [loading]="loadingMore()" (loadMore)="onLoadMore()" />
+        }
+      }
+    </section>
+  </div>
 </div>

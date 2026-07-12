@@ -13,7 +13,13 @@
     "no_results": "No results found",
     "error_generic": "Something went wrong. Please try again.",
     "required": "This field is required.",
-    "coming_soon": "This page is coming soon."
+    "coming_soon": "This page is coming soon.",
+    "apply": "Apply"
+  },
+  "shared": {
+    "filter_sidebar": {
+      "title": "Filters"
+    }
   },
   "core": {
     "nav": {
@@ -71,19 +77,101 @@
       "title": "Explore The Catalogue",
       "search_ph": "Search courses, qualifications, categories…",
       "results": "results",
-      "actions": { "enrol": "Enrol Now" },
+      "actions": {
+        "enrol": "Enrol Now",
+        "notify_me": "Enrolment Closed — Notify me for next cohort",
+        "enrolled": "Enrolled ✓",
+        "unavailable": "Not currently available"
+      },
       "delivery": {
         "online": "Online",
         "offline": "Offline",
         "hybrid": "Hybrid",
         "external_link": "External"
       },
+      "level": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "professional": "Professional"
+      },
       "card": { "starts": "Starts" },
       "empty": {
         "title": "No courses found",
         "message": "Try adjusting your search or filters to find more courses."
       },
-      "enrol": { "success": "You're enrolled — find it in My Learnings." }
+      "enrol": {
+        "success": "You're enrolled — find it in My Learnings.",
+        "success_title": "Enrolled Successfully",
+        "error_title": "Something Went Wrong!"
+      },
+      "notify": {
+        "success": "We'll notify you when the next cohort opens."
+      },
+      "filters": {
+        "type": "Type",
+        "level": "Level",
+        "duration": "Duration",
+        "job_role": "Job Role",
+        "sort_by": "Sort by",
+        "duration_options": {
+          "1_2_weeks": "1-2 Weeks",
+          "2_4_weeks": "2-4 Weeks",
+          "4_8_weeks": "4-8 Weeks",
+          "8_plus_weeks": "+8 Weeks"
+        },
+        "sort_options": {
+          "most_relevant": "Most Relevant",
+          "highest_rated": "Highest Rated",
+          "soonest_start": "Soonest Start",
+          "newest": "Newest"
+        }
+      }
+    },
+    "course_detail": {
+      "title": "Course Details",
+      "tabs": {
+        "overview": "Overview",
+        "curriculum": "Curriculum",
+        "instructor": "Instructor"
+      },
+      "overview": {
+        "what_you_will_learn": "What you'll learn",
+        "requirements": "Requirements",
+        "qualifications_earned": "Qualifications earned"
+      },
+      "curriculum": {
+        "locked_note": "Full module content is visible after enrolment. Module names and session counts shown below.",
+        "modules_count": "{{count}} modules",
+        "sessions_count": "{{count}} sessions total",
+        "duration_weeks": "{{count}} weeks",
+        "locked": "Locked until enrolment"
+      },
+      "instructor": {
+        "rating": "rating"
+      },
+      "hero": {
+        "enrolled": "enrolled",
+        "earns": "Earns:"
+      },
+      "card": {
+        "starts": "Starts",
+        "ends": "End",
+        "type": "Type",
+        "sessions": "Sessions",
+        "instructor": "Instructor",
+        "includes": "This course includes",
+        "remaining_seats": "{{count}} Remaining Seats"
+      },
+      "includes": {
+        "sessions": "{{count}} live sessions",
+        "reading": "Reading materials & resources",
+        "assessments": "Quizzes & assignments",
+        "certificate": "Certificate upon completion"
+      },
+      "not_found": {
+        "title": "Course not found",
+        "message": "This course may have been removed or is no longer available."
+      }
     }
   }
 }

@@ -1,7 +1,10 @@
 <article class="course-card">
-  <div class="course-card__media" [class.course-card__media--placeholder]="!course.image">
+  <a class="course-card__media" [class.course-card__media--placeholder]="!course.image" [routerLink]="[detailRoute, course.id]">
     @if (course.image) {
       <img class="course-card__image" [src]="course.image" [alt]="course.title" loading="lazy" />
+    }
+    @if (levelKey) {
+      <app-badge class="course-card__badge course-card__badge--level" tone="level" [label]="levelKey | translate" />
     }
     <app-badge
       class="course-card__badge course-card__badge--delivery"
@@ -9,10 +12,12 @@
       icon="pi-globe"
       [label]="deliveryKey | translate"
     />
-  </div>
+  </a>
 
   <div class="course-card__body">
-    <h3 class="course-card__title">{{ course.title }}</h3>
+    <h3 class="course-card__title">
+      <a [routerLink]="[detailRoute, course.id]">{{ course.title }}</a>
+    </h3>
 
     <div class="course-card__meta-row">
       @if (instructor) {
@@ -39,7 +44,15 @@
           {{ course.next_cohort.start_date | date: 'mediumDate' }}
         </span>
       }
-      <button type="button" class="course-card__cta" (click)="onEnrol()">{{ ctaLabel }}</button>
+      @if (isActionable) {
+        <button type="button" class="course-card__cta" (click)="onCtaClick()">
+          {{ ctaLabelKey | translate }}
+        </button>
+      } @else {
+        <span class="course-card__cta course-card__cta--static" [class.is-enrolled]="course.cta.state === 'enrolled_view_learning'">
+          {{ ctaLabelKey | translate }}
+        </span>
+      }
     </div>
   </div>
 </article>
