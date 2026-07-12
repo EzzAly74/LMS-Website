@@ -1,0 +1,95 @@
+<div class="lesson-viewer">
+  @switch (lecture.content_type) {
+    @case ('video') {
+      <div class="lesson-viewer__media">
+        @if (lecture.content_url) {
+          <video class="lesson-viewer__video" [src]="lecture.content_url" controls></video>
+        } @else {
+          <button type="button" class="lesson-viewer__play" [attr.aria-label]="contentTypeKey | translate">
+            <i class="pi pi-play"></i>
+          </button>
+        }
+      </div>
+    }
+    @case ('document') {
+      <div class="lesson-viewer__media lesson-viewer__media--placeholder">
+        <i class="pi pi-file lesson-viewer__file-icon"></i>
+        <p class="lesson-viewer__placeholder-text">{{ contentTypeKey | translate }}</p>
+        @if (lecture.content_url) {
+          <a class="lesson-viewer__download" [href]="lecture.content_url" target="_blank" rel="noopener">
+            <i class="pi pi-download"></i>
+            {{ lecture.title }}
+          </a>
+        }
+      </div>
+    }
+    @case ('link') {
+      <div class="lesson-viewer__media lesson-viewer__media--placeholder">
+        <i class="pi pi-external-link lesson-viewer__file-icon"></i>
+        <p class="lesson-viewer__placeholder-text">
+          {{ 'feature.course_player.completion.link_visit' | translate }}
+        </p>
+        <button type="button" class="lesson-viewer__visit-btn" (click)="onVisitLink()">
+          {{ 'feature.course_player.completion.link_cta' | translate }}
+        </button>
+      </div>
+    }
+  }
+
+  <div class="lesson-viewer__details">
+    <div class="lesson-viewer__heading">
+      <h2 class="lesson-viewer__title">{{ lecture.title }}</h2>
+      <span class="lesson-viewer__type-tag">{{ contentTypeKey | translate }}</span>
+    </div>
+
+    @if (lecture.content_type === 'article') {
+      <div class="lesson-viewer__article-body">
+        @for (paragraph of lecture.body?.split('\n'); track $index) {
+          <p>{{ paragraph }}</p>
+        }
+      </div>
+    } @else if (lecture.description) {
+      <p class="lesson-viewer__description">{{ lecture.description }}</p>
+    }
+
+    <div class="lesson-viewer__meta">
+      @if (lecture.duration_minutes) {
+        <span class="lesson-viewer__meta-item">
+          <i class="pi pi-clock"></i>
+          {{ 'feature.course_player.completion.duration' | translate: { count: lecture.duration_minutes } }}
+        </span>
+      }
+      @if (lecture.require_completion) {
+        <span class="lesson-viewer__meta-item">
+          <i class="pi pi-info-circle"></i>
+          {{ 'feature.course_player.completion.required' | translate }}
+        </span>
+      }
+    </div>
+  </div>
+
+  @if (!lecture.completed) {
+    <div class="lesson-viewer__completion-card">
+      @if (lecture.content_type === 'link') {
+        <p class="lesson-viewer__completion-question">
+          {{ completionQuestionKey | translate }}
+        </p>
+        <button type="button" class="lesson-viewer__complete-btn" (click)="onMarkComplete()">
+          {{ 'feature.course_player.completion.mark_complete' | translate }}
+        </button>
+      } @else {
+        <p class="lesson-viewer__completion-question">
+          {{ completionQuestionKey | translate }}
+        </p>
+        <div class="lesson-viewer__completion-actions">
+          <button type="button" class="lesson-viewer__yes-btn" (click)="onYes()">
+            {{ 'feature.course_player.completion.yes' | translate }}
+          </button>
+          <button type="button" class="lesson-viewer__no-btn" (click)="onNo()">
+            {{ 'feature.course_player.completion.no' | translate }}
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

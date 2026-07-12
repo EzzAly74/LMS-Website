@@ -1,0 +1,84 @@
+<div class="assessment-results">
+  <header class="assessment-results__header">
+    <p class="assessment-results__eyebrow">{{ 'feature.course_player.results.title' | translate }}</p>
+    <h1 class="assessment-results__title">{{ courseTitle }}</h1>
+  </header>
+
+  <div class="score-summary">
+    <div class="score-summary__ring" [style.--score-percent.%]="results.percent">
+      <span>{{ results.total_score }}</span>
+    </div>
+    <div class="score-summary__info">
+      <p class="score-summary__label">{{ 'feature.course_player.results.final_score' | translate }}</p>
+      <p class="score-summary__total">
+        {{ 'feature.course_player.results.out_of' | translate: { total: results.max_score } }}
+      </p>
+    </div>
+  </div>
+
+  <div class="assessment-results__section-header">
+    <h2>{{ 'feature.course_player.results.question_review' | translate }}</h2>
+    <span>{{ 'feature.course_player.results.total_questions' | translate: { count: results.answers.length } }}</span>
+  </div>
+
+  <div class="question-review-list">
+    @for (q of results.answers; track q.question_id) {
+      <article class="question-card" [class]="'question-card--' + q.state">
+        <div class="question-card__icon">
+          <span class="question-card__number">Q{{ q.position }}</span>
+          <i class="pi" [class]="stateIcon(q.state)"></i>
+        </div>
+
+        <div class="question-card__body">
+          <p class="question-card__text">{{ q.question }}</p>
+
+          @if (q.type === 'reorder') {
+            <div class="question-card__reorder">
+              <div>
+                <p class="question-card__reorder-label">{{ 'feature.course_player.quiz.your_order' | translate }}</p>
+                <ol>
+                  @for (item of q.my_answer?.order ?? []; track $index) {
+                    <li>{{ item }}</li>
+                  }
+                </ol>
+              </div>
+              <div>
+                <p class="question-card__reorder-label">{{ 'feature.course_player.quiz.correct_order' | translate }}</p>
+                <ol>
+                  @for (item of $any(q.correct_answer) ?? []; track $index) {
+                    <li>{{ item }}</li>
+                  }
+                </ol>
+              </div>
+            </div>
+          } @else {
+            @if (answerLabel(q.my_answer); as selected) {
+              <p class="question-card__answer">
+                <span>{{ 'feature.course_player.results.selected_answer' | translate }}</span>
+                {{ selected }}
+              </p>
+            }
+            @if (q.state !== 'pending' && q.correct_answer) {
+              <p class="question-card__answer">
+                <span>{{ 'feature.course_player.results.model_answer' | translate }}</span>
+                {{ q.correct_answer }}
+              </p>
+            }
+          }
+        </div>
+
+        <div class="question-card__points">
+          <span class="question-card__points-value">
+            <i class="pi pi-sun"></i>
+            @if (q.awarded_score !== null) {
+              {{ 'feature.course_player.results.points_earned' | translate: { count: q.awarded_score } }}
+            } @else {
+              {{ 'feature.course_player.results.pending' | translate }}
+            }
+          </span>
+          <span class="question-card__points-label">{{ 'feature.course_player.results.earned_label' | translate }}</span>
+        </div>
+      </article>
+    }
+  </div>
+</div>

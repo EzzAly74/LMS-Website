@@ -1,0 +1,169 @@
+@use 'mixins' as *;
+
+.lesson-viewer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3xs);
+
+  &__media {
+    position: relative;
+    height: 300px;
+    border-radius: var(--radius-container-md);
+    background: var(--color-neutral-1000);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &--placeholder {
+      background: var(--color-neutral-250);
+      flex-direction: column;
+      gap: var(--spacing-15xs);
+    }
+  }
+
+  &__video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: var(--color-neutral-1000);
+  }
+
+  &__play {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-full);
+    background: var(--color-neutral-0);
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xl);
+    color: var(--color-essential-tertiary);
+    cursor: pointer;
+  }
+
+  &__file-icon {
+    font-size: var(--font-size-2xl);
+    color: var(--color-neutral-700);
+  }
+
+  &__placeholder-text {
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-700);
+  }
+
+  &__download,
+  &__visit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    @include typography('body-small', 'medium');
+    color: var(--color-primary-700);
+  }
+
+  &__visit-btn {
+    padding: var(--spacing-15xs) var(--spacing-13xs);
+    border-radius: var(--radius-control-sm);
+    background: var(--color-essential-tertiary);
+    color: var(--color-essential-primary);
+    border: none;
+    cursor: pointer;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-15xs);
+  }
+
+  &__heading {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-13xs);
+  }
+
+  &__title {
+    @include typography('h2', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__type-tag {
+    padding: var(--spacing-17xs) var(--spacing-15xs);
+    border-radius: var(--radius-control-xs);
+    background: var(--color-neutral-300);
+    color: var(--color-neutral-800);
+    @include typography('caption', 'medium');
+  }
+
+  &__description,
+  &__article-body {
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-800);
+  }
+
+  &__article-body p + p {
+    margin-top: var(--spacing-14xs);
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-3xl);
+  }
+
+  &__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-700);
+
+    i {
+      color: var(--color-additionally-700);
+    }
+  }
+
+  &__completion-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--spacing-13xs);
+    padding: var(--spacing-14xs);
+    background: var(--color-essential-primary);
+    border: var(--stroke-width-default) solid var(--color-neutral-400);
+    border-radius: var(--radius-container-md);
+  }
+
+  &__completion-question {
+    @include typography('body-small', 'medium');
+    color: var(--color-essential-secondary);
+  }
+
+  &__completion-actions {
+    display: flex;
+    gap: var(--spacing-15xs);
+  }
+
+  &__yes-btn,
+  &__complete-btn {
+    padding: var(--spacing-15xs) var(--spacing-13xs);
+    border-radius: var(--radius-control-sm);
+    background: var(--color-essential-tertiary);
+    color: var(--color-essential-primary);
+    border: none;
+    cursor: pointer;
+    @include typography('button', 'medium');
+  }
+
+  &__no-btn {
+    padding: var(--spacing-15xs) var(--spacing-13xs);
+    border-radius: var(--radius-control-sm);
+    background: var(--color-essential-primary);
+    color: var(--color-essential-secondary);
+    border: var(--stroke-width-default) solid var(--color-neutral-500);
+    cursor: pointer;
+    @include typography('button', 'medium');
+  }
+}
