@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { authGuard } from './core/auth/auth.guard';
 import { guestGuard } from './core/auth/guest.guard';
 import { AuthLayoutComponent } from './core/layout/auth-layout/auth-layout.component';
 import { MainLayoutComponent } from './core/layout/main-layout/main-layout.component';
@@ -36,8 +37,20 @@ export const routes: Routes = [
         path: LmsRoutes.Blogs,
         loadChildren: () => import('./feature/blogs/blogs.routes').then((m) => m.BLOGS_ROUTES),
       },
-      // Guarded learner features (My Learnings, Profile, Notifications) are wired
-      // here as each is built. authGuard is applied per feature route.
+      {
+        path: LmsRoutes.MyLearnings,
+        canActivate: [authGuard],
+        loadChildren: () =>
+          import('./feature/my-learnings/my-learnings.routes').then((m) => m.MY_LEARNINGS_ROUTES),
+      },
+      {
+        path: `${LmsRoutes.MyLearnings}/:courseId/learn`,
+        canActivate: [authGuard],
+        loadChildren: () =>
+          import('./feature/course-player/course-player.routes').then((m) => m.COURSE_PLAYER_ROUTES),
+      },
+      // Guarded learner features (Profile, Notifications) are wired here as
+      // each is built. authGuard is applied per feature route.
     ],
   },
   { path: '**', redirectTo: LmsRoutes.Catalogue },

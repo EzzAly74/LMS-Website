@@ -172,6 +172,90 @@
         "title": "الدورة غير موجودة",
         "message": "قد تكون هذه الدورة قد أُزيلت أو لم تعد متاحة."
       }
+    },
+    "my_learnings": {
+      "title": "دوراتي النشطة",
+      "search_ph": "ابحث في دوراتك…",
+      "upcoming": "القادمة",
+      "delivery": {
+        "online": "عن بُعد",
+        "offline": "حضوري",
+        "hybrid": "مدمج",
+        "external_link": "رابط خارجي"
+      },
+      "card": {
+        "sessions": "{{count}} جلسة",
+        "started": "بدأت في"
+      },
+      "certificate": {
+        "earned": "الشهادة: تم الحصول عليها",
+        "on_track": "الشهادة: على المسار الصحيح",
+        "at_risk": "الشهادة: في خطر",
+        "blocked": "الشهادة: محظورة"
+      },
+      "actions": {
+        "continue": "متابعة التعلّم"
+      },
+      "empty": {
+        "title": "لا توجد دورات نشطة بعد",
+        "message": "سجّل في دورة من الدورات المتاحة لتبدأ التعلّم."
+      }
+    },
+    "course_player": {
+      "back": "تعلّمي",
+      "modules_completed": "{{completed}} من {{total}} وحدات مكتملة",
+      "curriculum": "منهج الدورة",
+      "nav": {
+        "previous": "السابق",
+        "next": "التالي"
+      },
+      "content_type": {
+        "video": "فيديو",
+        "document": "مستند",
+        "article": "مقال",
+        "link": "رابط خارجي"
+      },
+      "completion": {
+        "video_question": "هل أكملت مشاهدة هذا الفيديو؟",
+        "document_question": "هل قرأت هذا المستند؟",
+        "article_question": "هل قرأت هذا المقال؟",
+        "link_question": "قم بزيارة الرابط، ثم ضع علامة على هذا كمكتمل.",
+        "yes": "نعم",
+        "no": "لا",
+        "mark_complete": "وضع علامة كمكتمل",
+        "duration": "المدة التقريبية: {{count}} دقيقة",
+        "required": "إكمال هذه الوحدة مطلوب للمتابعة",
+        "link_visit": "لن يظهر الرابط الخارجي هنا، يرجى النقر للانتقال إلى الرابط",
+        "link_cta": "زيارة الرابط"
+      },
+      "quiz": {
+        "title": "اختبار",
+        "assignment_title": "مهمة",
+        "question_of": "السؤال {{current}} من {{total}}",
+        "score": "النتيجة",
+        "passed": "ناجح",
+        "submit": "إرسال الإجابة",
+        "next_question": "السؤال التالي",
+        "finish": "إنهاء",
+        "char_count": "{{count}} / {{max}}",
+        "answer_ph": "اكتب إجابتك هنا...",
+        "correct_order": "الترتيب الصحيح",
+        "your_order": "ترتيبك",
+        "true": "صحيح",
+        "false": "خطأ"
+      },
+      "results": {
+        "title": "مراجعة النتائج",
+        "final_score": "النتيجة النهائية",
+        "out_of": "من أصل {{total}} نقطة",
+        "question_review": "مراجعة الأسئلة",
+        "total_questions": "{{count}} إجمالاً",
+        "selected_answer": "الإجابة المختارة:",
+        "model_answer": "الإجابة النموذجية:",
+        "points_earned": "{{count}} نقطة",
+        "pending": "قيد المراجعة",
+        "earned_label": "محصّلة"
+      }
     }
   }
 }

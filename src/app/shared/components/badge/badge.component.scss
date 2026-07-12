@@ -31,4 +31,26 @@
     backdrop-filter: blur(3px);
     @include typography('caption', 'bold');
   }
+
+  // Certificate progress status: On track / At risk / Blocked / Earned.
+  &--certificate {
+    padding: var(--spacing-17xs) var(--spacing-15xs);
+    border-radius: var(--radius-pill);
+    @include typography('caption', 'medium');
+
+    &-on_track {
+      background: var(--color-status-success-50);
+      color: var(--color-status-success);
+    }
+
+    &-at_risk {
+      background: var(--color-status-hold-50);
+      color: var(--color-status-hold-500);
+    }
+
+    &-blocked {
+      background: var(--color-status-warning-50);
+      color: var(--color-status-warning);
+    }
+  }
 }

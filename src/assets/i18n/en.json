@@ -172,6 +172,90 @@
         "title": "Course not found",
         "message": "This course may have been removed or is no longer available."
       }
+    },
+    "my_learnings": {
+      "title": "My Active Courses",
+      "search_ph": "Search your courses…",
+      "upcoming": "Upcoming",
+      "delivery": {
+        "online": "Online",
+        "offline": "Offline",
+        "hybrid": "Blended",
+        "external_link": "External"
+      },
+      "card": {
+        "sessions": "{{count}} sessions",
+        "started": "Started in"
+      },
+      "certificate": {
+        "earned": "Certificate: Earned",
+        "on_track": "Certificate: On track",
+        "at_risk": "Certificate: At Risk",
+        "blocked": "Certificate: Blocked"
+      },
+      "actions": {
+        "continue": "Continue Learning"
+      },
+      "empty": {
+        "title": "No active courses yet",
+        "message": "Enrol in a course from the catalogue to start learning."
+      }
+    },
+    "course_player": {
+      "back": "My Learnings",
+      "modules_completed": "{{completed}} of {{total}} modules completed",
+      "curriculum": "Course Curriculum",
+      "nav": {
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "content_type": {
+        "video": "Video",
+        "document": "Document",
+        "article": "Article",
+        "link": "External Link"
+      },
+      "completion": {
+        "video_question": "Did you complete this video?",
+        "document_question": "Did you read this document?",
+        "article_question": "Did you read this article?",
+        "link_question": "Visit the link, then mark this as complete.",
+        "yes": "Yes",
+        "no": "No",
+        "mark_complete": "Mark as complete",
+        "duration": "Approximate duration: {{count}} mins",
+        "required": "Require completion of this module to continue",
+        "link_visit": "External link won't appear here, please click to navigate to the link",
+        "link_cta": "Visit link"
+      },
+      "quiz": {
+        "title": "Quiz",
+        "assignment_title": "Assignment",
+        "question_of": "Question {{current}} of {{total}}",
+        "score": "Score",
+        "passed": "Passed",
+        "submit": "Submit Answer",
+        "next_question": "Next Question",
+        "finish": "Finish",
+        "char_count": "{{count}} / {{max}}",
+        "answer_ph": "Type your answer here...",
+        "correct_order": "Correct order",
+        "your_order": "Your order",
+        "true": "True",
+        "false": "False"
+      },
+      "results": {
+        "title": "Review Results",
+        "final_score": "Final Score",
+        "out_of": "out of {{total}} points",
+        "question_review": "Question Review",
+        "total_questions": "{{count}} Total",
+        "selected_answer": "Selected Answer:",
+        "model_answer": "Model Answer:",
+        "points_earned": "{{count}} pts",
+        "pending": "Pending",
+        "earned_label": "Earned"
+      }
     }
   }
 }
