@@ -5,8 +5,12 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
 
-/** Accepts primitive query params; null/undefined values are dropped. */
-export type QueryParams = Record<string, string | number | boolean | null | undefined>;
+/**
+ * Accepts primitive query params; null/undefined values are dropped.
+ * Array values are sent as a single comma-separated query param (e.g.
+ * `type=online,offline`) — the convention this API's list filters use.
+ */
+export type QueryParams = Record<string, string | number | boolean | string[] | number[] | null | undefined>;
 
 interface RequestOptions {
   params?: QueryParams;
@@ -70,9 +74,16 @@ export class ApiService {
     }
     let httpParams = new HttpParams();
     for (const [key, value] of Object.entries(params)) {
-      if (value !== null && value !== undefined) {
-        httpParams = httpParams.set(key, String(value));
+      if (value === null || value === undefined) {
+        continue;
       }
+      if (Array.isArray(value)) {
+        if (value.length) {
+          httpParams = httpParams.set(key, value.join(','));
+        }
+        continue;
+      }
+      httpParams = httpParams.set(key, String(value));
     }
     return httpParams;
   }

@@ -89,3 +89,55 @@ select:-webkit-autofill {
   -webkit-text-fill-color: #000 !important;
   transition: background-color 9999s ease-in-out 0s;
 }
+
+// -----------------------------------------------------------------------------
+// Global toast (p-toast) — styled to match the design system, per the
+// "Enrolled Successfully" / "Something Went Wrong" catalogue toasts in Figma.
+// -----------------------------------------------------------------------------
+.p-toast-message {
+  background: var(--color-essential-primary);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-lg);
+  box-shadow: var(--elevation-shadow-lg);
+  overflow: hidden;
+}
+
+.p-toast-message-content {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-13xs);
+  padding: var(--spacing-3xs);
+}
+
+.p-toast-message-icon {
+  flex-shrink: 0;
+  font-size: var(--font-size-xl);
+}
+
+.p-toast-summary {
+  @include typography('subtitle-small', 'bold');
+  color: var(--color-essential-secondary);
+  display: block;
+}
+
+.p-toast-detail {
+  @include typography('body-small', 'regular');
+  color: var(--color-neutral-800);
+  display: block;
+  margin-top: var(--spacing-16xs);
+}
+
+.p-toast-icon-close {
+  color: var(--color-neutral-700);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.p-toast-message-success .p-toast-message-icon {
+  color: var(--color-status-success);
+}
+
+.p-toast-message-error .p-toast-message-icon {
+  color: var(--color-status-warning);
+}

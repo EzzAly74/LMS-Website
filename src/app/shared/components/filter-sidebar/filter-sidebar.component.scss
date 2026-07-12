@@ -1,0 +1,267 @@
+@use 'mixins' as *;
+
+// Desktop/tablet: collapsible filter panel (Figma node 828:43785).
+.filter-sidebar {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-essential-primary);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-md);
+  box-shadow: var(--elevation-shadow-sm);
+  overflow: hidden;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-13xs) var(--spacing-14xs);
+    border-bottom: var(--stroke-width-default) solid var(--color-neutral-300);
+  }
+
+  &__title {
+    @include typography('caption', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__clear {
+    @include typography('caption', 'medium');
+    color: var(--color-primary-700);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  &__section {
+    border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--spacing-13xs) var(--spacing-14xs);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: start;
+  }
+
+  &__section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    @include typography('caption', 'bold');
+    color: var(--color-primary-700);
+    letter-spacing: var(--font-tracking-label);
+    text-transform: capitalize;
+
+    i {
+      font-size: var(--font-size-3xs);
+    }
+  }
+
+  &__chevron {
+    font-size: var(--font-size-3xs);
+    color: var(--color-primary-700);
+    transition: transform 0.15s ease;
+
+    &.is-collapsed {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-16xs);
+    max-height: 340px;
+    overflow-y: auto;
+    padding: var(--spacing-17xs) var(--spacing-14xs) var(--spacing-13xs);
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-15xs);
+    padding: var(--spacing-15xs) 0;
+    cursor: pointer;
+
+    input {
+      appearance: none;
+      flex-shrink: 0;
+      width: 15px;
+      height: 15px;
+      margin: 0;
+      background: var(--color-essential-primary);
+      border: var(--stroke-width-default) solid var(--color-neutral-500);
+      border-radius: var(--radius-control-xs);
+      cursor: pointer;
+
+      &[type='radio'] {
+        border-radius: var(--radius-full);
+      }
+
+      &:checked {
+        background: var(--color-primary-700);
+        border-color: var(--color-primary-700);
+      }
+    }
+  }
+
+  &__option-label {
+    flex: 1;
+    min-width: 0;
+    @include typography('body-small', 'regular');
+    color: var(--color-essential-secondary);
+  }
+
+  &__option-count {
+    @include typography('minimum-size', 'regular');
+    color: var(--color-primary-700);
+    background: var(--color-neutral-300);
+    border-radius: var(--radius-full);
+    padding: var(--paragraph-spacing-none) var(--spacing-15xs);
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-16xs);
+  }
+
+  &__chip {
+    @include typography('caption', 'medium');
+    color: var(--color-essential-secondary);
+    background: var(--color-neutral-200);
+    border: var(--stroke-width-default) solid var(--color-neutral-500);
+    border-radius: var(--radius-full);
+    padding: var(--spacing-16xs) var(--spacing-13xs);
+    cursor: pointer;
+
+    &.is-selected {
+      color: var(--color-essential-primary);
+      background: var(--color-primary-700);
+      border-color: var(--color-primary-700);
+    }
+  }
+}
+
+// Mobile: horizontal trigger-chip row (Figma node 963:48258).
+.filter-chip-row {
+  display: none;
+
+  @media (max-width: 900px) {
+    display: flex;
+    gap: var(--spacing-15xs);
+    overflow-x: auto;
+    padding-bottom: var(--spacing-16xs);
+  }
+
+  &__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    flex-shrink: 0;
+    @include typography('body-small', 'medium');
+    color: var(--color-essential-secondary);
+    background: var(--color-neutral-200);
+    border: var(--stroke-width-default) solid var(--color-neutral-500);
+    border-radius: var(--radius-full);
+    padding: var(--spacing-16xs) var(--spacing-13xs);
+    cursor: pointer;
+    @include touch-target;
+  }
+
+  &__badge {
+    @include typography('minimum-size', 'bold');
+    color: var(--color-essential-primary);
+    background: var(--color-primary-700);
+    border-radius: var(--radius-full);
+    min-width: var(--size-16);
+    text-align: center;
+    padding: 0 var(--spacing-16xs);
+  }
+}
+
+.filter-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--surface-bg-overlay);
+  z-index: 1000;
+}
+
+.filter-sheet {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-13xs);
+  max-height: 80vh;
+  background: var(--color-essential-primary);
+  border-radius: var(--radius-container-md) var(--radius-container-md) 0 0;
+  box-shadow: var(--elevation-shadow-xl);
+  padding: var(--spacing-13xs) var(--spacing-14xs) var(--spacing-14xs);
+
+  &__handle {
+    align-self: center;
+    width: 40px;
+    height: 4px;
+    background: var(--color-neutral-500);
+    border-radius: var(--radius-full);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    @include typography('subtitle-small', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__close {
+    @include touch-target;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--color-essential-secondary);
+    cursor: pointer;
+  }
+
+  &__options {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-16xs);
+  }
+
+  &__apply {
+    @include typography('button', 'medium');
+    @include touch-target;
+    color: var(--color-essential-primary);
+    background: var(--color-essential-tertiary);
+    border: none;
+    border-radius: var(--radius-control-sm);
+    box-shadow: var(--elevation-shadow-sm);
+    cursor: pointer;
+  }
+}

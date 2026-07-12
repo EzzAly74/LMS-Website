@@ -246,6 +246,10 @@
   --font-height-2xl: 38.8px;
 
   --font-tracking-neutral: 0;
+  // Positive tracking used by eyebrow/section-label caption text (e.g. filter
+  // sidebar section headers, hero eyebrow) — distinct from the negative
+  // per-heading tracking below.
+  --font-tracking-wide: 0.5px;
   --font-tracking-2xs: -0.36px;
   --font-tracking-xs: -0.42px;
   --font-tracking-s: -0.48px;

@@ -36,11 +36,17 @@ export class SearchInputComponent implements OnInit {
 
   @Input() placeholder = '';
   @Input() debounce = 350;
+  /** Initial value (e.g. seeded from a query param on page load). */
+  @Input() value = '';
   @Output() search = new EventEmitter<string>();
 
   protected readonly control = new FormControl('', { nonNullable: true });
 
   ngOnInit(): void {
+    if (this.value) {
+      this.control.setValue(this.value, { emitEvent: false });
+    }
+
     this.control.valueChanges
       .pipe(
         debounceTime(this.debounce),
