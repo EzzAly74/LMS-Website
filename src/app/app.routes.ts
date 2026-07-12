@@ -23,6 +23,11 @@ export const routes: Routes = [
           import('./feature/catalogue/catalogue.routes').then((m) => m.CATALOGUE_ROUTES),
       },
       {
+        path: LmsRoutes.CourseDetail,
+        loadChildren: () =>
+          import('./feature/course-detail/course-detail.routes').then((m) => m.COURSE_DETAIL_ROUTES),
+      },
+      {
         path: LmsRoutes.WhoWeAre,
         loadChildren: () =>
           import('./feature/who-we-are/who-we-are.routes').then((m) => m.WHO_WE_ARE_ROUTES),

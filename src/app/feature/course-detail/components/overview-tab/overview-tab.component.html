@@ -1,0 +1,46 @@
+@if (whatYouWillLearn.length) {
+  <section class="detail-section">
+    <h2 class="detail-section__heading">{{ 'feature.course_detail.overview.what_you_will_learn' | translate }}</h2>
+    <ul class="learn-grid">
+      @for (item of whatYouWillLearn; track $index) {
+        <li class="learn-grid__item">
+          <i class="pi pi-check learn-grid__check"></i>
+          <span>{{ item }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+}
+
+@if (requirements.length) {
+  <section class="detail-section">
+    <h2 class="detail-section__heading">{{ 'feature.course_detail.overview.requirements' | translate }}</h2>
+    <ul class="requirement-list">
+      @for (item of requirements; track $index) {
+        <li class="requirement-list__item">
+          <span class="requirement-list__dot"></span>
+          <span>{{ item }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+}
+
+@if (qualifications.length) {
+  <section class="detail-section">
+    <h2 class="detail-section__heading">{{ 'feature.course_detail.overview.qualifications_earned' | translate }}</h2>
+    <ul class="qualification-list">
+      @for (q of qualifications; track q.id) {
+        <li class="qualification-list__item">
+          <span class="qualification-list__icon"><i class="pi pi-verified"></i></span>
+          <div>
+            <p class="qualification-list__name">{{ q.name }}</p>
+            @if (q.description) {
+              <p class="qualification-list__desc">{{ q.description }}</p>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+  </section>
+}

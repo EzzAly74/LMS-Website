@@ -1,0 +1,34 @@
+@use 'mixins' as *;
+
+.instructor-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3xs);
+  padding: var(--spacing-14xs);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-md);
+
+  &__name {
+    @include typography('h2', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__stats {
+    display: flex;
+    gap: var(--spacing-13xs);
+    margin-top: var(--spacing-16xs);
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-800);
+
+    i {
+      color: var(--color-status-hold-500);
+      margin-inline-end: var(--spacing-17xs);
+    }
+  }
+}
+
+.instructor-bio {
+  margin-top: var(--spacing-3xl);
+  @include typography('body-small', 'regular');
+  color: var(--color-neutral-800);
+}
