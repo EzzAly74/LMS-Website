@@ -23,10 +23,10 @@ We are building a brand new LMS Website from scratch.
 Current Projects
 
 Laravel Backend
-D:\2b-source-code\2b-academy-test
+F:\2B-Academy
 
 Angular Frontend
-D:\2b-source-code\2B-Academy-Website
+F:\LMS-Website
 
 The Angular project is currently empty.
 
@@ -205,6 +205,84 @@ https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=966-50318&t=Oc9e
 ---
 
 MY LEARNING FLOW
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1062-56048&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=900-45179&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=900-45363&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=900-45585&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=907-45837&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=907-46056&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-46446&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-46659&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-46867&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-47084&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-47335&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-47544&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-47757&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-48560&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-49092&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-49297&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-49572&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=933-46418&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1047-63046&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=933-46695&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1207-19636&t=Oc9eqtHqXGRPF38J-4
+
+MOBILE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1078-55926&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=971-14248&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=975-14197&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=976-13438&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=976-13556&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=976-13669&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=976-13784&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-13712&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-13847&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-13977&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-14109&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-14378&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-14486&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-14595&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-14724&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-14863&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1049-19229&t=Oc9eqtHqXGRPF38J-4
 
 (Use ALL provided Web and Mobile Figma links exactly as provided in this prompt. Every screen is mandatory. Do not skip any.)
 
