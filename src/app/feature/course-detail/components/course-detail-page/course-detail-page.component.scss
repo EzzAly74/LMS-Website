@@ -8,13 +8,6 @@
   padding: var(--spacing-3xs) var(--spacing-3xs) var(--spacing-12xl);
 }
 
-.detail-loading {
-  @include typography('body', 'regular');
-  color: var(--color-neutral-700);
-  padding: var(--spacing-4xl);
-  text-align: center;
-}
-
 .breadcrumb {
   display: flex;
   align-items: center;

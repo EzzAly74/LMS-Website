@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
+import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { CardSkeletonComponent } from '../../../../shared/components/card-skeleton/card-skeleton.component';
 import { EmptyStateComponent, EmptyStateConfig } from '../../../../shared/components/empty-state/empty-state.component';
@@ -36,6 +37,12 @@ export class MyLearningsPageComponent implements OnInit {
     }
     return this.allCourses().filter((c) => c.title.toLowerCase().includes(term));
   });
+
+  constructor() {
+    // Backend course text is localized via Accept-Language — refetch instead
+    // of leaving stale-language content on screen after a switch.
+    reloadOnLanguageChange(() => this.loadCourses());
+  }
 
   ngOnInit(): void {
     this.loadCourses();

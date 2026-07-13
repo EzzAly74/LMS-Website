@@ -1,5 +1,5 @@
 @if (loading()) {
-  <div class="player-loading">{{ 'common.loading' | translate }}</div>
+  <app-course-player-skeleton />
 } @else if (outline()) {
   @let o = outline()!;
   <div class="course-player">

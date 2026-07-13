@@ -43,13 +43,9 @@
     </div>
 
     @if (lecture.content_type === 'article') {
-      <div class="lesson-viewer__article-body">
-        @for (paragraph of lecture.body?.split('\n'); track $index) {
-          <p>{{ paragraph }}</p>
-        }
-      </div>
+      <div class="lesson-viewer__article-body" [innerHTML]="lecture.body"></div>
     } @else if (lecture.description) {
-      <p class="lesson-viewer__description">{{ lecture.description }}</p>
+      <p class="lesson-viewer__description" [innerHTML]="lecture.description"></p>
     }
 
     <div class="lesson-viewer__meta">

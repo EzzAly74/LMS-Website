@@ -23,10 +23,10 @@ We are building a brand new LMS Website from scratch.
 Current Projects
 
 Laravel Backend
-F:\2B-Academy
+D:\2b-source-code\2b-academy-test
 
 Angular Frontend
-F:\LMS-Website
+D:\2b-source-code\2B-Academy-Website
 
 The Angular project is currently empty.
 

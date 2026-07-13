@@ -13,7 +13,7 @@
   }
 
   &--initials {
-    background: var(--color-primary-500);
+    background: var(--avatar-bg, var(--color-primary-500));
     color: var(--color-neutral-0);
     font-size: var(--font-size-3xs);
     font-weight: var(--font-weight-bold);

@@ -3,6 +3,7 @@ import { Observable, tap } from 'rxjs';
 
 import { ApiResponse } from '../models/api-response.model';
 import { ApiService } from '../services/api.service';
+import { reloadOnLanguageChange } from '../utils/reload-on-language-change';
 import { AuthUser } from './models/auth-user.model';
 import { LoginPayload, LoginResult } from './models/login.model';
 import { TokenStorageService } from './token-storage.service';
@@ -20,6 +21,17 @@ export class AuthService {
   private readonly _user = signal<AuthUser | null>(null);
   readonly user = this._user.asReadonly();
   readonly isAuthenticated = computed(() => this._user() !== null);
+
+  constructor() {
+    // UserResource.name is server-localized (getLocalizedName()) — refetch
+    // the profile on language switch or the navbar name/avatar initials stay
+    // frozen in whichever locale was active when the app first loaded.
+    reloadOnLanguageChange(() => {
+      if (this.isAuthenticated()) {
+        this.loadCurrentUser().subscribe();
+      }
+    });
+  }
 
   /** True when a token exists but the profile has not been fetched yet. */
   hasToken(): boolean {

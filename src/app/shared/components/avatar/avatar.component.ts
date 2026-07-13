@@ -8,7 +8,12 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
     @if (image) {
       <img class="avatar avatar--img" [src]="image" [alt]="name" [style.--avatar-size]="size + 'px'" />
     } @else {
-      <span class="avatar avatar--initials" [style.--avatar-size]="size + 'px'" aria-hidden="true">
+      <span
+        class="avatar avatar--initials"
+        [style.--avatar-size]="size + 'px'"
+        [style.--avatar-bg]="'var(--color-' + tone + ')'"
+        aria-hidden="true"
+      >
         {{ initials }}
       </span>
     }
@@ -20,6 +25,8 @@ export class AvatarComponent {
   @Input({ required: true }) name = '';
   @Input() image: string | null = null;
   @Input() size = 20;
+  /** Semantic color token suffix for the initials background, e.g. 'primary-500'. */
+  @Input() tone = 'primary-500';
 
   protected get initials(): string {
     const parts = this.name.trim().split(/\s+/).filter(Boolean);

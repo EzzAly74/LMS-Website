@@ -6,11 +6,13 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { LanguageService } from '../../../../core/services/language.service';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { EmptyStateComponent, EmptyStateConfig } from '../../../../shared/components/empty-state/empty-state.component';
 import { RatingStarsComponent } from '../../../../shared/components/rating-stars/rating-stars.component';
 import { CourseDetail, CourseDetailTab } from '../../models/course-detail.models';
 import { CourseDetailService } from '../../services/course-detail.service';
+import { CourseDetailSkeletonComponent } from '../course-detail-skeleton/course-detail-skeleton.component';
 import { CurriculumTabComponent } from '../curriculum-tab/curriculum-tab.component';
 import { InstructorTabComponent } from '../instructor-tab/instructor-tab.component';
 import { OverviewTabComponent } from '../overview-tab/overview-tab.component';
@@ -25,6 +27,7 @@ import { OverviewTabComponent } from '../overview-tab/overview-tab.component';
     BadgeComponent,
     RatingStarsComponent,
     EmptyStateComponent,
+    CourseDetailSkeletonComponent,
     OverviewTabComponent,
     CurriculumTabComponent,
     InstructorTabComponent,
@@ -104,7 +107,26 @@ export class CourseDetailPageComponent implements OnInit {
     }
   });
 
+  constructor() {
+    // Backend course text is localized via Accept-Language — refetch instead
+    // of leaving stale-language content on screen after a switch.
+    reloadOnLanguageChange(() => this.loadCourse());
+  }
+
   ngOnInit(): void {
+    this.loadCourse();
+  }
+
+  /**
+   * `showSkeleton` is false for the post-enrol silent refresh (only the CTA/
+   * enrolment state actually changed — replacing the whole page with a
+   * skeleton there would just be jarring), and true for the initial load and
+   * the locale-triggered reload, where the content itself is changing language.
+   */
+  private loadCourse(showSkeleton = true): void {
+    if (showSkeleton) {
+      this.loading.set(true);
+    }
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.service.getCourse(id).subscribe({
       next: (res) => {
@@ -147,7 +169,7 @@ export class CourseDetailPageComponent implements OnInit {
               this.translate.instant('feature.catalogue.enrol.success'),
               this.translate.instant('feature.catalogue.enrol.success_title'),
             );
-            this.ngOnInit();
+            this.loadCourse(false);
           } else {
             this.showError();
           }

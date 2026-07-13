@@ -1,5 +1,5 @@
 @if (loading()) {
-  <div class="detail-loading">{{ 'common.loading' | translate }}</div>
+  <app-course-detail-skeleton />
 } @else if (!course()) {
   <app-empty-state [config]="notFoundState" />
 } @else {
@@ -22,7 +22,7 @@
       </div>
 
       <h1 class="detail-hero__title">{{ c.title }}</h1>
-      <p class="detail-hero__desc">{{ c.description }}</p>
+      <p class="detail-hero__desc" [innerHTML]="c.description"></p>
 
       <div class="detail-hero__stats">
         <span><app-rating-stars [score]="c.rating.avg" [count]="c.rating.count" /></span>

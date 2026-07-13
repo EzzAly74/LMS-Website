@@ -4,6 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import {
   AnswerFeedback,
@@ -17,6 +18,7 @@ import {
 } from '../../models/course-player.models';
 import { CoursePlayerService } from '../../services/course-player.service';
 import { AssessmentResultsComponent } from '../assessment-results/assessment-results.component';
+import { CoursePlayerSkeletonComponent } from '../course-player-skeleton/course-player-skeleton.component';
 import { LessonViewerComponent } from '../lesson-viewer/lesson-viewer.component';
 import { QuizRunnerComponent } from '../quiz-runner/quiz-runner.component';
 
@@ -25,7 +27,15 @@ type ViewMode = 'lecture' | 'quiz' | 'results';
 @Component({
   selector: 'app-course-player-page',
   standalone: true,
-  imports: [TranslatePipe, RouterLink, BadgeComponent, LessonViewerComponent, QuizRunnerComponent, AssessmentResultsComponent],
+  imports: [
+    TranslatePipe,
+    RouterLink,
+    BadgeComponent,
+    CoursePlayerSkeletonComponent,
+    LessonViewerComponent,
+    QuizRunnerComponent,
+    AssessmentResultsComponent,
+  ],
   templateUrl: './course-player-page.component.html',
   styleUrl: './course-player-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -102,6 +112,17 @@ export class CoursePlayerPageComponent implements OnInit {
     if (idx >= 0 && idx < this.flatItems().length - 1) {
       this.selectItem(this.flatItems()[idx + 1]);
     }
+  }
+
+  constructor() {
+    // Backend lecture/quiz text is localized via Accept-Language — a switch
+    // shows the full page skeleton (like the initial load) and refetches the
+    // outline, then re-opens whichever item was active so the learner lands
+    // back where they were, just in the new language.
+    reloadOnLanguageChange(() => {
+      const activeBefore = this.activeItem();
+      this.loadOutline(false, activeBefore ?? undefined);
+    });
   }
 
   ngOnInit(): void {
@@ -202,7 +223,9 @@ export class CoursePlayerPageComponent implements OnInit {
     return !!take && this.currentQuestionIndex() < take.questions.length - 1;
   }
 
-  private loadOutline(silent = false): void {
+  /** `resumeItem` overrides the default "resume where the learner left off"
+   * pick — used to reopen the same item after a locale-triggered reload. */
+  private loadOutline(silent = false, resumeItem?: PlaylistItem): void {
     if (!silent) {
       this.loading.set(true);
     }
@@ -216,7 +239,7 @@ export class CoursePlayerPageComponent implements OnInit {
         this.expandedWeeks.set(new Set(res.result.weeks.map((w) => w.label)));
 
         if (!silent) {
-          const active = this.findResumeItem(res.result);
+          const active = resumeItem ?? this.findResumeItem(res.result);
           if (active) {
             this.selectItem(active);
           }

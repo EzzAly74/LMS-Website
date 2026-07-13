@@ -1,4 +1,4 @@
-@use 'mixins' as *;
+@use "mixins" as *;
 
 .lesson-viewer {
   display: flex;
@@ -7,7 +7,7 @@
 
   &__media {
     position: relative;
-    height: 300px;
+    height: 500px;
     border-radius: var(--radius-container-md);
     background: var(--color-neutral-1000);
     overflow: hidden;
@@ -49,7 +49,7 @@
   }
 
   &__placeholder-text {
-    @include typography('body-small', 'regular');
+    @include typography("body-small", "regular");
     color: var(--color-neutral-700);
   }
 
@@ -58,7 +58,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-16xs);
-    @include typography('body-small', 'medium');
+    @include typography("body-small", "medium");
     color: var(--color-primary-700);
   }
 
@@ -84,7 +84,7 @@
   }
 
   &__title {
-    @include typography('h2', 'bold');
+    @include typography("h2", "bold");
     color: var(--color-essential-secondary);
   }
 
@@ -93,12 +93,12 @@
     border-radius: var(--radius-control-xs);
     background: var(--color-neutral-300);
     color: var(--color-neutral-800);
-    @include typography('caption', 'medium');
+    @include typography("caption", "medium");
   }
 
   &__description,
   &__article-body {
-    @include typography('body-small', 'regular');
+    @include typography("body-small", "regular");
     color: var(--color-neutral-800);
   }
 
@@ -116,7 +116,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-16xs);
-    @include typography('body-small', 'regular');
+    @include typography("body-small", "regular");
     color: var(--color-neutral-700);
 
     i {
@@ -137,7 +137,7 @@
   }
 
   &__completion-question {
-    @include typography('body-small', 'medium');
+    @include typography("body-small", "medium");
     color: var(--color-essential-secondary);
   }
 
@@ -154,7 +154,7 @@
     color: var(--color-essential-primary);
     border: none;
     cursor: pointer;
-    @include typography('button', 'medium');
+    @include typography("button", "medium");
   }
 
   &__no-btn {
@@ -164,6 +164,6 @@
     color: var(--color-essential-secondary);
     border: var(--stroke-width-default) solid var(--color-neutral-500);
     cursor: pointer;
-    @include typography('button', 'medium');
+    @include typography("button", "medium");
   }
 }

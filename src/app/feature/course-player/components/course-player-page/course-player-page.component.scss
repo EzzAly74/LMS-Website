@@ -1,12 +1,5 @@
 @use 'mixins' as *;
 
-.player-loading {
-  @include typography('body', 'regular');
-  color: var(--color-neutral-700);
-  padding: var(--spacing-4xl);
-  text-align: center;
-}
-
 .course-player {
   display: grid;
   grid-template-columns: 300px 1fr;

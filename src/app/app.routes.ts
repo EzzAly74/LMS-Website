@@ -49,8 +49,14 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./feature/course-player/course-player.routes').then((m) => m.COURSE_PLAYER_ROUTES),
       },
-      // Guarded learner features (Profile, Notifications) are wired here as
-      // each is built. authGuard is applied per feature route.
+      {
+        path: LmsRoutes.Notifications,
+        canActivate: [authGuard],
+        loadChildren: () =>
+          import('./feature/notifications/notifications.routes').then((m) => m.NOTIFICATIONS_ROUTES),
+      },
+      // Guarded learner features (Profile) are wired here as each is built.
+      // authGuard is applied per feature route.
     ],
   },
   { path: '**', redirectTo: LmsRoutes.Catalogue },

@@ -1,0 +1,30 @@
+<div class="notifications-page">
+  <header class="notifications-page__header">
+    <h1 class="notifications-page__title">{{ 'core.notifications.title' | translate }}</h1>
+    @if (inbox.unreadCount() > 0) {
+      <button type="button" class="notifications-page__mark-all" (click)="onMarkAllRead()">
+        {{ 'core.notifications.mark_all_read' | translate }}
+      </button>
+    }
+  </header>
+
+  @if (inbox.loading()) {
+    <div class="notifications-page__list">
+      @for (s of skeletons; track $index) {
+        <app-notification-skeleton />
+      }
+    </div>
+  } @else if (inbox.items().length === 0) {
+    <app-empty-state [config]="emptyState" />
+  } @else {
+    <div class="notifications-page__list">
+      @for (item of inbox.items(); track item.id) {
+        <app-notification-list-item [item]="item" (activate)="onActivate($event)" />
+      }
+    </div>
+
+    @if (inbox.hasMore()) {
+      <app-load-more [loading]="inbox.loadingMore()" (loadMore)="onLoadMore()" />
+    }
+  }
+</div>

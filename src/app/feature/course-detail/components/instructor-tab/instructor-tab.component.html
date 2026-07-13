@@ -11,5 +11,5 @@
 </div>
 
 @if (instructor.bio) {
-  <p class="instructor-bio">{{ instructor.bio }}</p>
+  <p class="instructor-bio" [innerHTML]="instructor.bio"></p>
 }

@@ -1,0 +1,56 @@
+.detail-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4xl);
+  padding-block: var(--spacing-4xl);
+
+  &__hero {
+    display: grid;
+    grid-template-columns: 1fr 316px;
+    gap: var(--spacing-4xl);
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-13xs);
+  }
+
+  &__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-3xl);
+    margin-top: var(--spacing-13xs);
+  }
+
+  &__card {
+    align-self: start;
+    border: var(--stroke-width-default) solid var(--color-neutral-400);
+    border-radius: var(--radius-container-md);
+    overflow: hidden;
+  }
+
+  &__card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-15xs);
+    padding: var(--spacing-14xs);
+  }
+
+  &__tabs {
+    display: flex;
+    gap: var(--spacing-4xl);
+    padding-bottom: var(--spacing-13xs);
+    border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-13xs);
+  }
+}

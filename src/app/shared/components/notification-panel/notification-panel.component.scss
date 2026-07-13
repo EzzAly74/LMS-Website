@@ -1,0 +1,60 @@
+@use 'mixins' as *;
+
+:host {
+  position: absolute;
+  inset-block-start: calc(100% + var(--spacing-15xs));
+  inset-inline-end: 0;
+  z-index: 110;
+  width: 360px;
+}
+
+.notif-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-essential-primary);
+  border: var(--stroke-width-default) solid var(--color-neutral-300);
+  border-radius: var(--radius-container-md);
+  box-shadow: var(--elevation-shadow-lg);
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-13xs);
+    padding: var(--spacing-11xs) var(--spacing-9xs);
+    border-bottom: var(--stroke-width-default) solid var(--color-neutral-300);
+  }
+
+  &__title {
+    @include typography('subtitle-small', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__mark-all {
+    border: none;
+    background: none;
+    padding: 0;
+    color: var(--color-primary-700);
+    @include typography('caption', 'medium');
+    cursor: pointer;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-17xs);
+    padding: var(--spacing-15xs);
+    overflow-y: auto;
+    max-height: 380px;
+  }
+
+  &__view-all {
+    display: block;
+    text-align: center;
+    padding: var(--spacing-13xs) var(--spacing-9xs);
+    border-top: var(--stroke-width-default) solid var(--color-neutral-300);
+    color: var(--color-primary-700);
+    @include typography('body-small', 'medium');
+  }
+}

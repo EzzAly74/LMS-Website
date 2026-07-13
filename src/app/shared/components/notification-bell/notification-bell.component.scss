@@ -1,0 +1,42 @@
+.notif-bell {
+  position: relative;
+  display: inline-flex;
+}
+
+.notif-bell__trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--notif-bell-size, var(--size-36));
+  height: var(--notif-bell-size, var(--size-36));
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--color-essential-secondary);
+  cursor: pointer;
+
+  .pi {
+    font-size: var(--size-18);
+  }
+}
+
+.notif-bell__badge {
+  position: absolute;
+  inset-block-start: -5px;
+  inset-inline-end: -5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--size-18);
+  height: var(--size-18);
+  padding-inline: var(--spacing-17xs);
+  border: var(--stroke-width-2) solid var(--color-neutral-0);
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-500);
+  color: var(--color-neutral-0);
+  font-family: var(--font-family-english);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  line-height: 10px;
+}

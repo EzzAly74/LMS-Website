@@ -7,5 +7,11 @@
     flex: 1;
     // Clear the fixed floating header (top offset 24 + 64 tall + breathing room).
     padding-top: calc(var(--spacing-7xs) + var(--size-64) + var(--spacing-7xs));
+
+    // Below 900px the header becomes a flush, non-floating 60px bar (see
+    // header.component.scss) — clear exactly its height, no extra gap.
+    @media (max-width: 900px) {
+      padding-top: var(--size-60);
+    }
   }
 }

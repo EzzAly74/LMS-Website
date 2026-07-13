@@ -41,17 +41,33 @@
       "settings": "Settings",
       "logout": "Logout"
     },
+    "notifications": {
+      "title": "Notifications",
+      "mark_all_read": "Mark all as read",
+      "view_all": "View all notifications",
+      "empty": {
+        "title": "You're all caught up",
+        "message": "New activity on your courses will show up here."
+      }
+    },
     "footer": {
+      "nav": {
+        "catalogue": "Catalogue",
+        "who_we_are": "Who we are",
+        "contact_us": "Contact Us"
+      },
       "newsletter": {
-        "title": "Stay in the loop",
+        "title": "Get the freshest courses from us",
         "email_label": "Email address",
-        "email_ph": "Enter your email",
-        "subscribe": "Subscribe"
+        "email_ph": "Your email address..",
+        "subscribe": "Subscribe",
+        "success": "Thanks for subscribing — look out for our next update."
       },
       "legal": {
         "terms": "Terms & Conditions",
         "privacy": "Privacy Policy"
-      }
+      },
+      "copyright": "Design with love © TanahAirStudio {{year}}. All right reserved"
     }
   },
   "feature": {

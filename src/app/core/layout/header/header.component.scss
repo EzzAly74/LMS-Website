@@ -1,4 +1,4 @@
-@use 'mixins' as *;
+@use "mixins" as *;
 
 .app-nav {
   position: fixed;
@@ -44,7 +44,7 @@
     a {
       padding: var(--spacing-15xs) var(--spacing-8xs);
       color: var(--color-essential-secondary);
-      @include typography('body-small', 'medium');
+      @include typography("body-small", "medium");
 
       &.is-active {
         color: var(--color-primary-700);
@@ -81,12 +81,54 @@
     border-radius: var(--radius-control-sm);
     color: var(--color-essential-tertiary);
     box-shadow: var(--elevation-shadow-sm);
-    @include typography('body-small', 'medium');
+    @include typography("body-small", "medium");
   }
 
   &__profile {
-    color: var(--color-primary-700);
-    @include typography('body-small', 'bold');
+    position: relative;
+    display: inline-flex;
+  }
+
+  &__profile-trigger {
+    display: inline-flex;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: var(--radius-pill);
+  }
+
+  &__profile-menu {
+    position: absolute;
+    inset-block-start: calc(100% + var(--spacing-15xs));
+    inset-inline-end: 0;
+    z-index: 110;
+    display: flex;
+    flex-direction: column;
+    min-width: 168px;
+    padding: var(--spacing-15xs);
+    background: var(--color-essential-primary);
+    border: var(--stroke-width-default) solid var(--color-neutral-300);
+    border-radius: var(--radius-container-md);
+    box-shadow: var(--elevation-shadow-lg);
+
+    a,
+    button {
+      display: block;
+      width: 100%;
+      padding: var(--spacing-14xs) var(--spacing-11xs);
+      border: none;
+      border-radius: var(--radius-control-xs);
+      background: none;
+      text-align: start;
+      color: var(--color-essential-secondary);
+      cursor: pointer;
+      @include typography("body-small", "medium");
+
+      &:hover {
+        background: var(--color-neutral-50);
+      }
+    }
   }
 
   &__cta {
@@ -96,6 +138,148 @@
     border-radius: var(--radius-control-sm);
     background: var(--color-essential-tertiary);
     color: var(--color-essential-primary);
-    @include typography('body-small', 'medium');
+    @include typography("body-small", "medium");
+  }
+
+  &__burger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--size-36);
+    height: var(--size-36);
+    border: none;
+    background: none;
+    color: var(--color-essential-secondary);
+
+    .pi {
+      font-size: var(--size-24);
+    }
+  }
+
+  // Drawer/backdrop are only ever opened by the mobile burger, but keep an
+  // explicit desktop-width kill switch: a viewport resized past the
+  // breakpoint while the drawer is open (e.g. rotating a tablet, or a
+  // manual browser resize) must not leave a stray overlay on the desktop
+  // layout, since the open/close signal isn't tied to breakpoint changes.
+  &__backdrop,
+  &__drawer {
+    @media (min-width: 900.02px) {
+      display: none;
+    }
+  }
+
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    background: var(--elevation-surface-overlay);
+    z-index: 105;
+  }
+
+  &__drawer {
+    position: fixed;
+    inset-inline: var(--spacing-13xs);
+    inset-block-start: calc(var(--size-64) + var(--spacing-9xs));
+    z-index: 106;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-11xs);
+    max-height: calc(100vh - var(--size-64) - var(--spacing-11xl));
+    overflow-y: auto;
+    padding: var(--spacing-9xs);
+    background: var(--color-essential-primary);
+    border-radius: var(--radius-container-md);
+    box-shadow: var(--elevation-shadow-xl);
+  }
+
+  &__drawer-links {
+    display: flex;
+    flex-direction: column;
+
+    a {
+      padding: var(--spacing-11xs) var(--spacing-9xs);
+      border-radius: var(--radius-control-xs);
+      color: var(--color-essential-secondary);
+      @include typography("body", "medium");
+
+      &.is-active {
+        color: var(--color-primary-700);
+        background: var(--color-primary-100);
+      }
+    }
+  }
+
+  &__drawer-lang {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-15xs);
+    padding: var(--spacing-11xs) var(--spacing-9xs);
+    border: var(--stroke-width-default) solid var(--color-neutral-300);
+    border-radius: var(--radius-control-xs);
+    background: none;
+    color: var(--color-essential-secondary);
+    @include typography("body-small", "medium");
+
+    .pi {
+      font-size: var(--size-18);
+    }
+  }
+
+  &__drawer-auth {
+    display: flex;
+    flex-direction: column;
+    border-top: var(--stroke-width-default) solid var(--color-neutral-300);
+    padding-top: var(--spacing-11xs);
+
+    a,
+    button {
+      padding: var(--spacing-11xs) var(--spacing-9xs);
+      border: none;
+      border-radius: var(--radius-control-xs);
+      background: none;
+      text-align: start;
+      color: var(--color-essential-secondary);
+      cursor: pointer;
+      @include typography("body", "medium");
+    }
+  }
+
+  &__drawer-cta {
+    height: var(--size-44);
+    border: none;
+    border-radius: var(--radius-control-sm);
+    background: var(--color-essential-tertiary);
+    color: var(--color-essential-primary);
+    @include typography("body-small", "medium");
+  }
+
+  @media (max-width: 900px) {
+    inset-block-start: 0;
+    padding-inline: 0;
+
+    &__bar {
+      max-width: 100%;
+      height: var(--size-60);
+      padding-inline: var(--spacing-11xs);
+      border-radius: 0;
+      border-bottom: none;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &__links,
+    &__lang,
+    &__profile,
+    &__login,
+    &__cta {
+      display: none;
+    }
+
+    &__burger {
+      display: inline-flex;
+    }
+
+    app-notification-bell {
+      --notif-bell-size: 30px;
+    }
   }
 }

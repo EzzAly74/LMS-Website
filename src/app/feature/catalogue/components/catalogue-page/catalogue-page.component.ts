@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { NotificationService } from '../../../../core/services/notification.service';
+import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { CardSkeletonComponent } from '../../../../shared/components/card-skeleton/card-skeleton.component';
 import {
   EmptyStateComponent,
@@ -88,6 +89,16 @@ export class CataloguePageComponent implements OnInit {
   protected readonly filterConfig = computed<FilterSidebarConfig>(() =>
     this.buildFilterConfig(this.filterMeta(), this.jobRoles()),
   );
+
+  constructor() {
+    // Backend course/filter text is localized via Accept-Language — refetch
+    // instead of leaving stale-language content on screen after a switch.
+    reloadOnLanguageChange(() => {
+      this.loadJobRoles();
+      this.loadScopes();
+      this.loadCourses(true);
+    });
+  }
 
   ngOnInit(): void {
     this.seedFromQueryParams();

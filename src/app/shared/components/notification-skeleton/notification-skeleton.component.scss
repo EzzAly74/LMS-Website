@@ -1,0 +1,14 @@
+.notif-skeleton {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-13xs);
+  width: 100%;
+  padding: var(--spacing-13xs) var(--spacing-11xs);
+
+  &__body {
+    flex: 1 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-15xs);
+  }
+}
