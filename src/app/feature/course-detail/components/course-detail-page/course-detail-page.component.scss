@@ -24,17 +24,29 @@
   }
 }
 
-.detail-hero {
+// The enrolment card sits beside the ENTIRE left column (hero text + tabs),
+// not just the hero — otherwise a taller card reserves grid-row height the
+// hero-only column doesn't need, leaving a dead gap above the tabs.
+.detail-layout {
   display: grid;
   grid-template-columns: 1fr 316px;
   gap: var(--spacing-4xl);
   padding-block: var(--spacing-4xl);
+  align-items: start;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
   }
+}
 
-  &__eyebrow {
+.detail-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.detail-hero__main {
+  .detail-hero__eyebrow {
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-16xs);
@@ -48,20 +60,20 @@
     }
   }
 
-  &__title {
+  .detail-hero__title {
     margin-top: var(--spacing-13xs);
     @include typography('h1', 'bold');
     color: var(--color-essential-secondary);
   }
 
-  &__desc {
+  .detail-hero__desc {
     margin-top: var(--spacing-14xs);
     max-width: 640px;
     @include typography('body', 'regular');
     color: var(--color-neutral-800);
   }
 
-  &__stats {
+  .detail-hero__stats {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -81,7 +93,7 @@
     }
   }
 
-  &__qualifications {
+  .detail-hero__qualifications {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -91,7 +103,7 @@
     color: var(--color-neutral-800);
   }
 
-  &__qtag {
+  .detail-hero__qtag {
     padding: var(--spacing-17xs) var(--spacing-15xs);
     border-radius: var(--radius-full);
     background: var(--color-primary-200);
@@ -237,7 +249,7 @@
 }
 
 .detail-content {
-  padding-block: var(--spacing-4xl);
+  margin-top: var(--spacing-4xl);
 }
 
 .detail-tabs {

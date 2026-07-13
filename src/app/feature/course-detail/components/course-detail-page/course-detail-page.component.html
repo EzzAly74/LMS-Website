@@ -5,48 +5,84 @@
 } @else {
   @let c = course()!;
 
-  <section class="detail-hero">
-    <div class="detail-hero__main">
-      <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a [routerLink]="catalogueRoute">{{ 'feature.catalogue.title' | translate }}</a>
-        <span>›</span>
-        <span>{{ c.title }}</span>
-      </nav>
+  <div class="detail-layout">
+    <div class="detail-main">
+      <div class="detail-hero__main">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a [routerLink]="catalogueRoute">{{ 'feature.catalogue.title' | translate }}</a>
+          <span>›</span>
+          <span>{{ c.title }}</span>
+        </nav>
 
-      <div class="detail-hero__eyebrow">
-        <i class="pi pi-circle-fill"></i>
-        <span>{{ 'feature.catalogue.delivery.' + c.course_type | translate }}</span>
-        @if (c.level) {
-          <span>· {{ 'feature.catalogue.level.' + c.level | translate }}</span>
-        }
-      </div>
-
-      <h1 class="detail-hero__title">{{ c.title }}</h1>
-      <p class="detail-hero__desc" [innerHTML]="c.description"></p>
-
-      <div class="detail-hero__stats">
-        <span><app-rating-stars [score]="c.rating.avg" [count]="c.rating.count" /></span>
-        <span><i class="pi pi-users"></i><b>{{ c.enrolled_users_count }}</b> {{ 'feature.course_detail.hero.enrolled' | translate }}</span>
-        @if (c.duration_weeks) {
-          <span><i class="pi pi-clock"></i><b>{{ 'feature.course_detail.curriculum.duration_weeks' | translate: { count: c.duration_weeks } }}</b></span>
-        }
-        @if (c.anchor_cohort) {
-          <span>
-            <i class="pi pi-calendar"></i>
-            {{ 'feature.catalogue.card.starts' | translate }}
-            <b>{{ c.anchor_cohort.start_date | date: 'mediumDate' }}</b>
-          </span>
-        }
-      </div>
-
-      @if (c.qualifications.length) {
-        <div class="detail-hero__qualifications">
-          <span>{{ 'feature.course_detail.hero.earns' | translate }}</span>
-          @for (q of c.qualifications; track q.id) {
-            <span class="detail-hero__qtag">{{ q.name }}</span>
+        <div class="detail-hero__eyebrow">
+          <i class="pi pi-circle-fill"></i>
+          <span>{{ 'feature.catalogue.delivery.' + c.course_type | translate }}</span>
+          @if (c.level) {
+            <span>· {{ 'feature.catalogue.level.' + c.level | translate }}</span>
           }
         </div>
-      }
+
+        <h1 class="detail-hero__title">{{ c.title }}</h1>
+        <p class="detail-hero__desc" [innerHTML]="c.description"></p>
+
+        <div class="detail-hero__stats">
+          <span><app-rating-stars [score]="c.rating.avg" [count]="c.rating.count" /></span>
+          <span><i class="pi pi-users"></i><b>{{ c.enrolled_users_count }}</b> {{ 'feature.course_detail.hero.enrolled' | translate }}</span>
+          @if (c.duration_weeks) {
+            <span><i class="pi pi-clock"></i><b>{{ 'feature.course_detail.curriculum.duration_weeks' | translate: { count: c.duration_weeks } }}</b></span>
+          }
+          @if (c.anchor_cohort) {
+            <span>
+              <i class="pi pi-calendar"></i>
+              {{ 'feature.catalogue.card.starts' | translate }}
+              <b>{{ c.anchor_cohort.start_date | date: 'mediumDate' }}</b>
+            </span>
+          }
+        </div>
+
+        @if (c.qualifications.length) {
+          <div class="detail-hero__qualifications">
+            <span>{{ 'feature.course_detail.hero.earns' | translate }}</span>
+            @for (q of c.qualifications; track q.id) {
+              <span class="detail-hero__qtag">{{ q.name }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <section class="detail-content">
+        <nav class="detail-tabs" role="tablist">
+          <button type="button" role="tab" [class.is-active]="activeTab() === 'overview'" (click)="setTab('overview')">
+            {{ 'feature.course_detail.tabs.overview' | translate }}
+          </button>
+          <button type="button" role="tab" [class.is-active]="activeTab() === 'curriculum'" (click)="setTab('curriculum')">
+            {{ 'feature.course_detail.tabs.curriculum' | translate }}
+          </button>
+          <button type="button" role="tab" [class.is-active]="activeTab() === 'instructor'" (click)="setTab('instructor')">
+            {{ 'feature.course_detail.tabs.instructor' | translate }}
+          </button>
+        </nav>
+
+        <div class="detail-tab-content">
+          @switch (activeTab()) {
+            @case ('overview') {
+              <app-overview-tab
+                [whatYouWillLearn]="whatYouWillLearn()"
+                [requirements]="requirements()"
+                [qualifications]="c.qualifications"
+              />
+            }
+            @case ('curriculum') {
+              <app-curriculum-tab [units]="c.units" [durationWeeks]="c.duration_weeks" />
+            }
+            @case ('instructor') {
+              @if (instructor(); as inst) {
+                <app-instructor-tab [instructor]="inst" [rating]="c.rating" />
+              }
+            }
+          }
+        </div>
+      </section>
     </div>
 
     <aside class="enrolment-card">
@@ -117,39 +153,5 @@
         }
       </div>
     </aside>
-  </section>
-
-  <section class="detail-content">
-    <nav class="detail-tabs" role="tablist">
-      <button type="button" role="tab" [class.is-active]="activeTab() === 'overview'" (click)="setTab('overview')">
-        {{ 'feature.course_detail.tabs.overview' | translate }}
-      </button>
-      <button type="button" role="tab" [class.is-active]="activeTab() === 'curriculum'" (click)="setTab('curriculum')">
-        {{ 'feature.course_detail.tabs.curriculum' | translate }}
-      </button>
-      <button type="button" role="tab" [class.is-active]="activeTab() === 'instructor'" (click)="setTab('instructor')">
-        {{ 'feature.course_detail.tabs.instructor' | translate }}
-      </button>
-    </nav>
-
-    <div class="detail-tab-content">
-      @switch (activeTab()) {
-        @case ('overview') {
-          <app-overview-tab
-            [whatYouWillLearn]="whatYouWillLearn()"
-            [requirements]="requirements()"
-            [qualifications]="c.qualifications"
-          />
-        }
-        @case ('curriculum') {
-          <app-curriculum-tab [units]="c.units" [durationWeeks]="c.duration_weeks" />
-        }
-        @case ('instructor') {
-          @if (instructor(); as inst) {
-            <app-instructor-tab [instructor]="inst" [rating]="c.rating" />
-          }
-        }
-      }
-    </div>
-  </section>
+  </div>
 }
