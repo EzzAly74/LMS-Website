@@ -217,6 +217,79 @@
         "message": "سجّل في دورة من الدورات المتاحة لتبدأ التعلّم."
       }
     },
+    "profile": {
+      "eyebrow": "ملف المتعلّم",
+      "logout": "تسجيل الخروج",
+      "search_ph": "ابحث في الدورات والمؤهلات والمدرّبين…",
+      "stats": {
+        "required": "مطلوبة",
+        "earned": "مُنجزة",
+        "in_progress": "قيد التقدّم",
+        "not_started": "لم تبدأ"
+      },
+      "tabs": {
+        "qualifications": "المؤهلات",
+        "my_learnings": "تعلّمي",
+        "my_schedule": "جدولي"
+      },
+      "qualifications": {
+        "earned": "الدورات المُنجزة",
+        "uncovered": "الدورات غير المُغطّاة",
+        "completed_on": "اكتملت في",
+        "also_in": "أيضًا ضمن:",
+        "no_cohort": "لا توجد مجموعة مجدولة",
+        "cohort_scheduled": "مجموعة متاحة للتسجيل",
+        "download_certificate": "تحميل الشهادة",
+        "notify_me": "أعلمني عند فتح المجموعة القادمة",
+        "empty": {
+          "title": "لا توجد مؤهلات مُسندة",
+          "message": "ستظهر هنا المؤهلات المرتبطة بمسمّاك الوظيفي."
+        }
+      },
+      "learnings": {
+        "tabs": {
+          "upcoming": "القادمة",
+          "current": "الحالية",
+          "completed": "المكتملة"
+        },
+        "starts_in": "تبدأ خلال {{count}} يوم",
+        "view_details": "عرض التفاصيل",
+        "review": "مراجعة",
+        "completed_on": "اكتملت في",
+        "score": "النتيجة: {{score}}٪",
+        "not_certified": "غير معتمدة",
+        "enrol_again": "سجّل مرة أخرى",
+        "empty": {
+          "upcoming": "لا توجد دورات قادمة",
+          "current": "لا توجد دورات قيد التقدّم",
+          "completed": "لا توجد دورات مكتملة بعد",
+          "message": "ستظهر هنا الدورات المُسجَّل بها."
+        },
+        "rating": {
+          "question": "كيف تجد هذه الدورة؟",
+          "subtitle": "تقييمك يساعد في تحسين المجموعات القادمة.",
+          "comment_label": "أضف تعليقًا (اختياري):",
+          "comment_ph": "تعليقك...",
+          "submit": "إرسال",
+          "thanks": "شكرًا لملاحظاتك!",
+          "very_unsatisfied": "غير راضٍ إطلاقًا",
+          "unsatisfied": "غير راضٍ",
+          "neutral": "محايد",
+          "satisfied": "راضٍ",
+          "very_satisfied": "راضٍ جدًا"
+        }
+      },
+      "sidebar": {
+        "active_session": "الجلسة النشطة",
+        "join_session": "انضم إلى الجلسة",
+        "live_now": "مباشر الآن",
+        "my_attendance": "حضوري",
+        "present": "حاضر",
+        "absent": "غائب",
+        "no_sessions": "لا توجد جلسات مجدولة بعد.",
+        "at_risk": "الشهادة في خطر — نسبة حضورك أقل من الحد المطلوب."
+      }
+    },
     "course_player": {
       "back": "تعلّمي",
       "modules_completed": "{{completed}} من {{total}} وحدات مكتملة",

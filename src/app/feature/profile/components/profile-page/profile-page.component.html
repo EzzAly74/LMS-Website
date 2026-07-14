@@ -1,0 +1,90 @@
+<section class="profile-hero">
+  <div class="profile-hero__inner">
+    <div class="profile-hero__identity">
+      @if (loading()) {
+        <app-shimmer width="56px" height="56px" radius="var(--radius-pill)" />
+        <div class="profile-hero__id-text">
+          <app-shimmer width="90px" height="12px" />
+          <app-shimmer width="180px" height="24px" />
+          <app-shimmer width="140px" height="12px" />
+        </div>
+      } @else {
+        @if (summary(); as s) {
+          <app-avatar
+            class="profile-hero__avatar"
+            [name]="s.learner.name"
+            [image]="s.learner.image"
+            [size]="56"
+            tone="primary-500"
+          />
+          <div class="profile-hero__id-text">
+            <span class="profile-hero__eyebrow">{{ 'feature.profile.eyebrow' | translate }}</span>
+            <h1 class="profile-hero__name">{{ s.learner.name }}</h1>
+            @if (s.learner.job_title?.name || s.learner.department_name) {
+              <p class="profile-hero__role">{{ s.learner.job_title?.name ?? s.learner.department_name }}</p>
+            }
+          </div>
+        }
+      }
+    </div>
+
+    <div class="profile-hero__stats">
+      @for (counter of counters; track counter.key) {
+        <div class="profile-hero__stat">
+          <span class="profile-hero__stat-value">{{ counterValues()[counter.key] }}</span>
+          <span class="profile-hero__stat-label">{{ counter.labelKey | translate }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<div class="profile-body">
+  <div class="profile-body__logout-row">
+    <button type="button" class="profile-body__logout" (click)="logout()">
+      <img src="assets/icons/profile/logout.svg" alt="" aria-hidden="true" />
+      {{ 'feature.profile.logout' | translate }}
+    </button>
+  </div>
+
+  <div class="profile-body__search">
+    <img class="profile-body__search-icon" src="assets/icons/profile/search.svg" alt="" aria-hidden="true" />
+    <input
+      type="search"
+      [placeholder]="'feature.profile.search_ph' | translate"
+      (input)="onSearch($any($event.target).value)"
+    />
+  </div>
+
+  <nav class="profile-tabs" role="tablist">
+    <button type="button" role="tab" [class.is-active]="activeTab() === 'qualifications'"
+      (click)="setTab('qualifications')">
+      {{ 'feature.profile.tabs.qualifications' | translate }}
+    </button>
+    <button type="button" role="tab" [class.is-active]="activeTab() === 'my_learnings'"
+      (click)="setTab('my_learnings')">
+      {{ 'feature.profile.tabs.my_learnings' | translate }}
+    </button>
+    <button type="button" role="tab" class="profile-tabs__mobile-only"
+      [class.is-active]="activeTab() === 'schedule'" (click)="setTab('schedule')">
+      {{ 'feature.profile.tabs.my_schedule' | translate }}
+    </button>
+  </nav>
+
+  <div class="profile-layout">
+    <div class="profile-layout__main">
+      @if (activeTab() === 'my_learnings') {
+      <app-my-learnings-tab [courses]="learnings()" [completedCourses]="completed()" [loading]="loading()"
+        [search]="searchTerm()" (activeCourseChange)="onActiveCourseChange($event)" />
+      } @else if (activeTab() === 'schedule') {
+      <app-profile-sidebar [activeCourse]="activeCourse()" [courses]="learnings()" tab="my_learnings" />
+      } @else {
+      <app-qualifications-tab [qualifications]="qualifications()" [loading]="loading()" [search]="searchTerm()" />
+      }
+    </div>
+
+    <aside class="profile-layout__side">
+      <app-profile-sidebar [activeCourse]="activeCourse()" [courses]="learnings()" [tab]="activeTab()" />
+    </aside>
+  </div>
+</div>

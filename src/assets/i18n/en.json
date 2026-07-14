@@ -217,6 +217,79 @@
         "message": "Enrol in a course from the catalogue to start learning."
       }
     },
+    "profile": {
+      "eyebrow": "Learner Profile",
+      "logout": "Log out",
+      "search_ph": "Search courses, qualifications, instructors…",
+      "stats": {
+        "required": "Required",
+        "earned": "Earned",
+        "in_progress": "In Progress",
+        "not_started": "Not Started"
+      },
+      "tabs": {
+        "qualifications": "Qualifications",
+        "my_learnings": "My Learnings",
+        "my_schedule": "My Schedule"
+      },
+      "qualifications": {
+        "earned": "Earned Courses",
+        "uncovered": "Uncovered Courses",
+        "completed_on": "Completed",
+        "also_in": "Also in:",
+        "no_cohort": "No cohort scheduled",
+        "cohort_scheduled": "Cohort open for enrolment",
+        "download_certificate": "Download certificate",
+        "notify_me": "Notify me when the next cohort opens",
+        "empty": {
+          "title": "No qualifications assigned",
+          "message": "Qualifications tied to your role will appear here."
+        }
+      },
+      "learnings": {
+        "tabs": {
+          "upcoming": "Upcoming",
+          "current": "Current",
+          "completed": "Completed"
+        },
+        "starts_in": "Starts in {{count}} days",
+        "view_details": "View Details",
+        "review": "Review",
+        "completed_on": "Completed",
+        "score": "Score: {{score}}%",
+        "not_certified": "Not certified",
+        "enrol_again": "Enrol again",
+        "empty": {
+          "upcoming": "No upcoming courses",
+          "current": "No courses in progress",
+          "completed": "No completed courses yet",
+          "message": "Your enrolled courses will show up here."
+        },
+        "rating": {
+          "question": "How are you finding this course?",
+          "subtitle": "Your rating helps improve future cohorts.",
+          "comment_label": "Add a comment (optional):",
+          "comment_ph": "Your comment...",
+          "submit": "Submit",
+          "thanks": "Thanks for your feedback!",
+          "very_unsatisfied": "Very Unsatisfied",
+          "unsatisfied": "Unsatisfied",
+          "neutral": "Neutral",
+          "satisfied": "Satisfied",
+          "very_satisfied": "Very Satisfied"
+        }
+      },
+      "sidebar": {
+        "active_session": "Active Session",
+        "join_session": "Join session",
+        "live_now": "Live now",
+        "my_attendance": "My Attendance",
+        "present": "Present",
+        "absent": "Absent",
+        "no_sessions": "No sessions scheduled yet.",
+        "at_risk": "Certificate at risk — your attendance is below the required threshold."
+      }
+    },
     "course_player": {
       "back": "My Learnings",
       "modules_completed": "{{completed}} of {{total}} modules completed",

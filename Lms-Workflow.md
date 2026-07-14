@@ -288,6 +288,54 @@ https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1049-19229&t=Oc9
 
 ---
 
+PROFILE FLOW
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=832-41307&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=839-43153&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=841-42290&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=841-42746&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=841-43294&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=851-43960&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1047-63328&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=851-44908&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=951-48857&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=851-45445&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=949-46601&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=951-49986&m=dev
+
+MOBILE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-51541&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-53546&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-53788&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-52323&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1050-55598&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-51866&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-53080&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-52127&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=988-51132&m=dev
+
+---
+
 # FIGMA EXECUTION RULES
 
 You MUST inspect every single Figma screen.

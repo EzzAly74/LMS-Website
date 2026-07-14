@@ -1,0 +1,176 @@
+<div class="ml-tabs" role="tablist">
+  @for (t of tabs; track t) {
+    <button
+      type="button"
+      role="tab"
+      class="ml-tabs__pill"
+      [class.is-active]="status() === t"
+      (click)="setStatus(t)"
+    >
+      {{ 'feature.profile.learnings.tabs.' + t | translate }}
+    </button>
+  }
+</div>
+
+@if (loading) {
+  <div class="ml-list">
+    @for (s of skeletons; track $index) {
+      <div class="ml-row ml-row--skeleton">
+        <app-shimmer width="58px" height="58px" radius="var(--radius-control-md)" />
+        <div class="ml-row__grow">
+          <app-shimmer width="45%" height="18px" />
+          <app-shimmer width="70%" height="13px" />
+        </div>
+      </div>
+    }
+  </div>
+} @else if (status() === 'completed') {
+  @if (completed().length === 0) {
+    <app-empty-state [config]="emptyState" />
+  } @else {
+    <div class="ml-list">
+      @for (course of completed(); track course.course_id) {
+        <article class="ml-row">
+          <div
+            class="ml-row__thumb"
+            [style.background-image]="course.image ? 'url(' + course.image + ')' : null"
+          ></div>
+          <div class="ml-row__body">
+            <h3 class="ml-row__title">{{ course.title }}</h3>
+            <p class="ml-row__meta">
+              @if (course.completed_at) {
+                {{ 'feature.profile.learnings.completed_on' | translate }} {{ course.completed_at | date: 'mediumDate' }}
+              }
+              @if (course.score_percent !== null) {
+                · {{ 'feature.profile.learnings.score' | translate: { score: course.score_percent } }}
+              }
+            </p>
+            <div class="ml-row__foot">
+              @if (course.certificate_earned) {
+                <app-badge tone="certificate" status="earned" icon="pi-verified" [label]="'feature.my_learnings.certificate.earned' | translate" />
+                <a
+                  class="ml-row__cta"
+                  [href]="'/api/v1/learner/profile/certificates/' + course.certificate_id + '/download'"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <i class="pi pi-download"></i>
+                  {{ 'feature.profile.qualifications.download_certificate' | translate }}
+                </a>
+              } @else {
+                <app-badge tone="certificate" status="at_risk" icon="pi-info-circle" [label]="'feature.profile.learnings.not_certified' | translate" />
+                <a class="ml-row__link" [routerLink]="[catalogueBase, course.course_id]">
+                  {{ 'feature.profile.learnings.enrol_again' | translate }} <i class="pi pi-arrow-right"></i>
+                </a>
+              }
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+} @else if (visible().length === 0) {
+  <app-empty-state [config]="emptyState" />
+} @else {
+  <div class="ml-list">
+    @for (course of visible(); track course.id) {
+      <article class="ml-row">
+        <div
+          class="ml-row__thumb"
+          [style.background-image]="course.image ? 'url(' + course.image + ')' : null"
+        ></div>
+
+        <div class="ml-row__body">
+          <div class="ml-row__head">
+            <h3 class="ml-row__title">{{ course.title }}</h3>
+            @if (status() === 'upcoming' && startsInDays(course); as days) {
+              <span class="ml-row__starts">
+                <i class="pi pi-clock"></i>
+                {{ 'feature.profile.learnings.starts_in' | translate: { count: days } }}
+              </span>
+            }
+          </div>
+
+          <p class="ml-row__meta">
+            {{ 'feature.catalogue.delivery.' + course.course_type | translate }}
+            @if (course.progress.total_sessions) {
+              · {{ 'feature.my_learnings.card.sessions' | translate: { count: course.progress.total_sessions } }}
+            }
+            @if (course.cohort?.start_date) {
+              · {{ 'feature.my_learnings.card.started' | translate }} {{ course.cohort!.start_date | date: 'mediumDate' }}
+            }
+          </p>
+
+          @if (status() === 'current') {
+            <div class="ml-row__progress">
+              <span class="ml-row__track"><span class="ml-row__fill" [style.width.%]="course.progress.percent"></span></span>
+              <span class="ml-row__pct">{{ course.progress.percent }}%</span>
+            </div>
+          }
+
+          <div class="ml-row__foot">
+            @if (course.rate) {
+              <app-badge tone="certificate" status="on_track" icon="pi-star-fill" [label]="course.rate_label ?? (course.rate + '/5')" />
+            }
+
+            @if (status() === 'upcoming') {
+              <a class="ml-row__link" [routerLink]="[catalogueBase, course.id]">
+                {{ 'feature.profile.learnings.view_details' | translate }} <i class="pi pi-arrow-right"></i>
+              </a>
+            } @else {
+              <a class="ml-row__cta" [routerLink]="[playerBase, course.id, 'learn']">
+                {{ 'feature.my_learnings.actions.continue' | translate }} <i class="pi pi-arrow-right"></i>
+              </a>
+            }
+          </div>
+        </div>
+      </article>
+    }
+
+    @if (status() === 'current' && current().length) {
+      @let target = current()[0];
+      <div class="rating-card">
+        <div class="rating-card__head">
+          <p class="rating-card__q">{{ 'feature.profile.learnings.rating.question' | translate }}</p>
+          <p class="rating-card__sub">{{ 'feature.profile.learnings.rating.subtitle' | translate }}</p>
+        </div>
+
+        <div class="rating-card__faces">
+          @for (face of faces; track face.value) {
+            <button
+              type="button"
+              class="rating-face"
+              [class.is-picked]="draftRating() === face.value"
+              (click)="pickRating(face.value)"
+              [attr.aria-label]="face.labelKey | translate"
+            >
+              <span class="rating-face__emoji">{{ face.emoji }}</span>
+              <span class="rating-face__label">{{ face.labelKey | translate }}</span>
+            </button>
+          }
+        </div>
+
+        <div class="rating-card__comment">
+          <label class="rating-card__comment-label">
+            {{ 'feature.profile.learnings.rating.comment_label' | translate }}
+          </label>
+          <textarea
+            class="rating-card__comment-input"
+            [placeholder]="'feature.profile.learnings.rating.comment_ph' | translate"
+            [value]="draftComment()"
+            (input)="draftComment.set($any($event.target).value)"
+          ></textarea>
+        </div>
+
+        <button
+          type="button"
+          class="rating-card__submit"
+          [disabled]="draftRating() === null || submitting()"
+          (click)="submitRating(target)"
+        >
+          {{ 'feature.profile.learnings.rating.submit' | translate }}
+        </button>
+      </div>
+    }
+  </div>
+}
