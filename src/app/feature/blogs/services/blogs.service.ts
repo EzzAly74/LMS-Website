@@ -36,6 +36,6 @@ export class BlogsService {
    * the roles they recognise rather than raw qualifications.
    */
   getJobTitles(): Observable<ApiResponse<BlogJobTitle[]>> {
-    return this.api.get<BlogJobTitle[]>('job-titles/active');
+    return this.api.get<BlogJobTitle[]>('blogs/job-titles');
   }
 }
