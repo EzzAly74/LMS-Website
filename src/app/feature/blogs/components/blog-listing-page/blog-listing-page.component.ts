@@ -13,7 +13,7 @@ import { SearchInputComponent } from '../../../../shared/components/search-input
 import { ToggleOption, ToggleTabsComponent } from '../../../../shared/components/toggle-tabs/toggle-tabs.component';
 import { BlogCardComponent } from '../blog-card/blog-card.component';
 import { BlogHeroComponent } from '../blog-hero/blog-hero.component';
-import { BlogLevel, BlogListItem, BlogScope, BlogTopic } from '../../models/blog.models';
+import { BlogJobTitle, BlogLevel, BlogListItem, BlogScope } from '../../models/blog.models';
 import { BlogsService } from '../../services/blogs.service';
 
 const PER_PAGE = 9;
@@ -45,12 +45,12 @@ export class BlogListingPageComponent implements OnInit {
   private readonly router = inject(Router);
 
   protected readonly blogs = signal<BlogListItem[]>([]);
-  protected readonly topics = signal<BlogTopic[]>([]);
+  protected readonly jobTitles = signal<BlogJobTitle[]>([]);
   protected readonly loading = signal(true);
   protected readonly loadingMore = signal(false);
   protected readonly totalRecords = signal(0);
   protected readonly selectedScope = signal<BlogScope>('all');
-  protected readonly filters = signal<FilterSelection>({ topic: [], level: [] });
+  protected readonly filters = signal<FilterSelection>({ job_role: [], level: [] });
 
   protected searchTerm = '';
   private page = 1;
@@ -66,18 +66,18 @@ export class BlogListingPageComponent implements OnInit {
     { value: 'all', label: this.translate.instant('feature.blogs.scope.all') },
   ]);
 
-  protected readonly filterConfig = computed<FilterSidebarConfig>(() => this.buildFilterConfig(this.topics()));
+  protected readonly filterConfig = computed<FilterSidebarConfig>(() => this.buildFilterConfig(this.jobTitles()));
 
   constructor() {
     reloadOnLanguageChange(() => {
-      this.loadTopics();
+      this.loadJobTitles();
       this.loadBlogs(true);
     });
   }
 
   ngOnInit(): void {
     this.seedFromQueryParams();
-    this.loadTopics();
+    this.loadJobTitles();
     this.loadBlogs(true);
   }
 
@@ -100,7 +100,7 @@ export class BlogListingPageComponent implements OnInit {
   }
 
   protected onClearAllFilters(): void {
-    this.filters.set({ topic: [], level: [] });
+    this.filters.set({ job_role: [], level: [] });
     this.syncQueryParams();
     this.loadBlogs(true);
   }
@@ -124,10 +124,10 @@ export class BlogListingPageComponent implements OnInit {
     return this.isAuthenticated() ? this.selectedScope() : 'all';
   }
 
-  private loadTopics(): void {
-    this.blogsApi.getTopics().subscribe({
+  private loadJobTitles(): void {
+    this.blogsApi.getJobTitles().subscribe({
       next: (res) => {
-        if (res.status === 'success' && res.result) this.topics.set(res.result);
+        if (res.status === 'success' && res.result) this.jobTitles.set(res.result);
       },
     });
   }
@@ -144,7 +144,7 @@ export class BlogListingPageComponent implements OnInit {
         {
           search: this.searchTerm || null,
           level: (f['level'] ?? []) as BlogLevel[],
-          qualification_ids: (f['topic'] ?? []).map(Number),
+          job_title_ids: (f['job_role'] ?? []).map(Number),
           page: this.page,
           per_page: PER_PAGE,
         },
@@ -165,15 +165,15 @@ export class BlogListingPageComponent implements OnInit {
       });
   }
 
-  private buildFilterConfig(topics: BlogTopic[]): FilterSidebarConfig {
+  private buildFilterConfig(jobTitles: BlogJobTitle[]): FilterSidebarConfig {
     const sections: FilterSection[] = [
       {
-        key: 'topic',
-        icon: 'pi-tag',
-        label: this.translate.instant('feature.blogs.filters.topic'),
+        key: 'job_role',
+        icon: 'pi-briefcase',
+        label: this.translate.instant('feature.blogs.filters.job_role'),
         type: 'chip',
         expanded: true,
-        options: topics.map((t) => ({ value: String(t.id), label: t.name })),
+        options: jobTitles.map((jt) => ({ value: String(jt.id), label: jt.name })),
       },
       {
         key: 'level',
@@ -195,7 +195,7 @@ export class BlogListingPageComponent implements OnInit {
     this.searchTerm = params.get('search') ?? '';
     this.selectedScope.set((params.get('scope') as BlogScope) ?? 'all');
     this.filters.set({
-      topic: params.get('topic')?.split(',').filter(Boolean) ?? [],
+      job_role: params.get('job_role')?.split(',').filter(Boolean) ?? [],
       level: params.get('level')?.split(',').filter(Boolean) ?? [],
     });
   }
@@ -207,7 +207,7 @@ export class BlogListingPageComponent implements OnInit {
       queryParams: {
         search: this.searchTerm || null,
         scope: this.selectedScope() === 'all' ? null : this.selectedScope(),
-        topic: f['topic']?.length ? f['topic'].join(',') : null,
+        job_role: f['job_role']?.length ? f['job_role'].join(',') : null,
         level: f['level']?.length ? f['level'].join(',') : null,
       },
       queryParamsHandling: 'merge',

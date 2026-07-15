@@ -1,10 +1,12 @@
-@use 'mixins' as *;
+@use "mixins" as *;
 
 .blogs {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-11xs);
   padding: var(--spacing-9xs) 0;
+  max-width: 90%;
+  margin-inline: auto;
 
   &__header {
     display: flex;
@@ -15,7 +17,7 @@
   }
 
   &__title {
-    @include typography('h1', 'bold');
+    @include typography("h1", "bold");
     color: var(--color-essential-secondary);
     margin: 0;
   }

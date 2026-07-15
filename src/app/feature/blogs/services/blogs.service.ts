@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import { ApiService } from '../../../core/services/api.service';
 import { removeNullFilterProperties } from '../../../shared/utils/remove-null-filter-properties';
-import { BlogDetail, BlogListItem, BlogScope, BlogsQuery, BlogTopic } from '../models/blog.models';
+import { BlogDetail, BlogJobTitle, BlogListItem, BlogScope, BlogsQuery } from '../models/blog.models';
 
 /**
  * Public blog API. Reads the SEO-facing endpoints (`/api/v1/blogs`); the
@@ -30,8 +30,12 @@ export class BlogsService {
     return this.api.get<BlogListItem[]>(`blogs/${slug}/related`);
   }
 
-  /** Topics for the filter sidebar — public qualification-skills lookup. */
-  getTopics(): Observable<ApiResponse<BlogTopic[]>> {
-    return this.api.get<BlogTopic[]>('qualification-skills/active');
+  /**
+   * Job titles for the "Job Role" filter (public lookup). Each qualification a
+   * blog links to is mapped to one or more job titles, so learners filter by
+   * the roles they recognise rather than raw qualifications.
+   */
+  getJobTitles(): Observable<ApiResponse<BlogJobTitle[]>> {
+    return this.api.get<BlogJobTitle[]>('job-titles/active');
   }
 }

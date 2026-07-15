@@ -11,6 +11,12 @@ export interface BlogTopic {
   name: string;
 }
 
+/** Job-title option used by the listing "Job Role" filter. */
+export interface BlogJobTitle {
+  id: number;
+  name: string;
+}
+
 /** Card shape (from BlogListResource). */
 export interface BlogListItem {
   id: number;
@@ -55,7 +61,7 @@ export interface BlogDetail extends BlogListItem {
 export interface BlogsQuery {
   search?: string | null;
   level?: BlogLevel[] | null;
-  qualification_ids?: number[] | null;
+  job_title_ids?: number[] | null;
   page?: number;
   per_page?: number;
 }
