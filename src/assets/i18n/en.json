@@ -118,6 +118,39 @@
       "copy_link": "Copy link",
       "link_copied": "Link copied to clipboard"
     },
+    "contact": {
+      "hero_title": "Smarter Learning Starts Here",
+      "hero_subtitle": "Book a short call to see how NAS LMS connects your team's roles to the right qualifications and courses - automatically.",
+      "card_title": "NAS LMS Product Tour",
+      "name": "Name",
+      "name_ph": "Full Name",
+      "email": "Email",
+      "email_ph": "Work Email",
+      "guests": "Guests",
+      "add_guests": "Add guests",
+      "remove_guest": "Remove guest",
+      "phone": "Phone Number",
+      "phone_ph": "Your phone number",
+      "job_title": "Job Title",
+      "job_title_ph": "e.g. L&D Manager",
+      "company": "Company Name",
+      "company_ph": "Your company",
+      "submit": "Schedule Meeting",
+      "quick_contact": "For quick contact",
+      "errors": {
+        "required": "This field is required.",
+        "email": "Enter a valid email address."
+      },
+      "success": {
+        "title": "Your request has been sent!",
+        "subtitle": "An invitation will be sent to your email address shortly.",
+        "duration": "30 min",
+        "description_label": "Description",
+        "description": "Book a short call to see how NAS LMS empowers your team and boosts engagement.",
+        "meeting_label": "Meeting details",
+        "meeting_value": "Google Meet"
+      }
+    },
     "catalogue": {
       "title": "Explore The Catalogue",
       "search_ph": "Search courses, qualifications, categories…",

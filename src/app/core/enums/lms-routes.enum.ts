@@ -8,6 +8,7 @@ export const LmsRoutes = {
   CourseDetail: 'catalogue/:id',
   MyLearnings: 'my-learnings',
   WhoWeAre: 'who-we-are',
+  RequestDemo: 'request-demo',
   Blogs: 'blogs',
   Profile: 'profile',
   Notifications: 'notifications',

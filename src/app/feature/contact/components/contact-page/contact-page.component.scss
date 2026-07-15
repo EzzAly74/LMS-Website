@@ -1,0 +1,283 @@
+@use 'mixins' as *;
+
+.demo {
+  padding: var(--spacing-8xs) 0 var(--spacing-6xs);
+
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr 550px;
+    align-items: center;
+    gap: var(--spacing-4xl);
+    max-inline-size: 1200px;
+    margin-inline: auto;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+      gap: var(--spacing-9xs);
+      max-inline-size: 620px;
+    }
+  }
+
+  &__marketing {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-9xs);
+  }
+
+  &__marketing-copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-14xs);
+  }
+
+  &__title {
+    @include typography('large-heading', 'bold');
+    color: var(--color-essential-secondary);
+    margin: 0;
+  }
+
+  &__subtitle {
+    @include typography('body', 'regular');
+    color: var(--color-neutral-800);
+    margin: 0;
+  }
+
+  &__illustration {
+    inline-size: 100%;
+    block-size: auto;
+    object-fit: contain;
+  }
+
+  &__booking {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.booking-card {
+  background: var(--color-essential-primary);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-lg);
+  box-shadow: var(--elevation-shadow-sm);
+  padding: var(--spacing-9xs);
+
+  &__title {
+    @include typography('subtitle', 'bold');
+    color: var(--color-essential-secondary);
+    text-align: center;
+    margin: 0 0 var(--spacing-11xs);
+  }
+}
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-13xs);
+
+  &__add-guests {
+    align-self: flex-start;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--color-primary-700);
+    @include typography('body-small', 'medium');
+    margin-top: calc(-1 * var(--spacing-15xs));
+    &:hover { text-decoration: underline; }
+  }
+
+  &__submit {
+    margin-top: var(--spacing-15xs);
+    block-size: 44px;
+    border: none;
+    border-radius: var(--radius-control-sm);
+    background: var(--color-essential-cta);
+    color: var(--color-essential-primary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-16xs);
+    @include typography('button', 'medium');
+    transition: opacity 0.15s ease;
+    &:hover:not(:disabled) { opacity: 0.92; }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16xs);
+
+  &__label {
+    @include typography('body-small', 'medium');
+    color: var(--color-essential-secondary);
+  }
+
+  &__req { color: var(--color-status-red); }
+
+  &__input {
+    block-size: 44px;
+    padding: 0 var(--spacing-15xs);
+    border: var(--stroke-width-default) solid var(--color-neutral-400);
+    border-radius: var(--radius-control-sm);
+    background: var(--color-essential-primary);
+    color: var(--color-essential-secondary);
+    @include typography('body-small', 'regular');
+    outline: none;
+    transition: border-color 0.15s ease;
+    &:focus { border-color: var(--color-primary-500); }
+    &::placeholder { color: var(--color-neutral-600); }
+    &--error { border-color: var(--color-status-red); }
+  }
+
+  &__error {
+    @include typography('caption', 'regular');
+    color: var(--color-status-red);
+  }
+}
+
+.guests {
+  gap: var(--spacing-16xs);
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+  }
+
+  &__remove {
+    flex-shrink: 0;
+    inline-size: 44px;
+    block-size: 44px;
+    border: var(--stroke-width-default) solid var(--color-neutral-400);
+    border-radius: var(--radius-control-sm);
+    background: var(--color-essential-primary);
+    color: var(--color-neutral-700);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    &:hover { border-color: var(--color-status-red); color: var(--color-status-red); }
+  }
+}
+
+/* ── Success state ─────────────────────────────────────────────── */
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--spacing-15xs);
+  padding: var(--spacing-12xs) 0 var(--spacing-14xs);
+
+  &__check {
+    inline-size: 48px;
+    block-size: 48px;
+    border-radius: var(--radius-full);
+    background: var(--color-status-green);
+    color: var(--color-essential-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    i { font-size: 22px; }
+  }
+
+  &__title {
+    @include typography('subtitle', 'bold');
+    color: var(--color-essential-secondary);
+    margin: 0;
+  }
+
+  &__subtitle {
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-800);
+    margin: 0;
+  }
+}
+
+.summary {
+  inline-size: 100%;
+  text-align: start;
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-md);
+  padding: var(--spacing-12xs);
+  margin-top: var(--spacing-13xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-15xs);
+
+  &__name {
+    @include typography('body', 'bold');
+    color: var(--color-essential-secondary);
+    margin: 0;
+  }
+
+  &__duration {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-800);
+    margin: 0;
+  }
+
+  &__block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: var(--spacing-15xs);
+    border-top: var(--stroke-width-default) solid var(--color-neutral-300);
+  }
+
+  &__label {
+    @include typography('caption', 'regular');
+    color: var(--color-neutral-700);
+  }
+
+  &__text {
+    @include typography('body-small', 'regular');
+    color: var(--color-essential-secondary);
+    margin: 0;
+  }
+
+  &__meet {
+    @include typography('body-small', 'medium');
+    color: var(--color-primary-700);
+  }
+}
+
+/* ── Quick contact ─────────────────────────────────────────────── */
+.quick-contact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-15xs);
+  padding: var(--spacing-14xs) var(--spacing-15xs) 0;
+
+  &__label {
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-800);
+  }
+
+  &__links {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-11xs);
+    flex-wrap: wrap;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    text-decoration: none;
+    color: var(--color-primary-700);
+    @include typography('body-small', 'medium');
+    i { font-size: 15px; }
+    &:hover { text-decoration: underline; }
+  }
+}

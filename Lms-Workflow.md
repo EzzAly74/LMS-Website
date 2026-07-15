@@ -28,6 +28,9 @@ D:\2b-source-code\2b-academy-test
 Angular Frontend
 D:\2b-source-code\2B-Academy-Website
 
+Angular Dashboard
+D:\2b-source-code\2B-Academy-Angular
+
 The Angular project is currently empty.
 
 The Laravel project already contains APIs.
@@ -333,6 +336,76 @@ https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-53080&m=dev
 https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-52127&m=dev
 
 https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=988-51132&m=dev
+
+---
+
+BLOGS DASHBOARD (Instead of Resources)
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87960&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-86883&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87792&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87007&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87159&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87336&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87488&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87640&m=dev
+
+BLOGS WEBSITE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-48859&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-45934&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46653&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46827&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46108&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46217&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46326&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46435&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46544&m=dev
+
+MOBILE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-85206&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-85294&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-85387&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-85499&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-85599&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-85699&m=dev
+
+---
+
+WHO WE ARE (CONTACT US)
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-42826&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-42765&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-42723&m=dev
+
+MOBILE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-42633&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-42682&m=dev
 
 ---
 
@@ -661,3 +734,22 @@ Begin by:
 5. Creating a complete Figma screen checklist.
 6. Identifying backend improvements before writing frontend code.
 7. Starting implementation feature-by-feature with small, clean commits.
+
+# Contact Us – Business Requirements
+
+The company email must not be hardcoded.
+
+Add the company email to the backend environment configuration (.env), for example:
+CONTACT_EMAIL=NASLMS@gmail.com
+Contact Form Flow
+
+When a user submits the Contact Us form:
+
+Save the contact request in the database.
+Send an auto-reply email to the customer's email address confirming that their request has been received and that the team will contact them shortly.
+Send a notification email to the company email defined in the .env file (CONTACT_EMAIL) containing all submitted customer information (name, email, phone, subject, message, etc.).
+Notes
+The company email should be configurable through the .env file only, so the client can change it without modifying the code.
+Do not hardcode NASLMS@gmail.com anywhere in the application.
+The email templates should support both Arabic and English.
+All email sending should be handled by Laravel Mail using queued jobs for better performance.

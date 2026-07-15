@@ -38,6 +38,10 @@ export const routes: Routes = [
         loadChildren: () => import('./feature/blogs/blogs.routes').then((m) => m.BLOGS_ROUTES),
       },
       {
+        path: LmsRoutes.RequestDemo,
+        loadChildren: () => import('./feature/contact/contact.routes').then((m) => m.CONTACT_ROUTES),
+      },
+      {
         path: LmsRoutes.MyLearnings,
         canActivate: [authGuard],
         loadChildren: () =>
