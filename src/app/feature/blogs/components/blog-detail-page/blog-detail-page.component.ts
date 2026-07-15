@@ -1,5 +1,13 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -14,7 +22,14 @@ import { BlogsService } from '../../services/blogs.service';
 @Component({
   selector: 'app-blog-detail-page',
   standalone: true,
-  imports: [DatePipe, RouterLink, TranslatePipe, AvatarComponent, ShimmerComponent, BlogCardComponent],
+  imports: [
+    DatePipe,
+    RouterLink,
+    TranslatePipe,
+    AvatarComponent,
+    ShimmerComponent,
+    BlogCardComponent,
+  ],
   templateUrl: './blog-detail-page.component.html',
   styleUrl: './blog-detail-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +40,7 @@ export class BlogDetailPageComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly notify = inject(NotificationService);
   private readonly translate = inject(TranslateService);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly blog = signal<BlogDetail | null>(null);
   protected readonly related = signal<BlogListItem[]>([]);
@@ -37,8 +53,15 @@ export class BlogDetailPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.slug = this.route.snapshot.paramMap.get('slug') ?? '';
-    this.load();
+    this.route.paramMap
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params) => {
+        this.slug = params.get('slug') ?? '';
+        this.blog.set(null);
+        this.related.set([]);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.load();
+      });
   }
 
   private load(): void {
@@ -62,7 +85,8 @@ export class BlogDetailPageComponent implements OnInit {
 
     this.blogsApi.getRelated(this.slug).subscribe({
       next: (res) => {
-        if (res.status === 'success' && res.result) this.related.set(res.result);
+        if (res.status === 'success' && res.result)
+          this.related.set(res.result);
       },
     });
   }
@@ -70,7 +94,10 @@ export class BlogDetailPageComponent implements OnInit {
   protected copyLink(): void {
     const url = window.location.href;
     navigator.clipboard?.writeText(url).then(
-      () => this.notify.success(this.translate.instant('feature.blogs.link_copied')),
+      () =>
+        this.notify.success(
+          this.translate.instant('feature.blogs.link_copied'),
+        ),
       () => undefined,
     );
   }
