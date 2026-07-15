@@ -1,0 +1,123 @@
+@use 'mixins' as *;
+
+.blog-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--color-essential-primary);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-md);
+  box-shadow: var(--elevation-shadow-sm);
+
+  &__media {
+    position: relative;
+    display: block;
+    height: 200px;
+    flex-shrink: 0;
+
+    &--placeholder {
+      background-image: linear-gradient(
+        130deg,
+        var(--color-primary-700) 0%,
+        var(--color-additionally-400) 100%
+      );
+    }
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__badge {
+    position: absolute;
+    top: var(--spacing-16xs);
+    inset-inline-start: var(--spacing-16xs);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--spacing-14xs);
+    flex: 1;
+    padding: var(--spacing-13xs);
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-15xs);
+  }
+
+  &__title {
+    @include typography('subtitle', 'bold');
+    margin: 0;
+
+    a {
+      color: var(--color-essential-secondary);
+      text-decoration: none;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  &__topic {
+    align-self: flex-start;
+    padding: var(--spacing-17xs) var(--spacing-15xs);
+    border-radius: var(--radius-control-xs);
+    background: var(--color-primary-200);
+    color: var(--color-primary-800);
+    @include typography('caption', 'medium');
+  }
+
+  &__excerpt {
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-800);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-15xs);
+    padding-top: var(--spacing-16xs);
+    border-top: var(--stroke-width-default) solid var(--color-neutral-300);
+  }
+
+  &__author {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    min-width: 0;
+  }
+
+  &__author-name {
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-900);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__read {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-17xs);
+    flex-shrink: 0;
+    @include typography('caption', 'regular');
+    color: var(--color-neutral-800);
+
+    i { font-size: 14px; }
+  }
+}

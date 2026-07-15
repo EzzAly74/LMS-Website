@@ -89,6 +89,34 @@
         "email_invalid": "Enter a valid email address."
       }
     },
+    "blogs": {
+      "title": "Your Daily Expansion",
+      "search_ph": "Search blogs…",
+      "scope": {
+        "tailored": "Tailored for Me",
+        "all": "Explore All"
+      },
+      "latest_in_role": "Latest in your role",
+      "min_read": "min read",
+      "filters": {
+        "topic": "Topic",
+        "level": "Level"
+      },
+      "level": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "professional": "Professional"
+      },
+      "empty": {
+        "title": "No blogs yet",
+        "message": "Check back soon — new articles are on the way."
+      },
+      "back_to_blogs": "Back to Blogs",
+      "about_author": "About the author",
+      "related": "Related articles",
+      "copy_link": "Copy link",
+      "link_copied": "Link copied to clipboard"
+    },
     "catalogue": {
       "title": "Explore The Catalogue",
       "search_ph": "Search courses, qualifications, categories…",

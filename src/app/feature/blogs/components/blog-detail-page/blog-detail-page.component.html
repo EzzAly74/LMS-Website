@@ -1,0 +1,104 @@
+@if (loading()) {
+  <div class="blog-detail blog-detail--loading">
+    <app-shimmer width="140px" height="18px" />
+    <app-shimmer width="80%" height="40px" />
+    <app-shimmer width="55%" height="20px" />
+    <app-shimmer width="100%" height="380px" radius="var(--radius-container-lg)" />
+    <app-shimmer width="100%" height="16px" />
+    <app-shimmer width="95%" height="16px" />
+    <app-shimmer width="90%" height="16px" />
+  </div>
+}
+
+@if (!loading() && blog(); as post) {
+  <article class="blog-detail">
+    <a routerLink="/blogs" class="blog-detail__back">
+      <i class="pi pi-arrow-left"></i>
+      {{ 'feature.blogs.back_to_blogs' | translate }}
+    </a>
+
+    <header class="blog-detail__head">
+      @if (post.qualification?.name) {
+        <span class="blog-detail__topic">{{ post.qualification!.name }}</span>
+      }
+      <h1 class="blog-detail__title">{{ post.title }}</h1>
+      @if (post.subtitle) {
+        <p class="blog-detail__lead">{{ post.subtitle }}</p>
+      }
+
+      <div class="blog-detail__meta">
+        <span class="blog-detail__author">
+          <app-avatar [name]="post.author.name" [image]="post.author.image" [size]="44" />
+          <span class="blog-detail__author-text">
+            <span class="blog-detail__author-name">{{ post.author.name }}</span>
+            <span class="blog-detail__author-sub">
+              @if (post.published_at) { {{ post.published_at | date: 'mediumDate' }} }
+              @if (post.published_at && post.reading_time) { &middot; }
+              @if (post.reading_time) { {{ post.reading_time }} {{ 'feature.blogs.min_read' | translate }} }
+            </span>
+          </span>
+        </span>
+
+        <div class="blog-detail__share">
+          <button type="button" class="blog-detail__share-btn" (click)="copyLink()" [attr.aria-label]="'feature.blogs.copy_link' | translate">
+            <i class="pi pi-link"></i>
+          </button>
+          <a class="blog-detail__share-btn" [href]="shareUrl('x')" target="_blank" rel="noopener" aria-label="Share on X"><i class="pi pi-twitter"></i></a>
+          <a class="blog-detail__share-btn" [href]="shareUrl('linkedin')" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><i class="pi pi-linkedin"></i></a>
+          <a class="blog-detail__share-btn" [href]="shareUrl('facebook')" target="_blank" rel="noopener" aria-label="Share on Facebook"><i class="pi pi-facebook"></i></a>
+        </div>
+      </div>
+    </header>
+
+    @if (post.image) {
+      <div class="blog-detail__cover">
+        <img [src]="post.image" [alt]="post.title" />
+      </div>
+    }
+
+    <div class="blog-detail__body">
+      @for (section of post.sections; track section.id) {
+        <section class="blog-section">
+          @if (section.title) {
+            <h2 class="blog-section__title">{{ section.title }}</h2>
+          }
+          @if (section.body) {
+            <div class="blog-section__prose" [innerHTML]="section.body"></div>
+          }
+          @if (section.image) {
+            <figure class="blog-section__figure">
+              <img [src]="section.image" [alt]="section.title" loading="lazy" />
+            </figure>
+          }
+          @if (section.quote) {
+            <blockquote class="blog-section__quote">{{ section.quote }}</blockquote>
+          }
+        </section>
+      }
+    </div>
+
+    @if (post.author_bio; as bio) {
+      <aside class="blog-author-box">
+        <app-avatar [name]="bio.name" [image]="bio.image" [size]="56" />
+        <div class="blog-author-box__text">
+          <span class="blog-author-box__label">{{ 'feature.blogs.about_author' | translate }}</span>
+          <span class="blog-author-box__name">{{ bio.name }}</span>
+          @if (bio.title) {
+            <span class="blog-author-box__role">{{ bio.title }}</span>
+          }
+        </div>
+      </aside>
+    }
+  </article>
+
+  @if (related().length) {
+    <section class="blog-related">
+      <h2 class="blog-related__title">{{ 'feature.blogs.related' | translate }}</h2>
+      <div class="blog-related__grid">
+        @for (item of related(); track item.id) {
+          <app-blog-card [blog]="item" />
+        }
+      </div>
+    </section>
+  }
+}
