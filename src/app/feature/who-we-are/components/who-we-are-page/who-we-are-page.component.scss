@@ -75,12 +75,11 @@
 
   &__map {
     // Figma: 774px square at top -133 relative to Intro_Section, its trailing
-    // edge landing at the page edge on the 1440 canvas (centre + 722.5px) —
-    // anchored to the centred content column so wider screens keep the same
-    // relationship between copy and illustration.
+    // edge bleeding 2.5px past the page edge on the 1440 canvas — anchored to
+    // the viewport edge so wider screens never show a side gap.
     position: absolute;
     top: -133px;
-    inset-inline-end: calc(50% - 722.5px);
+    inset-inline-end: -2.5px;
     inline-size: 774px;
     block-size: 774px;
     object-fit: cover;
@@ -811,6 +810,12 @@ $settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
 /* RTL: the CTA arrow points forward in reading direction. */
 :host-context([dir='rtl']) .who-cta__button-arrow img {
+  transform: scaleX(-1);
+}
+
+/* RTL: mirror the road illustration so the journey flows with the reading
+   direction (step 1 nearest the copy). */
+:host-context([dir='rtl']) .who-hero__map {
   transform: scaleX(-1);
 }
 
