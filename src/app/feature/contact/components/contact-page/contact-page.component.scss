@@ -1,7 +1,15 @@
 @use 'mixins' as *;
 
 .demo {
-  padding: var(--spacing-8xs) 0 var(--spacing-6xs);
+  padding-block: var(--spacing-8xs) var(--spacing-6xs);
+  padding-inline: var(--spacing-9xs);
+
+  @media (max-width: 1024px) {
+    padding-inline: var(--spacing-11xs);
+  }
+  @media (max-width: 480px) {
+    padding-block: var(--spacing-9xs) var(--spacing-8xs);
+  }
 
   &__inner {
     display: grid;
@@ -14,7 +22,7 @@
     @media (max-width: 1024px) {
       grid-template-columns: 1fr;
       align-items: stretch;
-      gap: var(--spacing-9xs);
+      gap: var(--spacing-8xs);
       max-inline-size: 620px;
     }
   }
@@ -23,6 +31,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-9xs);
+
+    @media (max-width: 480px) {
+      gap: var(--spacing-11xs);
+    }
   }
 
   &__marketing-copy {
@@ -35,12 +47,20 @@
     @include typography('large-heading', 'bold');
     color: var(--color-essential-secondary);
     margin: 0;
+
+    @media (max-width: 480px) {
+      @include typography('h1', 'bold');
+    }
   }
 
   &__subtitle {
     @include typography('body', 'regular');
     color: var(--color-neutral-800);
     margin: 0;
+
+    @media (max-width: 480px) {
+      @include typography('body-small', 'regular');
+    }
   }
 
   &__illustration {
@@ -61,6 +81,10 @@
   border-radius: var(--radius-container-lg);
   box-shadow: var(--elevation-shadow-sm);
   padding: var(--spacing-9xs);
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-11xs);
+  }
 
   &__title {
     @include typography('subtitle', 'bold');
