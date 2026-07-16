@@ -813,11 +813,9 @@ $settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   transform: scaleX(-1);
 }
 
-/* RTL: mirror the road illustration so the journey flows with the reading
-   direction (step 1 nearest the copy). */
-:host-context([dir='rtl']) .who-hero__map {
-  transform: scaleX(-1);
-}
+/* RTL uses a dedicated pre-mirrored Arabic export of the road illustration
+   (hero-map-ar.png, swapped in the component) — a CSS flip would mirror the
+   baked-in milestone labels. */
 
 /* Accessibility: no motion → everything rests at its final state. */
 @media (prefers-reduced-motion: reduce) {

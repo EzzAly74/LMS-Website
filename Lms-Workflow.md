@@ -393,7 +393,7 @@ https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-85699&m=dev
 
 ---
 
-WHO WE ARE (CONTACT US)
+BOOK A DEMO (CONTACT US)
 
 https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-42826&m=dev
 
@@ -406,6 +406,16 @@ MOBILE
 https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-42633&m=dev
 
 https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-42682&m=dev
+
+---
+
+WHO WE ARE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1665-88349&m=dev
+
+MOBILE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1665-88730&m=dev
 
 ---
 

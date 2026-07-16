@@ -5,11 +5,14 @@ import {
   ElementRef,
   OnDestroy,
   ViewChild,
+  computed,
+  inject,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
+import { LanguageService } from '../../../../core/services/language.service';
 
 /** One entry on the "Our Journey" timeline (Figma Timeline_Node_1..6). */
 interface JourneyNode {
@@ -50,7 +53,20 @@ export class WhoWeArePageComponent implements AfterViewInit, OnDestroy {
   @ViewChild('journey') private journeyRef?: ElementRef<HTMLElement>;
   @ViewChild('cta') private ctaRef?: ElementRef<HTMLElement>;
 
+  private readonly language = inject(LanguageService);
+
   protected readonly requestDemoRoute = `/${LmsRoutes.RequestDemo}`;
+
+  /**
+   * The hero illustration has its milestone labels baked into the artwork,
+   * so RTL uses a dedicated pre-mirrored Arabic export (hero-map-ar.png)
+   * instead of a CSS flip — a flip would mirror the label text itself.
+   */
+  protected readonly heroMapSrc = computed(() =>
+    this.language.isRtl()
+      ? 'assets/who-we-are/hero-map-ar.png'
+      : 'assets/who-we-are/hero-map.png',
+  );
 
   protected readonly journeyNodes: JourneyNode[] = [
     {
