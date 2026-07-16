@@ -39,7 +39,6 @@
   padding: 64px 80px 56px;
 
   &__inner {
-    position: relative;
     inline-size: 100%;
     max-inline-size: 1280px;
     margin-inline: auto;
@@ -75,9 +74,13 @@
   }
 
   &__map {
+    // Figma: 774px square at top -133 relative to Intro_Section, its trailing
+    // edge landing at the page edge on the 1440 canvas (centre + 722.5px) —
+    // anchored to the centred content column so wider screens keep the same
+    // relationship between copy and illustration.
     position: absolute;
-    top: -197px; // Figma: image top -133 relative to section (section pt 64)
-    inset-inline-end: -82.5px; // spans to the page edge at 1440
+    top: -133px;
+    inset-inline-end: calc(50% - 722.5px);
     inline-size: 774px;
     block-size: 774px;
     object-fit: cover;
