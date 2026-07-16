@@ -1,0 +1,833 @@
+@use 'mixins' as *;
+
+// =============================================================================
+// Who We Are — pixel-perfect from Figma 1665:88349 (web) + 1665:88730 (mobile).
+// The Figma prototype's 8.2s reveal timeline is reproduced with the exact
+// keyframe offsets/easings, played once per section via `.is-live`
+// (IntersectionObserver in the component).
+// =============================================================================
+
+.who {
+  position: relative;
+  overflow-x: clip; // decorative wave/map may bleed past the viewport edge
+}
+
+.who__top-wave {
+  position: absolute;
+  top: -264px;
+  inset-inline-start: 0;
+  inline-size: 1432px;
+  max-inline-size: 100%;
+  block-size: 622px;
+  transform: rotate(180deg);
+  pointer-events: none;
+
+  @media (max-width: 900px) {
+    top: -7px;
+    block-size: auto;
+    aspect-ratio: 432 / 188;
+  }
+}
+
+/* ── Hero (Figma Intro_Section) ─────────────────────────────────── */
+.who-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-block-size: 582px;
+  padding: 64px 80px 56px;
+
+  &__inner {
+    position: relative;
+    inline-size: 100%;
+    max-inline-size: 1280px;
+    margin-inline: auto;
+  }
+
+  &__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    inline-size: 640px;
+    max-inline-size: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__overline {
+    @include typography('caption', 'bold');
+    color: var(--color-primary-600);
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  &__title {
+    @include typography('large-heading', 'bold');
+    color: var(--color-neutral-1000);
+    margin: 0;
+  }
+
+  &__body {
+    @include typography('body', 'regular');
+    color: var(--color-neutral-700);
+    margin: 0;
+  }
+
+  &__map {
+    position: absolute;
+    top: -197px; // Figma: image top -133 relative to section (section pt 64)
+    inset-inline-end: -82.5px; // spans to the page edge at 1440
+    inline-size: 774px;
+    block-size: 774px;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  // Laptop range: keep the two-column feel but flow the illustration so it
+  // can never underlap the copy (Figma only specifies 1440 and 390).
+  @media (max-width: 1280px) and (min-width: 901px) {
+    &__inner {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    &__copy {
+      flex: 1 1 0;
+      min-inline-size: 0;
+    }
+
+    &__map {
+      position: static;
+      flex: 0 1 auto;
+      inline-size: min(46vw, 620px);
+      block-size: auto;
+      margin-inline-end: -40px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    min-block-size: 0;
+    padding: 40px 20px;
+
+    &__inner {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    &__copy {
+      gap: 12px;
+      inline-size: 100%;
+    }
+
+    // Mobile type scale (Figma 1665:88735-88737)
+    &__overline {
+      @include typography('body-small', 'bold');
+      text-transform: none;
+    }
+    &__title {
+      @include typography('h2', 'bold');
+    }
+    &__body {
+      @include typography('body-small', 'regular');
+    }
+    &__body-more {
+      display: none; // mobile copy keeps only the first sentence
+    }
+
+    &__map {
+      position: static;
+      inline-size: 372px;
+      max-inline-size: 100%;
+      block-size: auto;
+      align-self: center;
+    }
+  }
+}
+
+/* ── Our Journey (Figma Journey_Section) ────────────────────────── */
+.who-journey {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 72px 80px;
+  background-image: linear-gradient(
+    145deg,
+    var(--color-primary-1000) 25%,
+    #143033 50%,
+    #1a4a4c 75%
+  );
+
+  &__top-line {
+    position: absolute;
+    top: 0;
+    inset-inline: 0;
+    block-size: 4px;
+    background-image: linear-gradient(
+      180deg,
+      var(--color-additionally-400) 25%,
+      var(--color-primary-600) 75%
+    );
+  }
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    inline-size: 100%;
+    text-align: center;
+  }
+
+  &__kicker {
+    @include typography('body', 'bold');
+    color: var(--color-additionally-400);
+    margin: 0;
+  }
+
+  &__title {
+    @include typography('large-heading', 'bold');
+    color: var(--color-neutral-0);
+    margin: 0;
+  }
+
+  &__timeline {
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+    max-inline-size: 1280px;
+  }
+
+  @media (max-width: 900px) {
+    gap: 48px;
+    padding: 64px 20px;
+    background-image: linear-gradient(
+      111deg,
+      var(--color-primary-1000) 25%,
+      #143033 50%,
+      #1a4a4c 75%
+    );
+
+    &__head {
+      gap: 8px;
+    }
+    &__kicker {
+      @include typography('body', 'bold');
+    }
+    &__title {
+      @include typography('h2', 'bold');
+    }
+  }
+}
+
+/* One timeline row: content column + 64px spine + mirror spacer. */
+.tl-node {
+  display: grid;
+  grid-template-columns: 1fr 64px 1fr;
+  inline-size: 100%;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-block-end: 24px;
+  }
+
+  // Alternating sides (Figma Timeline_Node_1..6)
+  &--start &__content {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: end;
+    align-items: flex-start;
+    padding-inline-end: 24px;
+  }
+
+  &--end &__content {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: start;
+    align-items: flex-start;
+    padding-inline-start: 24px;
+  }
+
+  &__label {
+    @include typography('caption', 'bold');
+    color: var(--color-additionally-400);
+    margin: 0;
+  }
+
+  &__label-mobile {
+    display: none;
+  }
+
+  &__title {
+    @include typography('h1', 'bold');
+    color: var(--color-neutral-0);
+    margin: 0;
+    max-inline-size: 311px;
+  }
+
+  &__desc {
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-500);
+    margin: 0;
+    max-inline-size: 311px;
+  }
+
+  &__spine {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    block-size: 100%;
+  }
+
+  &__dot {
+    inline-size: 12px;
+    block-size: 12px;
+    flex-shrink: 0;
+  }
+
+  &__rail {
+    flex: 1 0 0;
+    min-block-size: 1px;
+    inline-size: 2px;
+    background: var(--color-additionally-400);
+    opacity: 0.3;
+    transform-origin: top center;
+  }
+
+  &__final-dot {
+    inline-size: 60px; // 28px dot + glow bleed (Figma inset -57%)
+    block-size: 60px;
+    margin: -16px;
+    flex-shrink: 0;
+  }
+
+  &--final &__content {
+    padding-block-end: 0;
+  }
+
+  @media (max-width: 900px) {
+    // Mobile: single left spine (40px) with content on the right for every node.
+    grid-template-columns: 40px 1fr;
+
+    &--start &__content,
+    &--end &__content {
+      grid-column: 2;
+      grid-row: 1;
+      justify-self: stretch;
+      padding-inline: 0;
+      gap: 6px;
+      padding-block-end: 32px;
+    }
+
+    &__spine {
+      grid-column: 1;
+    }
+
+    &__dot {
+      inline-size: 10px;
+      block-size: 10px;
+      margin-block: 7px; // Figma Dot_Container h-24 centers the 10px dot
+    }
+
+    &__final-dot {
+      inline-size: 48px;
+      block-size: 48px;
+      margin: -12px;
+    }
+
+    &__title {
+      @include typography('subtitle', 'bold');
+      max-inline-size: none;
+    }
+    &__desc {
+      max-inline-size: none;
+    }
+
+    // Figma mobile node 1 overline reads "Today" instead of "Principle".
+    &__label-desktop {
+      display: none;
+    }
+    &__label-mobile {
+      display: inline;
+    }
+  }
+}
+
+/* ── Journey reveal animation (exact Figma 8.2s timeline, played once) ── */
+$reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
+$pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
+
+@keyframes who-fade-rise-15 {
+  from { opacity: 0; translate: 0 15px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes who-fade-rise-16 {
+  from { opacity: 0; translate: 0 16px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes who-dot-pop {
+  from { opacity: 0; scale: 0; }
+  to { opacity: 1; scale: 1; }
+}
+@keyframes who-rail-grow {
+  from { opacity: 0; scale: 1 0; }
+  5% { opacity: 1; }
+  to { opacity: 1; scale: 1 1; }
+}
+
+.who-journey:not(.is-live) {
+  .who-journey__head,
+  .tl-node__content,
+  .tl-node__dot,
+  .tl-node__final-dot {
+    opacity: 0;
+  }
+  .tl-node__rail {
+    opacity: 0;
+  }
+}
+
+.who-journey.is-live {
+  .who-journey__head {
+    animation: who-fade-rise-15 500ms $reveal-ease both;
+  }
+
+  // Per-node delays derived from the Figma keyframe offsets (×8200ms):
+  // dots 300+550i · rails 450+550i · cards 550/950/1500/2050/2600/3200.
+  .tl-node__dot {
+    animation: who-dot-pop 300ms $pop-ease both;
+    animation-delay: calc(300ms + var(--i) * 550ms);
+  }
+  .tl-node__rail {
+    animation: who-rail-grow 400ms $reveal-ease both;
+    animation-delay: calc(450ms + var(--i) * 550ms);
+  }
+  .tl-node__final-dot {
+    animation: who-dot-pop 400ms $pop-ease both;
+    animation-delay: 3050ms;
+  }
+  .tl-node__content {
+    animation: who-fade-rise-16 450ms $reveal-ease both;
+  }
+  .tl-node:nth-child(1) .tl-node__content { animation-delay: 550ms; }
+  .tl-node:nth-child(2) .tl-node__content { animation-delay: 950ms; }
+  .tl-node:nth-child(3) .tl-node__content { animation-delay: 1500ms; }
+  .tl-node:nth-child(4) .tl-node__content { animation-delay: 2050ms; }
+  .tl-node:nth-child(5) .tl-node__content { animation-delay: 2600ms; }
+  .tl-node:nth-child(6) .tl-node__content { animation-delay: 3200ms; animation-duration: 500ms; }
+}
+
+/* ── What that actually gets you (Figma Advantages_Section) ─────── */
+.who-advantages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  padding: 80px;
+
+  &__title {
+    @include typography('large-heading', 'bold');
+    color: var(--color-neutral-1000);
+    margin: 0;
+    text-align: center;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    inline-size: 100%;
+    max-inline-size: 1280px;
+  }
+
+  @media (max-width: 1200px) {
+    &__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 900px) {
+    gap: 40px;
+    padding: 40px 20px;
+
+    &__title {
+      @include typography('h2', 'bold');
+    }
+
+    &__grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+}
+
+.adv-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 32px;
+  background: var(--color-neutral-0);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-md);
+  box-shadow: var(--elevation-shadow-md);
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 44px;
+    block-size: 44px;
+    background: var(--color-primary-100);
+    border-radius: var(--radius-control-sm);
+    flex-shrink: 0;
+
+    img {
+      inline-size: 24px;
+      block-size: 24px;
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__title {
+    @include typography('h2', 'bold');
+    color: var(--color-primary-1000);
+    margin: 0;
+  }
+
+  &__desc {
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-700);
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    gap: 16px;
+    padding: 24px;
+    box-shadow: var(--elevation-shadow-sm);
+
+    &__icon {
+      inline-size: 40px;
+      block-size: 40px;
+    }
+
+    &__text {
+      gap: 4px;
+    }
+
+    &__title {
+      @include typography('subtitle', 'bold');
+    }
+  }
+}
+
+/* ── CTA band (Figma CTA-Geometric) ─────────────────────────────── */
+.who-cta {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  block-size: 265px;
+  inline-size: 100%;
+  overflow: clip;
+  background: var(--color-essential-cta);
+
+  &__glow,
+  &__shape {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  // Radial glows (positions from Figma: centre offsets on a 1440 canvas)
+  &__glow--right {
+    inline-size: 897px;
+    block-size: 897px;
+    left: 50%;
+    top: 50%;
+    translate: calc(-50% + 706.5px) calc(-50% - 182px);
+  }
+  &__glow--center {
+    inline-size: 790px;
+    block-size: 790px;
+    left: 50%;
+    top: 50%;
+    translate: calc(-50% + 34.5px) calc(-50% - 167.5px);
+  }
+  &__glow--left {
+    inline-size: 1087px;
+    block-size: 1087px;
+    left: 50%;
+    top: 50%;
+    translate: calc(-50% - 957.5px) calc(-50% - 219px);
+  }
+  &__glow--mobile {
+    display: none;
+  }
+
+  // Accent geometry (decor — physical coords kept as in Figma)
+  &__shape--diamond {
+    inline-size: 193px;
+    block-size: 193px;
+    left: 1033px;
+    top: 333px;
+    rotate: 70.19deg;
+  }
+  &__shape--circle-lg {
+    inline-size: 125px;
+    block-size: 125px;
+    left: 77px;
+    top: 43px;
+  }
+  &__shape--circle-sm {
+    inline-size: 58px;
+    block-size: 58px;
+    left: 32px;
+    top: 333px;
+  }
+  &__shape--pill {
+    inline-size: 120px;
+    block-size: 40px;
+    left: 200px;
+    top: 422px;
+    border: 1px solid var(--color-additionally-400);
+    border-radius: 60px;
+    opacity: 0.3;
+  }
+  &__shape--ellipse {
+    inline-size: 80px;
+    block-size: 80px;
+    left: 500px;
+    top: 431px;
+  }
+  &__shape--rect {
+    inline-size: 203px;
+    block-size: 203px;
+    left: 1177px;
+    top: 80px;
+    background: var(--color-primary-700);
+    opacity: 0.15;
+    border-radius: 40.639px;
+    rotate: 15deg;
+  }
+
+  &__content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    inline-size: 100%;
+    text-align: center;
+  }
+
+  // Figma spacing: text-stack gap 8 (kicker→title), title→subtitle 12,
+  // content-group gap 40 (text→button).
+  &__kicker {
+    @include typography('h2', 'bold');
+    color: var(--color-additionally-400);
+    margin: 0 0 8px;
+  }
+
+  &__title {
+    @include typography('large-heading', 'bold');
+    color: var(--color-essential-primary);
+    margin: 0;
+  }
+
+  &__subtitle {
+    @include typography('body', 'medium');
+    color: var(--color-neutral-400);
+    margin: 12px 0 0;
+  }
+
+  &__subtitle-mobile {
+    display: none;
+  }
+
+  &__button {
+    margin-block-start: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    padding-inline-start: 28px;
+    background: var(--color-additionally-400);
+    border-radius: var(--radius-control-sm);
+    text-decoration: none;
+    color: var(--color-essential-tertiary);
+    @include typography('body', 'medium');
+  }
+
+  &__button-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 28px;
+    block-size: 28px;
+    background: var(--color-essential-tertiary);
+    border-radius: var(--radius-full);
+
+    img {
+      inline-size: 20px;
+      block-size: 20px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    block-size: auto;
+    padding: 40px 20px;
+
+    &__glow--right,
+    &__glow--center,
+    &__glow--left,
+    &__shape--diamond,
+    &__shape--circle-lg,
+    &__shape--circle-sm,
+    &__shape--pill,
+    &__shape--ellipse,
+    &__shape--rect {
+      display: none;
+    }
+
+    &__glow--mobile {
+      display: block;
+      inline-size: 400px;
+      block-size: 400px;
+      left: 50%;
+      top: -100px;
+      translate: -50% 0;
+    }
+
+    &__content {
+      gap: 32px;
+    }
+
+    &__kicker {
+      @include typography('body-small', 'bold');
+    }
+    &__title {
+      @include typography('subtitle', 'bold');
+    }
+    &__subtitle {
+      @include typography('body-small', 'regular');
+    }
+    &__subtitle-desktop {
+      display: none;
+    }
+    &__subtitle-mobile {
+      display: inline;
+    }
+
+    &__button {
+      padding: 8px 16px;
+      @include typography('body-small', 'medium');
+    }
+    &__button-arrow {
+      inline-size: 20px;
+      block-size: 20px;
+
+      img {
+        inline-size: 14px;
+        block-size: 14px;
+      }
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .who-cta__kicker {
+    margin-block-end: 12px;
+  }
+  .who-cta__button {
+    margin-block-start: 32px;
+  }
+}
+
+/* ── CTA accent animation (exact Figma offsets, played once) ────── */
+$drift-ease: ease-in-out;
+$settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+@keyframes who-drift-in-out {
+  from { translate: 30px 30px; }
+  50% { translate: 0 0; }
+  to { translate: 30px 30px; }
+}
+@keyframes who-settle-pill {
+  from { opacity: 0; rotate: 8deg; translate: -60px 0; scale: 0.8; }
+  to { opacity: 0.3; rotate: 0deg; translate: 0 0; scale: 1; }
+}
+@keyframes who-settle-ellipse {
+  from { opacity: 0; rotate: 8deg; translate: -60px 0; scale: 0.8; }
+  to { opacity: 0.2; rotate: 0deg; translate: 0 0; scale: 1; }
+}
+@keyframes who-rect-drift {
+  from { translate: 50px 30px; }
+  50% { translate: 20px 0; }
+  to { translate: 40px 0; }
+}
+
+.who-cta:not(.is-live) {
+  .who-cta__shape--pill,
+  .who-cta__shape--ellipse {
+    opacity: 0;
+  }
+}
+
+.who-cta.is-live {
+  .who-cta__shape--diamond {
+    animation: who-drift-in-out 2000ms $drift-ease 77ms both;
+  }
+  .who-cta__shape--circle-lg {
+    animation: who-drift-in-out 2000ms $drift-ease 252ms both;
+  }
+  .who-cta__shape--circle-sm {
+    animation: who-drift-in-out 2000ms $drift-ease 529ms both;
+  }
+  .who-cta__shape--pill {
+    animation: who-settle-pill 1700ms $settle-ease 400ms both;
+  }
+  .who-cta__shape--ellipse {
+    animation: who-settle-ellipse 1900ms $settle-ease both;
+  }
+  .who-cta__shape--rect {
+    animation: who-rect-drift 2813ms $drift-ease both;
+  }
+}
+
+/* RTL: the CTA arrow points forward in reading direction. */
+:host-context([dir='rtl']) .who-cta__button-arrow img {
+  transform: scaleX(-1);
+}
+
+/* Accessibility: no motion → everything rests at its final state. */
+@media (prefers-reduced-motion: reduce) {
+  .who-journey:not(.is-live) .who-journey__head,
+  .who-journey:not(.is-live) .tl-node__content,
+  .who-journey:not(.is-live) .tl-node__dot,
+  .who-journey:not(.is-live) .tl-node__final-dot,
+  .who-cta:not(.is-live) .who-cta__shape--pill {
+    opacity: 1;
+  }
+  .who-journey:not(.is-live) .tl-node__rail {
+    opacity: 0.3;
+  }
+  .who-cta:not(.is-live) .who-cta__shape--ellipse {
+    opacity: 0.2;
+  }
+  .who-journey.is-live *,
+  .who-cta.is-live * {
+    animation: none !important;
+  }
+}

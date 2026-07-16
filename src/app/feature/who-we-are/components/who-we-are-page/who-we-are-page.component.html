@@ -1,0 +1,115 @@
+<div class="who">
+
+  <!-- Top decorative wave (Figma Vector 10, rotated 180) -->
+  <img class="who__top-wave" src="assets/who-we-are/top-wave.svg" alt="" aria-hidden="true" />
+
+  <!-- ── Intro / hero ─────────────────────────────────────────── -->
+  <section class="who-hero">
+    <div class="who-hero__inner">
+      <div class="who-hero__copy">
+        <p class="who-hero__overline">{{ 'feature.who_we_are.hero.overline' | translate }}</p>
+        <h1 class="who-hero__title">{{ 'feature.who_we_are.hero.title' | translate }}</h1>
+        <p class="who-hero__body">
+          {{ 'feature.who_we_are.hero.body_1' | translate }}
+          <span class="who-hero__body-more">{{ 'feature.who_we_are.hero.body_2' | translate }}</span>
+        </p>
+      </div>
+      <img
+        class="who-hero__map"
+        src="assets/who-we-are/hero-map.png"
+        [alt]="'feature.who_we_are.hero.title' | translate"
+      />
+    </div>
+  </section>
+
+  <!-- ── Our Journey (animated timeline) ──────────────────────── -->
+  <section class="who-journey" #journey>
+    <div class="who-journey__top-line" aria-hidden="true"></div>
+
+    <div class="who-journey__head">
+      <p class="who-journey__kicker">{{ 'feature.who_we_are.journey.kicker' | translate }}</p>
+      <h2 class="who-journey__title">{{ 'feature.who_we_are.journey.title' | translate }}</h2>
+    </div>
+
+    <div class="who-journey__timeline">
+      @for (node of journeyNodes; track node.titleKey; let i = $index; let odd = $odd) {
+        <div
+          class="tl-node"
+          [class.tl-node--start]="!odd"
+          [class.tl-node--end]="odd"
+          [class.tl-node--final]="node.final"
+          [style.--i]="i"
+        >
+          <div class="tl-node__content">
+            <p class="tl-node__label">
+              @if (node.mobileLabelKey) {
+                <span class="tl-node__label-desktop">{{ node.labelKey | translate }}</span>
+                <span class="tl-node__label-mobile">{{ node.mobileLabelKey | translate }}</span>
+              } @else {
+                {{ node.labelKey | translate }}
+              }
+            </p>
+            <h3 class="tl-node__title">{{ node.titleKey | translate }}</h3>
+            <p class="tl-node__desc">{{ node.descKey | translate }}</p>
+          </div>
+
+          <div class="tl-node__spine" aria-hidden="true">
+            @if (node.final) {
+              <img class="tl-node__final-dot" src="assets/who-we-are/final-dot.svg" alt="" />
+            } @else {
+              <img class="tl-node__dot" src="assets/who-we-are/dot.svg" alt="" />
+              <div class="tl-node__rail"></div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ── What that actually gets you ──────────────────────────── -->
+  <section class="who-advantages">
+    <h2 class="who-advantages__title">{{ 'feature.who_we_are.advantages.title' | translate }}</h2>
+    <div class="who-advantages__grid">
+      @for (card of advantages; track card.titleKey) {
+        <article class="adv-card">
+          <span class="adv-card__icon"><img [src]="card.icon" alt="" aria-hidden="true" /></span>
+          <div class="adv-card__text">
+            <h3 class="adv-card__title">{{ card.titleKey | translate }}</h3>
+            <p class="adv-card__desc">{{ card.descKey | translate }}</p>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <!-- ── CTA band (geometric) ─────────────────────────────────── -->
+  <section class="who-cta" #cta>
+    <img class="who-cta__glow who-cta__glow--right" src="assets/who-we-are/glow-right.svg" alt="" aria-hidden="true" />
+    <img class="who-cta__glow who-cta__glow--center" src="assets/who-we-are/glow-center.svg" alt="" aria-hidden="true" />
+    <img class="who-cta__glow who-cta__glow--left" src="assets/who-we-are/glow-left.svg" alt="" aria-hidden="true" />
+    <img class="who-cta__glow who-cta__glow--mobile" src="assets/who-we-are/glow-mobile.svg" alt="" aria-hidden="true" />
+
+    <img class="who-cta__shape who-cta__shape--diamond" src="assets/who-we-are/accent-diamond.svg" alt="" aria-hidden="true" />
+    <img class="who-cta__shape who-cta__shape--circle-lg" src="assets/who-we-are/accent-circle-lg.svg" alt="" aria-hidden="true" />
+    <img class="who-cta__shape who-cta__shape--circle-sm" src="assets/who-we-are/accent-circle-sm.svg" alt="" aria-hidden="true" />
+    <div class="who-cta__shape who-cta__shape--pill" aria-hidden="true"></div>
+    <img class="who-cta__shape who-cta__shape--ellipse" src="assets/who-we-are/cta-ellipse.svg" alt="" aria-hidden="true" />
+    <div class="who-cta__shape who-cta__shape--rect" aria-hidden="true"></div>
+
+    <div class="who-cta__content">
+      <p class="who-cta__kicker">{{ 'feature.who_we_are.cta.kicker' | translate }}</p>
+      <h2 class="who-cta__title">{{ 'feature.who_we_are.cta.title' | translate }}</h2>
+      <p class="who-cta__subtitle">
+        <span class="who-cta__subtitle-desktop">{{ 'feature.who_we_are.cta.subtitle' | translate }}</span>
+        <span class="who-cta__subtitle-mobile">{{ 'feature.who_we_are.cta.subtitle_mobile' | translate }}</span>
+      </p>
+      <a class="who-cta__button" [routerLink]="requestDemoRoute">
+        <span>{{ 'feature.who_we_are.cta.button' | translate }}</span>
+        <span class="who-cta__button-arrow">
+          <img src="assets/who-we-are/icon-arrow-right.svg" alt="" aria-hidden="true" />
+        </span>
+      </a>
+    </div>
+  </section>
+
+</div>

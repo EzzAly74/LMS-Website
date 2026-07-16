@@ -118,6 +118,74 @@
       "copy_link": "Copy link",
       "link_copied": "Link copied to clipboard"
     },
+    "who_we_are": {
+      "hero": {
+        "overline": "Who we are",
+        "title": "Learning, mapped to the role you actually hold",
+        "body_1": "NAS Smart LMS connects every job title to the qualifications it requires — and every qualification to the courses that earn it.",
+        "body_2": " It's how employees know exactly what to learn next, and how HR teams know who's ready for what."
+      },
+      "journey": {
+        "kicker": "( Our Journey )",
+        "title": "How we work, and where it is leading",
+        "principle": "Principle",
+        "nodes": {
+          "begin": {
+            "label": "Principle",
+            "label_mobile": "Today",
+            "title": "The journey begins",
+            "desc": "We connect job titles, qualifications, and courses into one system, so learning is never disconnected from the role someone actually holds today."
+          },
+          "real": {
+            "title": "We track what is real",
+            "desc": "Progress reflects actual completion, attendance, and scores - never estimates."
+          },
+          "language": {
+            "title": "Language is not an afterthought",
+            "desc": "Arabic and English are built side by side, from day one."
+          },
+          "record": {
+            "title": "One record, not three",
+            "desc": "Learning is one continuous story across app, website, and dashboard."
+          },
+          "earned": {
+            "title": "Nothing is issued unearned",
+            "desc": "Certificates and progress only appear when the work behind them is actually done."
+          },
+          "headed": {
+            "label": "Where We Are Headed",
+            "title": "Scaling across NAS",
+            "desc": "A NAS where every qualification is already mapped, and every course moves employees visibly closer to it."
+          }
+        }
+      },
+      "advantages": {
+        "title": "What that actually gets you",
+        "certificates": {
+          "title": "Verifiable certificates",
+          "desc": "Auto-generated from real completion, attendance, and score logic."
+        },
+        "bilingual": {
+          "title": "Bilingual by design",
+          "desc": "Arabic and RTL are first-class from day one, not a translation layer."
+        },
+        "connected": {
+          "title": "One connected system",
+          "desc": "Dashboard, website, and app share data in real time."
+        },
+        "personalization": {
+          "title": "Personalization engine",
+          "desc": "Courses map automatically to job titles and qualifications."
+        }
+      },
+      "cta": {
+        "kicker": "Get started",
+        "title": "Let's write the next chapter together.",
+        "subtitle": "See how NAS Smart LMS brings job titles, qualifications, and courses together in one system.",
+        "subtitle_mobile": "Brings job titles, qualifications, and courses together in one system.",
+        "button": "Book a demo"
+      }
+    },
     "contact": {
       "hero_title": "Smarter Learning Starts Here",
       "hero_subtitle": "Book a short call to see how NAS LMS connects your team's roles to the right qualifications and courses - automatically.",
