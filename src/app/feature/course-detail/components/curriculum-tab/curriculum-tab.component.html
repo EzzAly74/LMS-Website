@@ -1,0 +1,26 @@
+<div class="curr-note">
+  <i class="pi pi-info-circle"></i>
+  <span>{{ 'feature.course_detail.curriculum.locked_note' | translate }}</span>
+</div>
+
+<div class="curr-summary">
+  <span>{{ 'feature.course_detail.curriculum.modules_count' | translate: { count: totalUnits() } }}</span>
+  @if (totalSessions() > 0) {
+    <span>{{ 'feature.course_detail.curriculum.sessions_count' | translate: { count: totalSessions() } }}</span>
+  }
+  @if (durationWeeks) {
+    <span>{{ 'feature.course_detail.curriculum.duration_weeks' | translate: { count: durationWeeks } }}</span>
+  }
+</div>
+
+<ol class="module-list">
+  @for (unit of orderedUnits; track unit.id; let i = $index) {
+    <li class="module-list__item">
+      <span class="module-list__number">{{ i + 1 }}</span>
+      <span class="module-list__name">{{ unit.title }}</span>
+      @if (unit.require_completion) {
+        <i class="pi pi-lock module-list__lock" [attr.aria-label]="'feature.course_detail.curriculum.locked' | translate"></i>
+      }
+    </li>
+  }
+</ol>

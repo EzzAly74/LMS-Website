@@ -1,0 +1,118 @@
+@use 'mixins' as *;
+
+.detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3xs);
+
+  & + & {
+    margin-top: var(--spacing-4xl);
+  }
+
+  &__heading {
+    @include typography('h1-small', 'bold');
+    color: var(--color-essential-secondary);
+  }
+}
+
+.learn-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-13xs) var(--spacing-3xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+
+  &__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-15xs);
+    @include typography('body-small', 'regular');
+    color: var(--color-essential-secondary);
+  }
+
+  &__check {
+    flex-shrink: 0;
+    margin-top: var(--spacing-17xs);
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-3xs);
+    color: var(--color-primary-700);
+    background: var(--color-primary-200);
+    border-radius: var(--radius-full);
+  }
+}
+
+.requirement-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-14xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-13xs);
+    @include typography('body-small', 'regular');
+    color: var(--color-essential-secondary);
+  }
+
+  &__dot {
+    flex-shrink: 0;
+    margin-top: 8px;
+    width: 5px;
+    height: 5px;
+    border-radius: var(--radius-full);
+    background: var(--color-neutral-700);
+  }
+}
+
+.qualification-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-13xs);
+    padding: var(--spacing-14xs);
+    border: var(--stroke-width-default) solid var(--color-neutral-400);
+    border-radius: var(--radius-container-md);
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary-200);
+    color: var(--color-primary-700);
+  }
+
+  &__name {
+    @include typography('body-small', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__desc {
+    @include typography('caption', 'regular');
+    color: var(--color-neutral-700);
+    margin-top: var(--spacing-17xs);
+  }
+}

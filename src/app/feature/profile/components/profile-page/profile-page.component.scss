@@ -1,0 +1,226 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* ---- Hero (dark band) — Figma 851:44931 ---- */
+.profile-hero {
+  background: var(--color-essential-tertiary);
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-11xs);
+    width: 100%;
+    max-width: 1248px;
+    margin-inline: auto;
+    padding: var(--spacing-3xs) var(--spacing-3xs);
+
+    @media (max-width: 900px) {
+      flex-wrap: wrap;
+      gap: var(--spacing-13xs);
+    }
+  }
+
+  &__identity {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-11xs);
+    min-width: 0;
+  }
+
+  &__id-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-16xs);
+    min-width: 0;
+  }
+
+  &__eyebrow {
+    @include typography('caption', 'regular');
+    letter-spacing: -0.4px;
+    color: var(--color-additionally-700);
+  }
+
+  &__name {
+    @include typography('h1', 'bold');
+    color: var(--color-essential-primary);
+  }
+
+  &__role {
+    @include typography('caption', 'regular');
+    color: var(--color-neutral-300);
+  }
+
+  &__stats {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-11xs);
+
+    @media (max-width: 900px) {
+      order: 3;
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  &__stat {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    padding-inline: var(--spacing-15xs);
+
+    /* Vertical divider centred in the gap, matching Figma's 40px rule. */
+    & + &::before {
+      content: '';
+      position: absolute;
+      inset-inline-start: calc(-1 * var(--spacing-15xs));
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 40px;
+      background: var(--color-neutral-750);
+    }
+  }
+
+  &__stat-value {
+    @include typography('h1', 'bold');
+    color: var(--color-additionally-700);
+    letter-spacing: 0.39px;
+  }
+
+  &__stat-label {
+    @include typography('caption', 'regular');
+    letter-spacing: 0.6px;
+    text-transform: capitalize;
+    color: var(--color-neutral-300);
+    white-space: nowrap;
+  }
+}
+
+/* ---- Body ---- */
+.profile-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-7xs);
+  width: 100%;
+  max-width: 1248px;
+  margin-inline: auto;
+  padding: var(--spacing-12xs) var(--spacing-3xs) var(--spacing-12xl);
+
+  &__logout-row {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__logout {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    padding: 9.5px 17.5px;
+    background: var(--color-neutral-0);
+    border: var(--stroke-width-default) solid var(--color-status-warning);
+    border-radius: var(--radius-control-sm);
+    color: var(--color-status-warning);
+    cursor: pointer;
+    @include typography('button-small', 'medium');
+
+    img {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-14xs);
+    padding: var(--spacing-15xs) var(--spacing-13xs);
+    border: var(--stroke-width-default) solid var(--color-neutral-400);
+    border-radius: var(--radius-control-sm);
+    background: var(--color-neutral-0);
+
+    &-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      outline: none;
+      background: none;
+      color: var(--color-essential-secondary);
+      @include typography('caption', 'regular');
+
+      &::placeholder {
+        color: var(--color-neutral-700);
+      }
+    }
+  }
+}
+
+/* ---- Tabs (Qualifications | My Learnings) — Figma 851:45898 ---- */
+.profile-tabs {
+  display: flex;
+  border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
+
+  button {
+    padding: var(--spacing-13xs) var(--spacing-16xs) var(--spacing-12xs);
+    background: none;
+    border: none;
+    border-bottom: var(--stroke-width-strong) solid transparent;
+    cursor: pointer;
+    color: var(--color-neutral-700);
+    @include typography('button', 'medium');
+
+    &:not(:first-child) {
+      margin-inline-start: var(--spacing-11xs);
+    }
+
+    &.is-active {
+      color: var(--color-essential-secondary);
+      border-bottom-color: var(--color-essential-secondary);
+    }
+  }
+
+  &__mobile-only {
+    display: none;
+
+    @media (max-width: 1024px) {
+      display: inline-flex;
+    }
+  }
+}
+
+/* ---- Two-column layout (main 832 + rail) — Figma 851:44969 ---- */
+.profile-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 832fr) 384fr;
+  gap: var(--spacing-7xs);
+  align-items: start;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+
+  &__main {
+    min-width: 0;
+  }
+
+  &__side {
+    position: sticky;
+    top: var(--spacing-3xs);
+
+    @media (max-width: 1024px) {
+      display: none;
+    }
+  }
+}

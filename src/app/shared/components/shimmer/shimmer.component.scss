@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  background: var(--color-neutral-300);
+  animation: shimmer-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer-pulse {
+  50% {
+    opacity: var(--opacity-40);
+  }
+}

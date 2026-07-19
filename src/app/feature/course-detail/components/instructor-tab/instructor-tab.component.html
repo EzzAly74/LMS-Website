@@ -1,0 +1,15 @@
+<div class="instructor-card">
+  <app-avatar class="instructor-card__avatar" [name]="instructor.name" [image]="instructor.image" [size]="68" />
+  <div class="instructor-card__meta">
+    <p class="instructor-card__name">{{ instructor.name }}</p>
+    @if (rating) {
+      <div class="instructor-card__stats">
+        <span><i class="pi pi-star-fill"></i>{{ rating.avg.toFixed(1) }} {{ 'feature.course_detail.instructor.rating' | translate }}</span>
+      </div>
+    }
+  </div>
+</div>
+
+@if (instructor.bio) {
+  <p class="instructor-bio" [innerHTML]="instructor.bio"></p>
+}

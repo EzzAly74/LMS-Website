@@ -1,0 +1,234 @@
+@use 'mixins' as *;
+
+.login {
+  display: grid;
+  grid-template-columns: 1fr 576px;
+  min-height: 100vh;
+  background: var(--color-essential-primary);
+}
+
+// ---------------------------------------------------------------------------
+// Left — form column
+// ---------------------------------------------------------------------------
+.login__form-col {
+  display: flex;
+  align-items: center;
+  // Figma: form offset 96px from the edge (64 + 32), 64px on the inner side.
+  padding-inline: calc(var(--spacing-12xl) + var(--spacing-3xs)) var(--spacing-12xl);
+  padding-block: var(--spacing-3xs);
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-7xs);
+  width: 440px;
+}
+
+.login__intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-15xs);
+}
+
+.login__title {
+  @include typography('large-heading', 'medium');
+  color: var(--color-essential-secondary);
+}
+
+.login__subtitle {
+  @include typography('subtitle-small', 'regular');
+  color: var(--color-neutral-700);
+}
+
+.login__server-error {
+  @include typography('body-small', 'medium');
+  color: var(--color-status-warning);
+  background: var(--color-status-warning-08);
+  padding: var(--spacing-15xs) var(--spacing-13xs);
+  border-radius: var(--radius-control-sm);
+}
+
+.login__input {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-14xs);
+  padding: var(--spacing-13xs) var(--spacing-11xs);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-control-sm);
+  background: var(--color-essential-primary);
+
+  &:focus-within {
+    border-color: var(--color-primary-600);
+  }
+
+  &--invalid {
+    border-color: var(--color-status-warning);
+  }
+
+  input {
+    flex: 1 0 0;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--color-essential-secondary);
+    @include typography('body', 'regular');
+
+    &::placeholder {
+      color: var(--color-neutral-700);
+    }
+  }
+}
+
+.login__eye {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-neutral-700);
+
+  .pi {
+    font-size: var(--size-24);
+  }
+}
+
+.login__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-11xs);
+}
+
+.login__submit {
+  width: 100%;
+  padding: var(--spacing-13xs) var(--spacing-11xs);
+  border: none;
+  border-radius: var(--radius-control-sm);
+  background: var(--color-essential-tertiary);
+  color: var(--color-essential-primary);
+  box-shadow: var(--elevation-shadow-sm);
+  @include typography('button-large', 'medium');
+
+  &:disabled {
+    opacity: var(--opacity-disabled);
+  }
+}
+
+.login__helper {
+  @include typography('body-small', 'regular');
+  color: var(--color-neutral-700);
+  text-align: center;
+}
+
+// ---------------------------------------------------------------------------
+// Right — brand panel
+// ---------------------------------------------------------------------------
+.login__brand {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-inline: var(--spacing-12xl);
+  background: var(--color-essential-tertiary);
+}
+
+.login__brand-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.login__brand-logo {
+  height: var(--size-40);
+  width: auto;
+  margin-bottom: var(--spacing-m);
+}
+
+.login__brand-title {
+  @include typography('h1', 'medium');
+  color: var(--color-grey-0);
+  margin-bottom: var(--spacing-12xs);
+}
+
+.login__brand-subtitle {
+  @include typography('subtitle-small', 'regular');
+  color: var(--color-neutral-400);
+}
+
+// Decorative background — faint concentric rings + a dot grid (positions per Figma).
+.login__rings {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.login__ring {
+  position: absolute;
+  border: var(--stroke-width-default) solid var(--color-primary-900);
+  border-radius: var(--radius-pill);
+
+  &--1 {
+    inset-inline-start: 140px;
+    top: -100px;
+    width: 440px;
+    height: 440px;
+  }
+
+  &--2 {
+    inset-inline-start: -90px;
+    top: 580px;
+    width: 340px;
+    height: 340px;
+  }
+
+  &--3 {
+    inset-inline-start: 360px;
+    top: 350px;
+    width: 160px;
+    height: 160px;
+  }
+
+  &--4 {
+    inset-inline-start: 60px;
+    top: 760px;
+    width: 90px;
+    height: 90px;
+  }
+}
+
+.login__dots {
+  position: absolute;
+  inset-inline-start: 320px;
+  top: 580px;
+  width: 52px;
+  height: 52px;
+  background-image: radial-gradient(var(--color-primary-700) 1.5px, transparent 1.5px);
+  background-size: var(--spacing-11xs) var(--spacing-11xs);
+}
+
+// ---------------------------------------------------------------------------
+// Responsive — collapse to a single column; brand panel hidden on narrow widths
+// (mobile login frame 1000-49652 to be reconciled in a follow-up pass).
+// ---------------------------------------------------------------------------
+@media (max-width: 900px) {
+  .login {
+    grid-template-columns: 1fr;
+  }
+
+  .login__brand {
+    display: none;
+  }
+
+  .login__form-col {
+    justify-content: center;
+    padding-inline: var(--spacing-3xs);
+  }
+
+  .login__form {
+    width: 100%;
+  }
+}

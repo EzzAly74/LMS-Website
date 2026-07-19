@@ -1,0 +1,275 @@
+@use "mixins" as *;
+
+/* Individual outlined pills — Figma 851:44972 (not a segmented group). */
+.ml-tabs {
+  display: flex;
+  gap: var(--spacing-15xs);
+  margin-bottom: var(--spacing-13xs);
+
+  &__pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: var(--spacing-16xs) var(--spacing-11xs);
+    background: var(--color-essential-primary);
+    border: var(--stroke-width-default) solid var(--color-neutral-500);
+    border-radius: var(--radius-control-lg);
+    cursor: pointer;
+    color: var(--color-neutral-700);
+    @include typography("button", "medium");
+
+    &.is-active {
+      background: var(--color-primary-100);
+      border-color: var(--color-essential-tertiary);
+      color: var(--color-essential-tertiary);
+    }
+  }
+}
+
+.ml-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-14xs);
+}
+
+.ml-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-14xs);
+  padding: var(--spacing-14xs) var(--spacing-9xs);
+  background: var(--color-essential-primary);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-md);
+  box-shadow: var(--elevation-shadow-sm);
+
+  &--skeleton {
+    align-items: center;
+  }
+
+  &__thumb {
+    flex-shrink: 0;
+    width: 58px;
+    height: 58px;
+    border-radius: var(--radius-control-md);
+    background-image: linear-gradient(
+      135deg,
+      var(--color-primary-700) 0%,
+      var(--color-primary-500) 100%
+    );
+    background-size: cover;
+    background-position: center;
+  }
+
+  &__grow {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-16xs);
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-16xs);
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-14xs);
+  }
+
+  &__title {
+    @include typography("subtitle", "bold");
+    color: var(--color-essential-secondary);
+  }
+
+  &__starts {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    flex-shrink: 0;
+    padding: var(--spacing-17xs) var(--spacing-15xs);
+    border-radius: var(--radius-pill);
+    background: var(--color-status-hold-50);
+    color: var(--color-status-hold-500);
+    @include typography("caption", "medium");
+  }
+
+  &__meta {
+    @include typography("body-small", "regular");
+    color: var(--color-neutral-800);
+  }
+
+  &__progress {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-14xs);
+  }
+
+  &__track {
+    flex: 1;
+    height: 6px;
+    border-radius: var(--radius-pill);
+    background: var(--color-neutral-300);
+    overflow: hidden;
+  }
+
+  &__fill {
+    display: block;
+    height: 100%;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary-700);
+  }
+
+  &__pct {
+    @include typography("caption", "bold");
+    color: var(--color-primary-700);
+  }
+
+  &__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-15xs);
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    padding: var(--spacing-15xs) var(--spacing-13xs);
+    border-radius: var(--radius-control-sm);
+    background: var(--color-essential-tertiary);
+    color: var(--color-essential-primary);
+    @include typography("button-small", "medium");
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    color: var(--color-primary-700);
+    @include typography("button-small", "medium");
+  }
+}
+
+/* Rating widget — Figma node 861:44282, 1:1. */
+.rating-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-7xs); // 24
+  padding: var(--spacing-3xs); // 32
+  background: var(--color-neutral-0);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-md); // 16
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-15xs); // 8
+  }
+
+  &__q {
+    @include typography("h1-small", "bold"); // 20 / 24
+    color: var(--color-essential-secondary);
+  }
+
+  &__sub {
+    @include typography("body-small", "regular"); // 14 / 16.8
+    color: var(--color-neutral-700);
+  }
+
+  &__faces {
+    display: flex;
+    gap: var(--spacing-13xs); // 12
+  }
+
+  &__comment {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-15xs);
+
+    &-label {
+      @include typography("body-small", "bold");
+      color: var(--color-essential-secondary);
+    }
+
+    &-input {
+      width: 100%;
+      height: 100px;
+      padding: var(--spacing-11xs); // 16
+      border: var(--stroke-width-default) solid var(--color-neutral-400);
+      border-radius: var(--radius-control-sm); // 8
+      resize: none;
+      color: var(--color-essential-secondary);
+      @include typography("body-small", "regular");
+      background: #fff;
+
+      &::placeholder {
+        color: var(--color-neutral-700);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: var(--color-primary-500);
+      }
+    }
+  }
+
+  &__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 40px;
+    padding: var(--spacing-15xs) var(--spacing-13xs);
+    border: none;
+    border-radius: var(--radius-control-sm); // 8
+    background: var(--color-essential-tertiary); // #0c2427
+    box-shadow: var(--elevation-shadow-sm);
+    color: var(--color-essential-primary);
+    cursor: pointer;
+    @include typography("button", "medium");
+
+    &:disabled {
+      opacity: var(--opacity-disabled);
+      cursor: not-allowed;
+    }
+  }
+}
+
+.rating-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-16xs); // 4
+  width: 68px;
+  padding: var(--spacing-15xs); // 8
+  background: var(--color-neutral-0);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-control-md); // 12
+  cursor: pointer;
+
+  &__emoji {
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  &__label {
+    @include typography("minimum-size", "medium"); // 10 / 12
+    color: var(--color-neutral-700);
+    text-align: center;
+  }
+
+  &.is-picked {
+    background: var(--color-primary-100); // #f2fbfa
+    border-color: var(--color-primary-700); // #26787b
+  }
+}

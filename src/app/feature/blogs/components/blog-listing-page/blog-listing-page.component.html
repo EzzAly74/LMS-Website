@@ -1,0 +1,60 @@
+<div class="blogs">
+  <header class="blogs__header">
+    <h1 class="blogs__title">{{ 'feature.blogs.title' | translate }}</h1>
+    <div class="blogs__controls">
+      <app-search-input
+        class="blogs__search"
+        [placeholder]="'feature.blogs.search_ph' | translate"
+        [value]="searchTerm"
+        (search)="onSearch($event)"
+      />
+      @if (isAuthenticated()) {
+        <app-toggle-tabs
+          [options]="scopeOptions()"
+          [value]="selectedScope()"
+          (valueChange)="onScopeChange($event)"
+        />
+      }
+    </div>
+  </header>
+
+  @if (!loading() && heroBlog(); as hero) {
+    <app-blog-hero [blog]="hero" />
+  }
+
+  <div class="catalogue-layout">
+    <aside class="filter-container">
+      <app-filter-sidebar
+        [config]="filterConfig()"
+        [selected]="filters()"
+        [resultsCount]="totalRecords()"
+        (selectedChange)="onFilterChange($event)"
+        (clearAll)="onClearAllFilters()"
+      />
+    </aside>
+
+    <section class="grid-container">
+      @if (loading()) {
+        <div class="card-grid">
+          @for (s of skeletons; track $index) {
+            <app-card-skeleton />
+          }
+        </div>
+      } @else if (blogs().length === 0) {
+        <app-empty-state [config]="emptyState" />
+      } @else {
+        @if (gridBlogs().length) {
+          <div class="card-grid">
+            @for (blog of gridBlogs(); track blog.id) {
+              <app-blog-card [blog]="blog" />
+            }
+          </div>
+        }
+
+        @if (hasMore()) {
+          <app-load-more [loading]="loadingMore()" (loadMore)="onLoadMore()" />
+        }
+      }
+    </section>
+  </div>
+</div>

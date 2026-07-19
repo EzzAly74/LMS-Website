@@ -1,0 +1,81 @@
+@if (activeSessionCourse(); as course) {
+  @if (course.live_session; as session) {
+    <div class="side-card side-card--session">
+      <p class="side-card__title">{{ 'feature.profile.sidebar.active_session' | translate }}</p>
+      <div class="session">
+        @if (session.session_date) {
+          <div class="session__date">
+            <span class="session__day">{{ session.session_date | date: 'd' }}</span>
+            <span class="session__mon">{{ session.session_date | date: 'MMM' }}</span>
+          </div>
+        }
+        <div class="session__info">
+          <p class="session__name">{{ session.title ?? course.session_name ?? course.title }}</p>
+          <p class="session__time">
+            @if (session.time_from) {
+              {{ session.time_from }}
+            }
+            @if (session.location) {
+              · {{ session.location }}
+            }
+            @if (course.isLive) {
+              · <span class="session__live">{{ 'feature.profile.sidebar.live_now' | translate }}</span>
+            }
+          </p>
+        </div>
+      </div>
+      <a class="side-card__cta" [routerLink]="[playerBase, course.id, 'learn']">
+        <i class="pi pi-play-circle"></i>
+        {{ 'feature.profile.sidebar.join_session' | translate }}
+      </a>
+    </div>
+  }
+}
+
+@if (attendanceCourse(); as course) {
+  <div class="side-card">
+    <div class="side-card__head">
+      <p class="side-card__title">{{ 'feature.profile.sidebar.my_attendance' | translate }}</p>
+      <span class="side-card__count">
+        {{ attended() }}/{{ sessions().length }}
+      </span>
+    </div>
+
+    @if (sessionsLoading()) {
+      <p class="side-card__muted">{{ 'common.loading' | translate }}</p>
+    } @else if (sessions().length === 0) {
+      <p class="side-card__muted">{{ 'feature.profile.sidebar.no_sessions' | translate }}</p>
+    } @else {
+      <ul class="att-list">
+        @for (s of sessions(); track s.id) {
+          <li class="att-list__item">
+            <span class="att-list__label">
+              {{ s.title }}
+              @if (s.session_date) {
+                <span class="att-list__date">{{ s.session_date | date: 'mediumDate' }}</span>
+              }
+            </span>
+            <span class="att-list__status" [class.is-present]="s.attended" [class.is-absent]="!s.attended">
+              {{ (s.attended ? 'feature.profile.sidebar.present' : 'feature.profile.sidebar.absent') | translate }}
+            </span>
+          </li>
+        }
+      </ul>
+    }
+
+    @if (atRisk()) {
+      <div class="at-risk">
+        <i class="pi pi-exclamation-triangle"></i>
+        <span>{{ 'feature.profile.sidebar.at_risk' | translate }}</span>
+      </div>
+    }
+  </div>
+}
+
+@if (showPlaceholder()) {
+  <div class="side-card side-card--empty">
+    <i class="pi pi-calendar"></i>
+    <p class="side-card__title">{{ 'feature.profile.sidebar.active_session' | translate }}</p>
+    <p class="side-card__muted">{{ 'feature.profile.sidebar.no_sessions' | translate }}</p>
+  </div>
+}

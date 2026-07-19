@@ -1,0 +1,38 @@
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <img class="site-footer__logo" src="assets/brand/nas-logo-on-dark.svg" alt="NAS" />
+
+    <div class="site-footer__row">
+      <nav class="site-footer__nav" aria-label="Footer">
+        <a [routerLink]="'/' + routes.Catalogue">{{ 'core.footer.nav.catalogue' | translate }}</a>
+        <a [routerLink]="'/' + routes.WhoWeAre">{{ 'core.footer.nav.who_we_are' | translate }}</a>
+        <a [routerLink]="'/' + routes.RequestDemo">{{ 'core.footer.nav.contact_us' | translate }}</a>
+      </nav>
+
+      <form class="site-footer__newsletter" (ngSubmit)="subscribe()">
+        <p class="site-footer__newsletter-title">{{ 'core.footer.newsletter.title' | translate }}</p>
+        <div class="site-footer__newsletter-row">
+          <input
+            type="email"
+            class="site-footer__newsletter-input"
+            [formControl]="email"
+            [placeholder]="'core.footer.newsletter.email_ph' | translate"
+            [attr.aria-label]="'core.footer.newsletter.email_label' | translate"
+          />
+          <button type="submit" class="site-footer__newsletter-btn">
+            {{ 'core.footer.newsletter.subscribe' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="site-footer__bottom">
+      <nav class="site-footer__legal" aria-label="Legal">
+        <a href="#">{{ 'core.footer.legal.terms' | translate }}</a>
+        <span aria-hidden="true">|</span>
+        <a href="#">{{ 'core.footer.legal.privacy' | translate }}</a>
+      </nav>
+      <p class="site-footer__copyright">{{ 'core.footer.copyright' | translate: { year } }}</p>
+    </div>
+  </div>
+</footer>

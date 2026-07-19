@@ -1,0 +1,39 @@
+<article class="blog-card">
+  <a class="blog-card__media" [class.blog-card__media--placeholder]="!blog.image" [routerLink]="['/blogs', blog.slug]">
+    @if (blog.image) {
+      <img class="blog-card__image" [src]="blog.image" [alt]="blog.title" loading="lazy" />
+    }
+    @if (levelKey) {
+      <app-badge class="blog-card__badge" tone="level" [label]="levelKey | translate" />
+    }
+  </a>
+
+  <div class="blog-card__body">
+    <div class="blog-card__content">
+      <h3 class="blog-card__title">
+        <a [routerLink]="['/blogs', blog.slug]">{{ blog.title }}</a>
+      </h3>
+
+      @if (blog.qualification?.name) {
+        <span class="blog-card__topic">{{ blog.qualification!.name }}</span>
+      }
+
+      @if (blog.subtitle) {
+        <p class="blog-card__excerpt">{{ blog.subtitle }}</p>
+      }
+    </div>
+
+    <div class="blog-card__footer">
+      <span class="blog-card__author">
+        <app-avatar [name]="blog.author.name" [image]="blog.author.image" />
+        <span class="blog-card__author-name">{{ blog.author.name }}</span>
+      </span>
+      @if (blog.reading_time) {
+        <span class="blog-card__read">
+          <i class="pi pi-clock"></i>
+          {{ blog.reading_time }} {{ 'feature.blogs.min_read' | translate }}
+        </span>
+      }
+    </div>
+  </div>
+</article>

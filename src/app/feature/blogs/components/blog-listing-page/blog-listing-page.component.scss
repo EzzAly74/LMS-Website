@@ -1,0 +1,77 @@
+@use "mixins" as *;
+
+.blogs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-11xs);
+  padding: var(--spacing-9xs) 0;
+  max-width: 90%;
+  margin-inline: auto;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--spacing-13xs);
+  }
+
+  &__title {
+    @include typography("h1", "bold");
+    color: var(--color-essential-secondary);
+    margin: 0;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-14xs);
+    flex-wrap: wrap;
+  }
+
+  &__search {
+    inline-size: 280px;
+    max-inline-size: 100%;
+  }
+}
+
+.catalogue-layout {
+  display: grid;
+  grid-template-columns: 248px 1fr;
+  align-items: start;
+  gap: var(--spacing-11xs);
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.filter-container {
+  position: sticky;
+  top: var(--spacing-11xs);
+
+  @media (max-width: 900px) {
+    position: static;
+  }
+}
+
+.grid-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12xs);
+  min-width: 0;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-13xs);
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 620px) {
+    grid-template-columns: 1fr;
+  }
+}

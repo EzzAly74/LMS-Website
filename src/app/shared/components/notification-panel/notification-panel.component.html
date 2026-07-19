@@ -1,0 +1,28 @@
+<div class="notif-panel" role="menu">
+  <div class="notif-panel__header">
+    <span class="notif-panel__title">{{ 'core.notifications.title' | translate }}</span>
+    @if (inbox.unreadCount() > 0) {
+      <button type="button" class="notif-panel__mark-all" (click)="onMarkAllRead()">
+        {{ 'core.notifications.mark_all_read' | translate }}
+      </button>
+    }
+  </div>
+
+  <div class="notif-panel__list">
+    @if (inbox.loading()) {
+      @for (s of skeletons; track $index) {
+        <app-notification-skeleton />
+      }
+    } @else if (inbox.items().length === 0) {
+      <app-empty-state [config]="emptyState" />
+    } @else {
+      @for (item of inbox.items(); track item.id) {
+        <app-notification-list-item [item]="item" (activate)="onActivate($event)" />
+      }
+    }
+  </div>
+
+  <a class="notif-panel__view-all" [routerLink]="'/' + routes.Notifications" (click)="onViewAll()">
+    {{ 'core.notifications.view_all' | translate }}
+  </a>
+</div>

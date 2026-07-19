@@ -1,0 +1,98 @@
+@if (loading) {
+  <div class="qual-list">
+    @for (s of skeletons; track $index) {
+      <div class="qual-card qual-card--skeleton">
+        <app-shimmer width="40%" height="18px" />
+        <app-shimmer width="48px" height="18px" />
+      </div>
+    }
+  </div>
+} @else if (filtered().length === 0) {
+  <app-empty-state [config]="emptyState" />
+} @else {
+  <div class="qual-list">
+    @for (q of filtered(); track q.id) {
+      <div class="qual-card" [class.is-open]="isExpanded(q.id)">
+        <button type="button" class="qual-card__header" (click)="toggle(q.id)" [attr.aria-expanded]="isExpanded(q.id)">
+          <span class="qual-card__title">{{ q.name }}</span>
+          <span class="qual-card__right">
+            <span class="qual-card__percent">{{ q.percent }}%</span>
+            <i class="pi" [class.pi-chevron-down]="!isExpanded(q.id)" [class.pi-chevron-up]="isExpanded(q.id)"></i>
+          </span>
+          <span class="qual-card__track" aria-hidden="true">
+            <span class="qual-card__fill" [style.width.%]="q.percent"></span>
+          </span>
+        </button>
+
+        @if (isExpanded(q.id)) {
+          <div class="qual-card__body">
+            @if (q.earned_courses.length) {
+              <div class="qual-section qual-section--earned">
+                <p class="qual-section__title">{{ 'feature.profile.qualifications.earned' | translate }}</p>
+                @for (c of q.earned_courses; track c.course_id) {
+                  <div class="qual-course">
+                    <div class="qual-course__info">
+                      <p class="qual-course__title">{{ c.title }}</p>
+                      <p class="qual-course__meta">
+                        @if (c.completed_at) {
+                          {{ 'feature.profile.qualifications.completed_on' | translate }}
+                          {{ c.completed_at | date: 'mediumDate' }}
+                        }
+                      </p>
+                      @if (c.also_in.length) {
+                        <span class="qual-course__also">
+                          {{ 'feature.profile.qualifications.also_in' | translate }} {{ c.also_in.join(', ') }}
+                        </span>
+                      }
+                    </div>
+                    @if (c.certificate_id) {
+                      <a
+                        class="qual-course__cert"
+                        [href]="'/api/v1/learner/profile/certificates/' + c.certificate_id + '/download'"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        <i class="pi pi-download"></i>
+                        {{ 'feature.profile.qualifications.download_certificate' | translate }}
+                      </a>
+                    }
+                  </div>
+                }
+              </div>
+            }
+
+            @if (q.uncovered_courses.length) {
+              <div class="qual-section qual-section--uncovered">
+                <p class="qual-section__title">{{ 'feature.profile.qualifications.uncovered' | translate }}</p>
+                @for (c of q.uncovered_courses; track c.course_id) {
+                  <div class="qual-course">
+                    <div class="qual-course__info">
+                      <p class="qual-course__title">{{ c.title }}</p>
+                      <p class="qual-course__meta">
+                        {{
+                          (c.cohort_scheduled
+                            ? 'feature.profile.qualifications.cohort_scheduled'
+                            : 'feature.profile.qualifications.no_cohort'
+                          ) | translate
+                        }}
+                      </p>
+                      @if (c.also_in.length) {
+                        <span class="qual-course__also">
+                          {{ 'feature.profile.qualifications.also_in' | translate }} {{ c.also_in.join(', ') }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                }
+                <button type="button" class="qual-section__notify">
+                  <i class="pi pi-bell"></i>
+                  {{ 'feature.profile.qualifications.notify_me' | translate }}
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+}

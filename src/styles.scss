@@ -1,1 +1,143 @@
-/* You can add global styles to this file, and also import other style files */
+// =============================================================================
+// Global stylesheet — NAS LMS Learner Website
+// Token layers first, then third-party primitives, then base/reset.
+// Application code must consume semantic tokens only (see styles/_variables).
+// =============================================================================
+
+@use "styles/_primitives";
+@use "styles/_variables";
+@use "styles/_mixins" as *;
+
+// Third-party primitives (behaviour/layout only; visuals are tokenised).
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
+
+// -----------------------------------------------------------------------------
+// Base reset
+// -----------------------------------------------------------------------------
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-english);
+  color: var(--color-essential-secondary);
+  background-color: var(--elevation-surface-default);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @include typography("body", "regular");
+}
+
+// RTL: Arabic content uses Almarai; layout direction flips via [dir].
+[dir="rtl"] body {
+  font-family: var(--font-family-arabic);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+// Accessible focus ring — visible on light and brand surfaces.
+:focus-visible {
+  outline: var(--stroke-width-focus) solid var(--color-primary-600);
+  outline-offset: var(--size-2);
+}
+
+// Shared field wrapper (see LMS-Architecture "Forms").
+.our-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16xs);
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+  -webkit-text-fill-color: #000 !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+// -----------------------------------------------------------------------------
+// Global toast (p-toast) — styled to match the design system, per the
+// "Enrolled Successfully" / "Something Went Wrong" catalogue toasts in Figma.
+// -----------------------------------------------------------------------------
+.p-toast-message {
+  background: var(--color-essential-primary);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-lg);
+  box-shadow: var(--elevation-shadow-lg);
+  overflow: hidden;
+}
+
+.p-toast-message-content {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-13xs);
+  padding: var(--spacing-3xs);
+}
+
+.p-toast-message-icon {
+  flex-shrink: 0;
+  font-size: var(--font-size-xl);
+}
+
+.p-toast-summary {
+  @include typography('subtitle-small', 'bold');
+  color: var(--color-essential-secondary);
+  display: block;
+}
+
+.p-toast-detail {
+  @include typography('body-small', 'regular');
+  color: var(--color-neutral-800);
+  display: block;
+  margin-top: var(--spacing-16xs);
+}
+
+.p-toast-icon-close {
+  color: var(--color-neutral-700);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.p-toast-message-success .p-toast-message-icon {
+  color: var(--color-status-success);
+}
+
+.p-toast-message-error .p-toast-message-icon {
+  color: var(--color-status-warning);
+}

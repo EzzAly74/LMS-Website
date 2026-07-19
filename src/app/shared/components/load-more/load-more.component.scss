@@ -1,0 +1,33 @@
+@use 'mixins' as *;
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-3xs) 0;
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-15xs);
+    padding: var(--spacing-14xs) var(--spacing-2xs);
+    background: var(--color-essential-primary);
+    border: var(--stroke-width-default) solid var(--color-essential-tertiary);
+    border-radius: var(--radius-control-sm);
+    color: var(--color-essential-tertiary);
+    @include typography('button', 'medium');
+
+    &:disabled {
+      opacity: var(--opacity-disabled);
+    }
+  }
+
+  &__spin {
+    animation: load-more-spin 0.8s linear infinite;
+  }
+}
+
+@keyframes load-more-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,123 @@
+@use "mixins" as *;
+
+.blog-hero {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  overflow: hidden;
+  text-decoration: none;
+  background: var(--color-essential-primary);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-lg);
+  box-shadow: var(--elevation-shadow-sm);
+
+  &__media {
+    position: relative;
+    min-height: 320px;
+
+    &--placeholder {
+      background-image: linear-gradient(
+        130deg,
+        var(--color-primary-700) 0%,
+        var(--color-additionally-400) 100%
+      );
+    }
+  }
+
+  &__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__flag {
+    position: absolute;
+    top: var(--spacing-15xs);
+    inset-inline-start: var(--spacing-15xs);
+    padding: var(--spacing-17xs) var(--spacing-15xs);
+    border-radius: var(--radius-control-xs);
+    background: var(--color-secondary-200, #fbe8cf);
+    color: var(--color-secondary-800, #a85e05);
+    @include typography("caption", "medium");
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-14xs);
+    padding: var(--spacing-9xs);
+    justify-content: center;
+    background: #fff;
+  }
+
+  &__topic {
+    align-self: flex-start;
+    padding: var(--spacing-17xs) var(--spacing-15xs);
+    border-radius: var(--radius-control-xs);
+    background: var(--color-primary-200);
+    color: var(--color-primary-800);
+    @include typography("caption", "medium");
+  }
+
+  &__title {
+    @include typography("h1", "bold");
+    color: var(--color-essential-secondary);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__excerpt {
+    @include typography("body", "regular");
+    color: var(--color-neutral-800);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-15xs);
+    margin-top: var(--spacing-15xs);
+  }
+
+  &__meta-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__author {
+    @include typography("body-small", "medium");
+    color: var(--color-essential-secondary);
+  }
+
+  &__sub {
+    @include typography("caption", "regular");
+    color: var(--color-neutral-800);
+  }
+
+  &:hover .blog-hero__title {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+
+    &__media {
+      min-height: 200px;
+    }
+    &__content {
+      padding: var(--spacing-11xs);
+    }
+    &__title {
+      @include typography("h1-small", "bold");
+    }
+  }
+}

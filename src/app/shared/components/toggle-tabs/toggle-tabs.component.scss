@@ -1,0 +1,34 @@
+@use 'mixins' as *;
+
+.toggle-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-17xs);
+  padding: var(--spacing-17xs);
+  background: var(--color-neutral-300);
+  border-radius: var(--radius-pill);
+
+  &__tab {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    padding: var(--spacing-15xs) var(--spacing-11xs);
+    border: none;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-neutral-750);
+    white-space: nowrap;
+    @include typography('body-small', 'medium');
+
+    &.is-active {
+      background: var(--color-essential-primary);
+      color: var(--color-essential-secondary);
+      box-shadow: var(--elevation-shadow-sm);
+    }
+  }
+
+  &__count {
+    @include typography('caption', 'medium');
+    color: var(--color-neutral-700);
+  }
+}

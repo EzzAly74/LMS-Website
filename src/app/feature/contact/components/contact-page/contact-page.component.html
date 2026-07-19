@@ -1,0 +1,151 @@
+<section class="demo">
+  <div class="demo__inner">
+
+    <!-- Marketing side -->
+    <aside class="demo__marketing">
+      <div class="demo__marketing-copy">
+        <h1 class="demo__title">{{ 'feature.contact.hero_title' | translate }}</h1>
+        <p class="demo__subtitle">{{ 'feature.contact.hero_subtitle' | translate }}</p>
+      </div>
+      <img class="demo__illustration" src="assets/contact/rectangle.png"
+        [alt]="'feature.contact.hero_title' | translate" />
+    </aside>
+
+    <!-- Booking side -->
+    <div class="demo__booking">
+      <div class="booking-card">
+        @if (!submitted()) {
+        <p class="booking-card__title">{{ 'feature.contact.card_title' | translate }}</p>
+
+        <form class="booking-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <!-- Name -->
+          <div class="field">
+            <label class="field__label" for="c-name">
+              {{ 'feature.contact.name' | translate }} <span class="field__req">*</span>
+            </label>
+            <input id="c-name" type="text" formControlName="name" class="field__input"
+              [class.field__input--error]="form.controls.name.invalid && form.controls.name.touched"
+              [placeholder]="'feature.contact.name_ph' | translate" />
+            @if (form.controls.name.invalid && form.controls.name.touched) {
+            <span class="field__error">{{ 'feature.contact.errors.required' | translate }}</span>
+            }
+          </div>
+
+          <!-- Email -->
+          <div class="field">
+            <label class="field__label" for="c-email">
+              {{ 'feature.contact.email' | translate }} <span class="field__req">*</span>
+            </label>
+            <input id="c-email" type="email" formControlName="email" class="field__input"
+              [class.field__input--error]="form.controls.email.invalid && form.controls.email.touched"
+              [placeholder]="'feature.contact.email_ph' | translate" />
+            @if (form.controls.email.invalid && form.controls.email.touched) {
+            <span class="field__error">{{ 'feature.contact.errors.email' | translate }}</span>
+            }
+          </div>
+
+          <!-- Guests -->
+          @if (guests.length) {
+          <div class="field guests" formArrayName="guests">
+            <label class="field__label">{{ 'feature.contact.guests' | translate }}</label>
+            @for (guest of guests.controls; track guest; let i = $index) {
+            <div class="guests__row">
+              <input type="email" [formControlName]="i" class="field__input"
+                [class.field__input--error]="guest.invalid && guest.touched"
+                [placeholder]="'feature.contact.email_ph' | translate" />
+              <button type="button" class="guests__remove" (click)="removeGuest(i)"
+                [attr.aria-label]="'feature.contact.remove_guest' | translate">
+                <i class="pi pi-times"></i>
+              </button>
+            </div>
+            }
+          </div>
+          }
+          <button type="button" class="booking-form__add-guests" (click)="addGuest()">
+            {{ 'feature.contact.add_guests' | translate }}
+          </button>
+
+          <!-- Phone -->
+          <div class="field">
+            <label class="field__label" for="c-phone">{{ 'feature.contact.phone' | translate }}</label>
+            <input id="c-phone" type="tel" formControlName="phone" class="field__input"
+              [placeholder]="'feature.contact.phone_ph' | translate" />
+          </div>
+
+          <!-- Job Title -->
+          <div class="field">
+            <label class="field__label" for="c-job">
+              {{ 'feature.contact.job_title' | translate }} <span class="field__req">*</span>
+            </label>
+            <input id="c-job" type="text" formControlName="job_title" class="field__input"
+              [class.field__input--error]="form.controls.job_title.invalid && form.controls.job_title.touched"
+              [placeholder]="'feature.contact.job_title_ph' | translate" />
+            @if (form.controls.job_title.invalid && form.controls.job_title.touched) {
+            <span class="field__error">{{ 'feature.contact.errors.required' | translate }}</span>
+            }
+          </div>
+
+          <!-- Company -->
+          <div class="field">
+            <label class="field__label" for="c-company">
+              {{ 'feature.contact.company' | translate }} <span class="field__req">*</span>
+            </label>
+            <input id="c-company" type="text" formControlName="company_name" class="field__input"
+              [class.field__input--error]="form.controls.company_name.invalid && form.controls.company_name.touched"
+              [placeholder]="'feature.contact.company_ph' | translate" />
+            @if (form.controls.company_name.invalid && form.controls.company_name.touched) {
+            <span class="field__error">{{ 'feature.contact.errors.required' | translate }}</span>
+            }
+          </div>
+
+          <button type="submit" class="booking-form__submit" [disabled]="submitting()">
+            @if (submitting()) { <i class="pi pi-spin pi-spinner"></i> }
+            {{ 'feature.contact.submit' | translate }}
+          </button>
+        </form>
+        } @else {
+        <!-- Success state -->
+        <div class="success">
+          <span class="success__check">
+            <img src="assets/icons/contact/success.svg" alt="Success" />
+          </span>
+          <h2 class="success__title">{{ 'feature.contact.success.title' | translate }}</h2>
+          <p class="success__subtitle">{{ 'feature.contact.success.subtitle' | translate }}</p>
+
+          <div class="summary">
+            <p class="summary__name">{{ 'feature.contact.card_title' | translate }}</p>
+            <p class="summary__duration"><i class="pi pi-clock"></i> {{ 'feature.contact.success.duration' | translate
+              }}</p>
+            <div class="summary__block">
+              <span class="summary__label">{{ 'feature.contact.success.description_label' | translate }}</span>
+              <p class="summary__text">{{ 'feature.contact.success.description' | translate }}</p>
+            </div>
+            <div class="summary__block">
+              <span class="summary__label">{{ 'feature.contact.success.meeting_label' | translate }}</span>
+              <span class="summary__meet">{{ 'feature.contact.success.meeting_value' | translate }}</span>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Quick contact -->
+      <div class="quick-contact">
+        <span class="quick-contact__label">{{ 'feature.contact.quick_contact' | translate }}</span>
+        <div class="quick-contact__links">
+          @if (info()?.phone) {
+          <a class="quick-contact__link" [href]="'tel:' + info()!.phone">
+            <i class="pi pi-phone"></i> {{ info()!.phone }}
+          </a>
+          }
+          @if (info()?.email) {
+          <a class="quick-contact__link" [href]="'mailto:' + info()!.email">
+            <i class="pi pi-envelope"></i> {{ info()!.email }}
+          </a>
+          }
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

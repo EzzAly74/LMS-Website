@@ -1,0 +1,78 @@
+<div class="login">
+  <section class="login__form-col">
+    <form class="login__form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <header class="login__intro">
+        <h1 class="login__title">{{ 'feature.auth.login.title' | translate }}</h1>
+        <p class="login__subtitle">{{ 'feature.auth.login.subtitle' | translate }}</p>
+      </header>
+
+      @if (serverError()) {
+        <p class="login__server-error" role="alert">{{ serverError() }}</p>
+      }
+
+      <div class="our-field">
+        <label for="email">{{ 'feature.auth.login.email_label' | translate }}</label>
+        <div class="login__input" [class.login__input--invalid]="form.controls.email.touched && form.controls.email.invalid">
+          <input
+            id="email"
+            type="text"
+            formControlName="email"
+            autocomplete="username"
+            [placeholder]="'feature.auth.login.email_ph' | translate"
+          />
+        </div>
+        @if (form.controls.email.touched && form.controls.email.hasError('required')) {
+          <small class="our-field__error">{{ 'common.required' | translate }}</small>
+        }
+      </div>
+
+      <div class="our-field">
+        <label for="password">{{ 'feature.auth.login.password_label' | translate }}</label>
+        <div class="login__input" [class.login__input--invalid]="form.controls.password.touched && form.controls.password.invalid">
+          <input
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            autocomplete="current-password"
+            [placeholder]="'feature.auth.login.password_ph' | translate"
+          />
+          <button
+            type="button"
+            class="login__eye"
+            (click)="togglePassword()"
+            [attr.aria-label]="
+              (showPassword() ? 'feature.auth.login.hide_password' : 'feature.auth.login.show_password') | translate
+            "
+          >
+            <i class="pi" [class.pi-eye]="!showPassword()" [class.pi-eye-slash]="showPassword()"></i>
+          </button>
+        </div>
+        @if (form.controls.password.touched && form.controls.password.hasError('required')) {
+          <small class="our-field__error">{{ 'common.required' | translate }}</small>
+        }
+      </div>
+
+      <div class="login__actions">
+        <button type="submit" class="login__submit" [disabled]="loading()">
+          {{ 'feature.auth.login.submit' | translate }}
+        </button>
+        <p class="login__helper">{{ 'feature.auth.login.helper' | translate }}</p>
+      </div>
+    </form>
+  </section>
+
+  <aside class="login__brand">
+    <div class="login__rings" aria-hidden="true">
+      <span class="login__ring login__ring--1"></span>
+      <span class="login__ring login__ring--2"></span>
+      <span class="login__ring login__ring--3"></span>
+      <span class="login__ring login__ring--4"></span>
+      <span class="login__dots"></span>
+    </div>
+    <div class="login__brand-content">
+      <img class="login__brand-logo" src="assets/brand/nas-logo-on-dark.svg" alt="NAS" width="123" height="40" />
+      <h2 class="login__brand-title">{{ 'feature.auth.login.brand_title' | translate }}</h2>
+      <p class="login__brand-subtitle">{{ 'feature.auth.login.brand_subtitle' | translate }}</p>
+    </div>
+  </aside>
+</div>

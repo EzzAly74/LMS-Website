@@ -28,6 +28,9 @@ D:\2b-source-code\2b-academy-test
 Angular Frontend
 D:\2b-source-code\2B-Academy-Website
 
+Angular Dashboard
+D:\2b-source-code\2B-Academy-Angular
+
 The Angular project is currently empty.
 
 The Laravel project already contains APIs.
@@ -206,7 +209,213 @@ https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=966-50318&t=Oc9e
 
 MY LEARNING FLOW
 
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1062-56048&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=900-45179&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=900-45363&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=900-45585&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=907-45837&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=907-46056&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-46446&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-46659&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-46867&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-47084&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-47335&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-47544&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-47757&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-48560&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-49092&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-49297&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=913-49572&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=933-46418&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1047-63046&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=933-46695&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1207-19636&t=Oc9eqtHqXGRPF38J-4
+
+MOBILE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1078-55926&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=971-14248&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=975-14197&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=976-13438&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=976-13556&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=976-13669&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=976-13784&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-13712&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-13847&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-13977&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-14109&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-14378&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-14486&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-14595&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-14724&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=979-14863&t=Oc9eqtHqXGRPF38J-4
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1049-19229&t=Oc9eqtHqXGRPF38J-4
+
 (Use ALL provided Web and Mobile Figma links exactly as provided in this prompt. Every screen is mandatory. Do not skip any.)
+
+---
+
+PROFILE FLOW
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=832-41307&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=839-43153&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=841-42290&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=841-42746&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=841-43294&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=851-43960&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1047-63328&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=851-44908&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=951-48857&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=851-45445&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=949-46601&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=951-49986&m=dev
+
+MOBILE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-51541&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-53546&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-53788&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-52323&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1050-55598&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-51866&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-53080&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=994-52127&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=988-51132&m=dev
+
+---
+
+BLOGS DASHBOARD (Instead of Resources)
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87960&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-86883&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87792&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87007&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87159&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87336&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87488&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-87640&m=dev
+
+BLOGS WEBSITE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-48859&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-45934&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46653&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46827&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46108&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46217&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46326&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46435&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-46544&m=dev
+
+MOBILE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-85206&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-85294&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-85387&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-85499&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-85599&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1609-85699&m=dev
+
+---
+
+BOOK A DEMO (CONTACT US)
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-42826&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-42765&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-42723&m=dev
+
+MOBILE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-42633&m=dev
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1589-42682&m=dev
+
+---
+
+WHO WE ARE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1665-88349&m=dev
+
+MOBILE
+
+https://www.figma.com/design/JnNkT9eeYmRiDOuapW4RKf/LMS?node-id=1665-88730&m=dev
 
 ---
 
@@ -535,3 +744,22 @@ Begin by:
 5. Creating a complete Figma screen checklist.
 6. Identifying backend improvements before writing frontend code.
 7. Starting implementation feature-by-feature with small, clean commits.
+
+# Contact Us – Business Requirements
+
+The company email must not be hardcoded.
+
+Add the company email to the backend environment configuration (.env), for example:
+CONTACT_EMAIL=NASLMS@gmail.com
+Contact Form Flow
+
+When a user submits the Contact Us form:
+
+Save the contact request in the database.
+Send an auto-reply email to the customer's email address confirming that their request has been received and that the team will contact them shortly.
+Send a notification email to the company email defined in the .env file (CONTACT_EMAIL) containing all submitted customer information (name, email, phone, subject, message, etc.).
+Notes
+The company email should be configurable through the .env file only, so the client can change it without modifying the code.
+Do not hardcode NASLMS@gmail.com anywhere in the application.
+The email templates should support both Arabic and English.
+All email sending should be handled by Laravel Mail using queued jobs for better performance.

@@ -1,0 +1,128 @@
+<aside class="filter-sidebar" [attr.aria-label]="'shared.filter_sidebar.title' | translate">
+  <div class="filter-sidebar__header">
+    <span class="filter-sidebar__title">{{ 'shared.filter_sidebar.title' | translate }}</span>
+    <button type="button" class="filter-sidebar__clear" (click)="onClearAll()">
+      {{ 'common.clear_all' | translate }}
+    </button>
+  </div>
+
+  @for (section of config.sections; track section.key) {
+    <div class="filter-sidebar__section">
+      <button
+        type="button"
+        class="filter-sidebar__section-header"
+        [attr.aria-expanded]="isExpanded(section)"
+        (click)="toggleSection(section)"
+      >
+        <span class="filter-sidebar__section-label">
+          <i class="pi {{ section.icon }}"></i>
+          {{ section.label }}
+        </span>
+        <i class="pi pi-chevron-up filter-sidebar__chevron" [class.is-collapsed]="!isExpanded(section)"></i>
+      </button>
+
+      @if (isExpanded(section)) {
+        <div class="filter-sidebar__options">
+          @if (section.type === 'chip') {
+            <div class="filter-sidebar__chips">
+              @for (option of section.options; track option.value) {
+                <button
+                  type="button"
+                  class="filter-sidebar__chip"
+                  [class.is-selected]="isChecked(section.key, option.value)"
+                  (click)="toggleOption(section, option)"
+                >
+                  {{ option.label }}
+                </button>
+              }
+            </div>
+          } @else {
+            @for (option of section.options; track option.value) {
+              <label class="filter-sidebar__option">
+                <input
+                  [type]="section.type === 'radio' ? 'radio' : 'checkbox'"
+                  [name]="section.key"
+                  [checked]="isChecked(section.key, option.value)"
+                  (change)="toggleOption(section, option)"
+                />
+                <span class="filter-sidebar__option-label">{{ option.label }}</span>
+                @if (option.count !== undefined) {
+                  <span class="filter-sidebar__option-count">{{ option.count }}</span>
+                }
+              </label>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+</aside>
+
+<nav class="filter-chip-row" [attr.aria-label]="'shared.filter_sidebar.title' | translate">
+  @for (section of config.sections; track section.key) {
+    <button type="button" class="filter-chip-row__trigger" (click)="openMobileSheet(section)">
+      <i class="pi {{ section.icon }}"></i>
+      {{ section.label }}
+      @if (selectedCountFor(section.key) > 0) {
+        <span class="filter-chip-row__badge">{{ selectedCountFor(section.key) }}</span>
+      }
+    </button>
+  }
+</nav>
+
+@if (mobileSheetSection(); as section) {
+  <div class="filter-sheet-backdrop" (click)="closeMobileSheet()"></div>
+  <div class="filter-sheet" role="dialog" aria-modal="true" [attr.aria-label]="section.label">
+    <div class="filter-sheet__handle"></div>
+    <div class="filter-sheet__header">
+      <span class="filter-sheet__title">
+        <i class="pi {{ section.icon }}"></i>
+        {{ section.label }}
+      </span>
+      <button
+        type="button"
+        class="filter-sheet__close"
+        [attr.aria-label]="'common.close' | translate"
+        (click)="closeMobileSheet()"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    <div class="filter-sheet__options">
+      @if (section.type === 'chip') {
+        <div class="filter-sidebar__chips">
+          @for (option of section.options; track option.value) {
+            <button
+              type="button"
+              class="filter-sidebar__chip"
+              [class.is-selected]="isDraftChecked(option.value)"
+              (click)="toggleDraftOption(section, option)"
+            >
+              {{ option.label }}
+            </button>
+          }
+        </div>
+      } @else {
+        @for (option of section.options; track option.value) {
+          <label class="filter-sidebar__option">
+            <input
+              [type]="section.type === 'radio' ? 'radio' : 'checkbox'"
+              [name]="'sheet-' + section.key"
+              [checked]="isDraftChecked(option.value)"
+              (change)="toggleDraftOption(section, option)"
+            />
+            <span class="filter-sidebar__option-label">{{ option.label }}</span>
+            @if (option.count !== undefined) {
+              <span class="filter-sidebar__option-count">{{ option.count }}</span>
+            }
+          </label>
+        }
+      }
+    </div>
+
+    <button type="button" class="filter-sheet__apply" (click)="applyMobileSheet()">
+      {{ 'common.apply' | translate }}
+    </button>
+  </div>
+}

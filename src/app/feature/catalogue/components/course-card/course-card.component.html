@@ -1,0 +1,58 @@
+<article class="course-card">
+  <a class="course-card__media" [class.course-card__media--placeholder]="!course.image" [routerLink]="[detailRoute, course.id]">
+    @if (course.image) {
+      <img class="course-card__image" [src]="course.image" [alt]="course.title" loading="lazy" />
+    }
+    @if (levelKey) {
+      <app-badge class="course-card__badge course-card__badge--level" tone="level" [label]="levelKey | translate" />
+    }
+    <app-badge
+      class="course-card__badge course-card__badge--delivery"
+      tone="delivery"
+      icon="pi-globe"
+      [label]="deliveryKey | translate"
+    />
+  </a>
+
+  <div class="course-card__body">
+    <h3 class="course-card__title">
+      <a [routerLink]="[detailRoute, course.id]">{{ course.title }}</a>
+    </h3>
+
+    <div class="course-card__meta-row">
+      @if (instructor) {
+        <span class="course-card__instructor">
+          <app-avatar [name]="instructor.name" [image]="instructor.image" />
+          <span class="course-card__instructor-name">{{ instructor.name }}</span>
+        </span>
+      }
+      <app-rating-stars [score]="course.rating.avg" [count]="course.rating.count" />
+    </div>
+
+    @if (course.qualifications.length) {
+      <ul class="course-card__tags">
+        @for (tag of course.qualifications; track tag.id) {
+          <li class="course-card__tag">{{ tag.name }}</li>
+        }
+      </ul>
+    }
+
+    <div class="course-card__footer">
+      @if (course.next_cohort) {
+        <span class="course-card__date">
+          {{ 'feature.catalogue.card.starts' | translate }}
+          {{ course.next_cohort.start_date | date: 'mediumDate' }}
+        </span>
+      }
+      @if (isActionable) {
+        <button type="button" class="course-card__cta" (click)="onCtaClick()">
+          {{ ctaLabelKey | translate }}
+        </button>
+      } @else {
+        <span class="course-card__cta course-card__cta--static" [class.is-enrolled]="course.cta.state === 'enrolled_view_learning'">
+          {{ ctaLabelKey | translate }}
+        </span>
+      }
+    </div>
+  </div>
+</article>

@@ -1,0 +1,32 @@
+// =============================================================================
+// NAS Design System — SCSS mixins (consume semantic tokens only)
+// =============================================================================
+
+/// Apply a NAS type style. Style must be one of the 13 defined styles and
+/// weight one of: bold | medium | regular.
+/// Usage: @include typography("h1", "bold");
+@mixin typography($style, $weight: "regular") {
+  font-size: var(--typography-#{$style}-#{$weight}-font-size);
+  line-height: var(--typography-#{$style}-#{$weight}-line-height);
+  letter-spacing: var(--typography-#{$style}-#{$weight}-letter-spacing);
+  font-weight: var(--typography-#{$style}-#{$weight}-font-weight);
+}
+
+/// Visually hidden but available to assistive tech.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/// Minimum WCAG interactive target (44x44) — see UX non-negotiables.
+@mixin touch-target {
+  min-height: var(--size-44);
+  min-width: var(--size-44);
+}

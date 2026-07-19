@@ -1,0 +1,254 @@
+// =============================================================================
+// NAS Design System — SEMANTIC TOKENS (the ONLY code-facing API)
+// -----------------------------------------------------------------------------
+// Source of truth: NAS_DesignSystem.md (Phase 2).
+// Every semantic token aliases a primitive from _primitives.scss.
+// Use ONLY these tokens in components/pages. Never reference primitives or raw
+// values directly, and never add a fallback inside var().
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Typography semantic tokens — generated for 13 styles x 3 weights.
+// style -> (font-size, font-height, font-tracking) primitive keys.
+// -----------------------------------------------------------------------------
+$nas-type-styles: (
+  "large-heading": ("2xl", "2xl", "2xl"),
+  "h1": ("xl", "xl", "xl"),
+  "h1-small": ("l", "l", "l"),
+  "h2": ("m", "m", "m"),
+  "subtitle": ("s", "s", "s"),
+  "subtitle-small": ("xs", "xs", "xs"),
+  "body": ("s", "s", "neutral"),
+  "body-small": ("xs", "xs", "neutral"),
+  "button-large": ("button-l", "button-l", "neutral"),
+  "button": ("button-m", "button-m", "neutral"),
+  "button-small": ("button-s", "button-s", "neutral"),
+  "caption": ("2xs", "2xs", "neutral"),
+  "minimum-size": ("3xs", "3xs", "neutral"),
+);
+
+$nas-type-weights: (
+  "bold": var(--font-weight-bold),
+  "medium": var(--font-weight-medium),
+  "regular": var(--font-weight-regular),
+);
+
+:root {
+  // ---------------------------------------------------------------------------
+  // COLOR — ESSENTIAL
+  // ---------------------------------------------------------------------------
+  --color-essential-primary: var(--color-essential-background);
+  --color-essential-secondary: var(--color-essential-text);
+  --color-essential-tertiary: var(--color-essential-cta);
+  --color-essential-additionally: var(--color-essential-additional);
+
+  // COLOR — PRIMARY (Deep Teal, 100–1000)
+  --color-primary-100: var(--color-deep-teal-100);
+  --color-primary-200: var(--color-deep-teal-200);
+  --color-primary-300: var(--color-deep-teal-300);
+  --color-primary-400: var(--color-deep-teal-400);
+  --color-primary-500: var(--color-deep-teal-500);
+  --color-primary-600: var(--color-deep-teal-600);
+  --color-primary-700: var(--color-deep-teal-700);
+  --color-primary-800: var(--color-deep-teal-800);
+  --color-primary-900: var(--color-deep-teal-900);
+  --color-primary-1000: var(--color-deep-teal-1000);
+
+  // COLOR — ADDITIONALLY (Accent Sky)
+  --color-additionally-100: var(--color-accent-sky-100);
+  --color-additionally-200: var(--color-accent-sky-200);
+  --color-additionally-300: var(--color-accent-sky-300);
+  --color-additionally-400: var(--color-accent-sky-400);
+  --color-additionally-500: var(--color-accent-sky-500);
+  --color-additionally-600: var(--color-accent-sky-600);
+  --color-additionally-700: var(--color-accent-sky-700);
+  --color-additionally-800: var(--color-accent-sky-800);
+  --color-additionally-900: var(--color-accent-sky-900);
+  --color-additionally-1000: var(--color-accent-sky-1000);
+  --color-additionally-400-08: var(--color-accent-sky-400-08);
+  --color-additionally-400-16: var(--color-accent-sky-400-16);
+  --color-additionally-400-24: var(--color-accent-sky-400-24);
+
+  // COLOR — NEUTRAL (Grey ramp incl. alpha)
+  --color-neutral-0: var(--color-grey-0);
+  --color-neutral-50: var(--color-grey-50);
+  --color-neutral-100: var(--color-grey-100);
+  --color-neutral-100-20: var(--color-grey-100-20);
+  --color-neutral-200: var(--color-grey-200);
+  --color-neutral-250: var(--color-grey-250);
+  --color-neutral-300: var(--color-grey-300);
+  --color-neutral-300-40: var(--color-grey-300-40);
+  --color-neutral-350: var(--color-grey-350);
+  --color-neutral-400: var(--color-grey-400);
+  --color-neutral-400-60: var(--color-grey-400-60);
+  --color-neutral-400-40: var(--color-grey-400-40);
+  --color-neutral-450: var(--color-grey-450);
+  --color-neutral-500: var(--color-grey-500);
+  --color-neutral-550: var(--color-grey-550);
+  --color-neutral-600: var(--color-grey-600);
+  --color-neutral-700: var(--color-grey-700);
+  --color-neutral-750: var(--color-grey-750);
+  --color-neutral-800: var(--color-grey-800);
+  --color-neutral-900: var(--color-grey-900);
+  --color-neutral-1000: var(--color-grey-1000);
+  --color-neutral-1000-20: var(--color-grey-1000-20);
+  --color-neutral-1000-10: var(--color-grey-1000-10);
+
+  // COLOR — STATUS · Warning (Red)
+  --color-status-warning: var(--color-status-red-500);
+  --color-status-warning-08: var(--color-status-red-500-08);
+  --color-status-warning-10: var(--color-status-red-500-10);
+  --color-status-warning-16: var(--color-status-red-500-16);
+  --color-status-warning-20: var(--color-status-red-500-20);
+  --color-status-warning-40: var(--color-status-red-500-40);
+  --color-status-warning-50: var(--color-status-red-50);
+
+  // COLOR — STATUS · Success (Green)
+  --color-status-success: var(--color-status-green-500);
+  --color-status-success-08: var(--color-status-green-500-08);
+  --color-status-success-10: var(--color-status-green-500-10);
+  --color-status-success-16: var(--color-status-green-500-16);
+  --color-status-success-40: var(--color-status-green-500-40);
+  --color-status-success-50: var(--color-status-green-50);
+
+  // COLOR — STATUS · Hold (Orange)
+  --color-status-hold-50: var(--color-status-orange-50);
+  --color-status-hold-500: var(--color-status-orange-500);
+  --color-status-hold-500-08: var(--color-status-orange-500-08);
+  --color-status-hold-500-16: var(--color-status-orange-500-16);
+  --color-status-hold-500-40: var(--color-status-orange-500-40);
+
+  // COLOR — STATUS · Operational (Blue) + Neutral Alert (Purple)
+  --color-status-operational: var(--color-status-blue-500);
+  --color-status-operational-10: var(--color-status-blue-500-10);
+  --color-status-neutral-alert: var(--color-status-purple-500);
+
+  // ---------------------------------------------------------------------------
+  // SPACING — flat named scale (17XS = 2px … 12XL = 64px)
+  // ---------------------------------------------------------------------------
+  --spacing-17xs: var(--size-2);
+  --spacing-16xs: var(--size-4);
+  --spacing-15xs: var(--size-8);
+  --spacing-14xs: var(--size-10);
+  --spacing-13xs: var(--size-12);
+  --spacing-12xs: var(--size-14);
+  --spacing-11xs: var(--size-16);
+  --spacing-10xs: var(--size-18);
+  --spacing-9xs: var(--size-20);
+  --spacing-8xs: var(--size-22);
+  --spacing-7xs: var(--size-24);
+  --spacing-6xs: var(--size-26);
+  --spacing-5xs: var(--size-28);
+  --spacing-4xs: var(--size-30);
+  --spacing-3xs: var(--size-32);
+  --spacing-2xs: var(--size-34);
+  --spacing-xs: var(--size-36);
+  --spacing-s: var(--size-38);
+  --spacing-m: var(--size-40);
+  --spacing-xl: var(--size-42);
+  --spacing-2xl: var(--size-44);
+  --spacing-3xl: var(--size-46);
+  --spacing-4xl: var(--size-48);
+  --spacing-5xl: var(--size-50);
+  --spacing-6xl: var(--size-52);
+  --spacing-7xl: var(--size-54);
+  --spacing-8xl: var(--size-56);
+  --spacing-9xl: var(--size-58);
+  --spacing-10xl: var(--size-60);
+  --spacing-11xl: var(--size-62);
+  --spacing-12xl: var(--size-64);
+
+  // ---------------------------------------------------------------------------
+  // RADIUS — default mode (rounded / no-corner-radius overrides below)
+  // ---------------------------------------------------------------------------
+  --radius-control-xs: var(--radius-4xs);
+  --radius-control-sm: var(--radius-2xs);
+  --radius-control-md: var(--radius-sm);
+  --radius-control-lg: var(--radius-lg);
+  --radius-container-sm: var(--radius-sm);
+  --radius-container-md: var(--radius-lg);
+  --radius-container-lg: var(--radius-xl);
+  --radius-container-xl: var(--radius-2xl);
+  --radius-dialog: var(--radius-2xl);
+  --radius-pill: var(--radius-full);
+
+  // ---------------------------------------------------------------------------
+  // ELEVATION — surface + shadow
+  // NOTE: NAS_DesignSystem.md references surface/bg/* in the elevation section
+  // but never defines them as primitives. Mapped here to the closest primitives.
+  // ---------------------------------------------------------------------------
+  --surface-bg-sunken: var(--color-grey-50);
+  --surface-bg-default: var(--color-essential-background);
+  --surface-bg-raised: var(--color-grey-0);
+  --surface-bg-overlay: var(--color-grey-2000-64);
+
+  --elevation-surface-sunken: var(--surface-bg-sunken);
+  --elevation-surface-default: var(--surface-bg-default);
+  --elevation-surface-raised: var(--surface-bg-raised);
+  --elevation-surface-overlay: var(--surface-bg-overlay);
+  --elevation-shadow-none: var(--shadow-none);
+  --elevation-shadow-sm: var(--shadow-sm);
+  --elevation-shadow-md: var(--shadow-md);
+  --elevation-shadow-lg: var(--shadow-lg);
+  --elevation-shadow-xl: var(--shadow-xl);
+
+  // ---------------------------------------------------------------------------
+  // NUMBER
+  // ---------------------------------------------------------------------------
+  --font-tracking-label: var(--font-tracking-wide);
+  --opacity-disabled: var(--opacity-40);
+  --opacity-subtle: var(--opacity-8);
+  --opacity-overlay: var(--opacity-64);
+  --stroke-width-default: var(--stroke-width-1);
+  --stroke-width-strong: var(--stroke-width-2);
+  --stroke-width-focus: var(--stroke-width-2);
+
+  // ---------------------------------------------------------------------------
+  // TYPOGRAPHY — generated tokens
+  // ---------------------------------------------------------------------------
+  // NOTE: the Figma text styles (Eng/*) all resolve to letterSpacing 0, so every
+  // semantic type style uses neutral tracking — this supersedes the design doc's
+  // per-heading negative tracking, per the "Figma wins" rule. The negative
+  // font-tracking primitives remain available for the few components that set an
+  // explicit letter-spacing (e.g. nav labels).
+  @each $style, $keys in $nas-type-styles {
+    $size: nth($keys, 1);
+    $height: nth($keys, 2);
+
+    @each $weight, $weight-val in $nas-type-weights {
+      --typography-#{$style}-#{$weight}-font-size: var(--font-size-#{$size});
+      --typography-#{$style}-#{$weight}-line-height: var(--font-height-#{$height});
+      --typography-#{$style}-#{$weight}-letter-spacing: var(--font-tracking-neutral);
+      --typography-#{$style}-#{$weight}-font-weight: #{$weight-val};
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// RADIUS MODES — opt in via [data-radius="rounded" | "no-corner-radius"] on <html>
+// -----------------------------------------------------------------------------
+[data-radius="rounded"] {
+  --radius-control-xs: var(--radius-rounded-3xs);
+  --radius-control-sm: var(--radius-rounded-xs);
+  --radius-control-md: var(--radius-rounded-md);
+  --radius-control-lg: var(--radius-rounded-xl);
+  --radius-container-sm: var(--radius-rounded-lg);
+  --radius-container-md: var(--radius-rounded-2xl);
+  --radius-container-lg: var(--radius-rounded-3xl);
+  --radius-container-xl: var(--radius-rounded-4xl);
+  --radius-dialog: var(--radius-rounded-4xl);
+  --radius-pill: var(--radius-rounded-pill);
+}
+
+[data-radius="no-corner-radius"] {
+  --radius-control-xs: var(--radius-none);
+  --radius-control-sm: var(--radius-none);
+  --radius-control-md: var(--radius-none);
+  --radius-control-lg: var(--radius-none);
+  --radius-container-sm: var(--radius-none);
+  --radius-container-md: var(--radius-none);
+  --radius-container-lg: var(--radius-none);
+  --radius-container-xl: var(--radius-none);
+  --radius-dialog: var(--radius-none);
+  --radius-pill: var(--radius-none-pill);
+}

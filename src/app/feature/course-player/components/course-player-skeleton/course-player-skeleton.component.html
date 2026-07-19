@@ -1,0 +1,21 @@
+<div class="player-skeleton">
+  <aside class="player-skeleton__sidebar">
+    <app-shimmer width="100px" height="14px" />
+    <app-shimmer width="80%" height="20px" />
+    <app-shimmer width="100%" height="8px" radius="var(--radius-full)" />
+
+    <div class="player-skeleton__rows">
+      @for (row of rows; track $index) {
+        <app-shimmer width="100%" height="46px" />
+      }
+    </div>
+  </aside>
+
+  <section class="player-skeleton__main">
+    <app-shimmer width="100%" height="220px" />
+    <app-shimmer width="60%" height="24px" />
+    <app-shimmer width="100%" height="16px" />
+    <app-shimmer width="90%" height="16px" />
+    <app-shimmer width="100%" height="120px" />
+  </section>
+</div>

@@ -1,0 +1,99 @@
+@use 'mixins' as *;
+
+.my-learnings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4xl);
+  width: 100%;
+  max-width: 1248px;
+  margin-inline: auto;
+  padding: var(--spacing-3xs) var(--spacing-3xs) var(--spacing-12xl);
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-13xs);
+  }
+
+  &__title {
+    @include typography('h1', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__search {
+    max-width: 744px;
+  }
+
+  &__section-title {
+    @include typography('h1-small', 'bold');
+    color: var(--color-essential-secondary);
+    margin-bottom: var(--spacing-13xs);
+  }
+}
+
+.course-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-14xs);
+}
+
+.uc-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-14xs);
+  padding: var(--spacing-14xs) var(--spacing-9xs);
+  background: var(--color-essential-primary);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-md);
+  box-shadow: var(--elevation-shadow-sm);
+
+  &__icon {
+    flex-shrink: 0;
+    width: 58px;
+    height: 58px;
+    border-radius: var(--radius-control-md);
+    background-image: linear-gradient(135deg, var(--color-primary-700) 0%, var(--color-primary-500) 100%);
+    background-size: cover;
+    background-position: center;
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-17xs);
+  }
+
+  &__title {
+    @include typography('h2', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__meta {
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-800);
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-15xs);
+    padding-top: var(--spacing-15xs);
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-15xs);
+    height: 36px;
+    padding-inline: var(--spacing-13xs) var(--spacing-15xs);
+    border: var(--stroke-width-default) solid var(--color-essential-tertiary);
+    border-radius: var(--radius-control-sm);
+    box-shadow: var(--elevation-shadow-md);
+    color: var(--color-essential-tertiary);
+    @include typography('button-small', 'medium');
+  }
+}

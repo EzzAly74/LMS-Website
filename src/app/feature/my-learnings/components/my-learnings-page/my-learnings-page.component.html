@@ -1,0 +1,61 @@
+<div class="my-learnings">
+  <header class="my-learnings__header">
+    <h1 class="my-learnings__title">{{ 'feature.my_learnings.title' | translate }}</h1>
+    <app-search-input
+      class="my-learnings__search"
+      [placeholder]="'feature.my_learnings.search_ph' | translate"
+      (search)="onSearch($event)"
+    />
+  </header>
+
+  <section class="my-learnings__section">
+    <h2 class="my-learnings__section-title">{{ 'feature.my_learnings.upcoming' | translate }}</h2>
+
+    @if (loading()) {
+      <div class="course-list">
+        @for (s of skeletons; track $index) {
+          <app-card-skeleton />
+        }
+      </div>
+    } @else if (courses().length === 0) {
+      <app-empty-state [config]="emptyState" />
+    } @else {
+      <div class="course-list">
+        @for (course of courses(); track course.id) {
+          <article class="uc-card">
+            <div class="uc-card__icon" [style.background-image]="course.image ? 'url(' + course.image + ')' : null"></div>
+
+            <div class="uc-card__info">
+              <h3 class="uc-card__title">{{ course.title }}</h3>
+              <p class="uc-card__meta">
+                {{ deliveryKey(course) | translate }}
+                @if (course.cohort.session_count) {
+                  · {{ 'feature.my_learnings.card.sessions' | translate: { count: course.cohort.session_count } }}
+                }
+                @if (course.cohort.start_date) {
+                  · {{ 'feature.my_learnings.card.started' | translate }}
+                  {{ course.cohort.start_date | date: 'mediumDate' }}
+                }
+              </p>
+
+              <div class="uc-card__tags">
+                @if (course.certificate_status.status; as status) {
+                  <app-badge
+                    tone="certificate"
+                    [status]="status"
+                    icon="pi-check-circle"
+                    [label]="'feature.my_learnings.certificate.' + status | translate"
+                  />
+                }
+                <a class="uc-card__cta" [routerLink]="playerRoute(course)">
+                  {{ 'feature.my_learnings.actions.continue' | translate }}
+                  <i class="pi pi-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </section>
+</div>

@@ -1,0 +1,60 @@
+<div class="catalogue">
+  <header class="catalogue__header">
+    <h1 class="catalogue__title">{{ 'feature.catalogue.title' | translate }}</h1>
+    <div class="catalogue__controls">
+      <app-search-input
+        class="catalogue__search"
+        [placeholder]="'feature.catalogue.search_ph' | translate"
+        [value]="searchTerm"
+        (search)="onSearch($event)"
+      />
+      @if (scopeOptions().length) {
+        <app-toggle-tabs
+          [options]="scopeOptions()"
+          [value]="selectedScope()"
+          (valueChange)="onScopeChange($event)"
+        />
+      }
+    </div>
+  </header>
+
+  <div class="catalogue-layout">
+    <aside class="filter-container">
+      <app-filter-sidebar
+        [config]="filterConfig()"
+        [selected]="filters()"
+        [resultsCount]="totalRecords()"
+        (selectedChange)="onFilterChange($event)"
+        (clearAll)="onClearAllFilters()"
+      />
+    </aside>
+
+    <section class="grid-container">
+      @if (!loading()) {
+        <p class="grid-container__meta">
+          {{ totalRecords() }} {{ 'feature.catalogue.results' | translate }}
+        </p>
+      }
+
+      @if (loading()) {
+        <div class="card-grid">
+          @for (s of skeletons; track $index) {
+            <app-card-skeleton />
+          }
+        </div>
+      } @else if (courses().length === 0) {
+        <app-empty-state [config]="emptyState" />
+      } @else {
+        <div class="card-grid">
+          @for (course of courses(); track course.id) {
+            <app-course-card [course]="course" (enrol)="onEnrol($event)" (notifyMe)="onNotifyMe($event)" />
+          }
+        </div>
+
+        @if (hasMore()) {
+          <app-load-more [loading]="loadingMore()" (loadMore)="onLoadMore()" />
+        }
+      }
+    </section>
+  </div>
+</div>

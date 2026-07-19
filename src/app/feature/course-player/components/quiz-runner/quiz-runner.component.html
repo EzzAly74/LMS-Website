@@ -1,0 +1,100 @@
+<div class="quiz-runner">
+  <div class="quiz-runner__header">
+    <div class="quiz-runner__progress-row">
+      <span class="quiz-runner__type-tag">{{ assessmentTypeLabel }}</span>
+      @if (feedback) {
+        <span class="quiz-runner__score-chip">
+          {{ 'feature.course_player.quiz.score' | translate }}: {{ feedback.running_total_score }}/{{ feedback.quiz_max_score }}
+          @if (isLastQuestion && feedback.finalized) {
+            <span class="quiz-runner__passed">{{ 'feature.course_player.quiz.passed' | translate }}</span>
+          }
+        </span>
+      }
+    </div>
+    <div class="quiz-runner__progress-bar">
+      <div class="quiz-runner__progress-fill" [style.width.%]="(question.position / (feedback?.questions_count ?? question.position)) * 100"></div>
+    </div>
+  </div>
+
+  <p class="quiz-runner__question-text">{{ question.question }}</p>
+
+  @switch (question.type) {
+    @case ('open') {
+      <div class="quiz-runner__open-answer">
+        <textarea
+          class="quiz-runner__textarea"
+          [placeholder]="'feature.course_player.quiz.answer_ph' | translate"
+          [maxlength]="charLimit"
+          [disabled]="answered"
+          [ngModel]="openText()"
+          (ngModelChange)="openText.set($event)"
+        ></textarea>
+        <span class="quiz-runner__char-count">
+          {{ 'feature.course_player.quiz.char_count' | translate: { count: openText().length, max: charLimit } }}
+        </span>
+      </div>
+    }
+    @case ('reorder') {
+      <ol class="quiz-runner__reorder-list">
+        @for (item of reorderItems(); track item; let i = $index) {
+          <li class="quiz-runner__reorder-item">
+            <span>{{ item }}</span>
+            @if (!answered) {
+              <span class="quiz-runner__reorder-controls">
+                <button type="button" [disabled]="i === 0" (click)="moveUp(i)" aria-label="Move up">
+                  <i class="pi pi-arrow-up"></i>
+                </button>
+                <button type="button" [disabled]="i === reorderItems().length - 1" (click)="moveDown(i)" aria-label="Move down">
+                  <i class="pi pi-arrow-down"></i>
+                </button>
+              </span>
+            }
+          </li>
+        }
+      </ol>
+
+      @if (feedback?.correct_answer; as correctOrder) {
+        <div class="quiz-runner__reorder-compare">
+          <p class="quiz-runner__reorder-compare-label">{{ 'feature.course_player.quiz.correct_order' | translate }}</p>
+          <ol>
+            @for (item of correctOrder; track $index) {
+              <li>{{ item }}</li>
+            }
+          </ol>
+        </div>
+      }
+    }
+    @default {
+      <div class="quiz-runner__options">
+        @for (option of choiceOptions; track option) {
+          <button
+            type="button"
+            class="quiz-runner__option"
+            [class.is-selected]="selectedValue() === option"
+            [class.is-correct]="optionState(option) === 'correct'"
+            [class.is-incorrect]="optionState(option) === 'incorrect'"
+            [disabled]="answered"
+            (click)="selectOption(option)"
+          >
+            <span>{{ option }}</span>
+            @if (optionState(option) !== 'neutral') {
+              <i class="pi" [class.pi-check-circle]="optionState(option) === 'correct'" [class.pi-times-circle]="optionState(option) === 'incorrect'"></i>
+            }
+          </button>
+        }
+      </div>
+    }
+  }
+
+  <div class="quiz-runner__actions">
+    @if (!answered) {
+      <button type="button" class="quiz-runner__submit-btn" [disabled]="!canSubmit" (click)="onSubmit()">
+        {{ 'feature.course_player.quiz.submit' | translate }}
+      </button>
+    } @else {
+      <button type="button" class="quiz-runner__submit-btn" (click)="onContinue()">
+        {{ (isLastQuestion ? 'feature.course_player.quiz.finish' : 'feature.course_player.quiz.next_question') | translate }}
+      </button>
+    }
+  </div>
+</div>
