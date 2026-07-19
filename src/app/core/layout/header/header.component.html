@@ -1,23 +1,28 @@
 <header class="app-nav">
   <div class="app-nav__bar">
-    <a class="app-nav__logo" [routerLink]="'/' + routes.Catalogue" aria-label="NAS">
-      <img src="assets/brand/nas-logo-on-light.svg" alt="NAS" width="100" height="33" />
+    <a class="app-nav__logo" [routerLink]="'/'" aria-label="NAS">
+      <img
+        src="assets/brand/nas-logo-on-light.svg"
+        alt="NAS"
+        width="100"
+        height="33"
+      />
     </a>
 
     <nav class="app-nav__links" aria-label="Primary">
       <a [routerLink]="'/' + routes.Catalogue" routerLinkActive="is-active">
-        {{ 'core.nav.catalogue' | translate }}
+        {{ "core.nav.catalogue" | translate }}
       </a>
       @if (auth.isAuthenticated()) {
         <a [routerLink]="'/' + routes.MyLearnings" routerLinkActive="is-active">
-          {{ 'core.nav.my_learnings' | translate }}
+          {{ "core.nav.my_learnings" | translate }}
         </a>
       }
       <a [routerLink]="'/' + routes.WhoWeAre" routerLinkActive="is-active">
-        {{ 'core.nav.who_we_are' | translate }}
+        {{ "core.nav.who_we_are" | translate }}
       </a>
       <a [routerLink]="'/' + routes.Blogs" routerLinkActive="is-active">
-        {{ 'core.nav.blogs' | translate }}
+        {{ "core.nav.blogs" | translate }}
       </a>
     </nav>
 
@@ -34,7 +39,11 @@
       @if (auth.isAuthenticated()) {
         <app-notification-bell />
 
-        <div class="app-nav__profile" appClickOutside (appClickOutside)="closeProfileMenu()">
+        <div
+          class="app-nav__profile"
+          appClickOutside
+          (appClickOutside)="closeProfileMenu()"
+        >
           <button
             type="button"
             class="app-nav__profile-trigger"
@@ -42,27 +51,41 @@
             [attr.aria-expanded]="isProfileMenuOpen()"
             [attr.aria-label]="auth.user()?.name"
           >
-            <app-avatar [name]="auth.user()?.name ?? ''" [size]="36" tone="primary-700" />
+            <app-avatar
+              [name]="auth.user()?.name ?? ''"
+              [size]="36"
+              tone="primary-700"
+            />
           </button>
 
           @if (isProfileMenuOpen()) {
             <div class="app-nav__profile-menu" role="menu">
-              <a role="menuitem" [routerLink]="'/' + routes.Profile" (click)="closeProfileMenu()">
-                {{ 'core.profile_menu.profile' | translate }}
+              <a
+                role="menuitem"
+                [routerLink]="'/' + routes.Profile"
+                (click)="closeProfileMenu()"
+              >
+                {{ "core.profile_menu.profile" | translate }}
               </a>
               <button type="button" role="menuitem" (click)="logout()">
-                {{ 'core.profile_menu.logout' | translate }}
+                {{ "core.profile_menu.logout" | translate }}
               </button>
             </div>
           }
         </div>
       } @else {
         <a class="app-nav__login" [routerLink]="'/' + routes.Login">
-          {{ 'core.nav.login' | translate }}
+          {{ "core.nav.login" | translate }}
         </a>
       }
 
-      <button type="button" class="app-nav__cta" [routerLink]="'/' + routes.RequestDemo">{{ 'core.nav.request_demo' | translate }}</button>
+      <button
+        type="button"
+        class="app-nav__cta"
+        [routerLink]="'/' + routes.RequestDemo"
+      >
+        {{ "core.nav.request_demo" | translate }}
+      </button>
 
       <button
         type="button"
@@ -78,43 +101,76 @@
 
   @if (isMobileMenuOpen()) {
     <div class="app-nav__backdrop" (click)="closeMobileMenu()"></div>
-    <div class="app-nav__drawer" appClickOutside (appClickOutside)="closeMobileMenu()">
+    <div
+      class="app-nav__drawer"
+      appClickOutside
+      (appClickOutside)="closeMobileMenu()"
+    >
       <nav class="app-nav__drawer-links" aria-label="Primary">
-        <a [routerLink]="'/' + routes.Catalogue" routerLinkActive="is-active" (click)="closeMobileMenu()">
-          {{ 'core.nav.catalogue' | translate }}
+        <a
+          [routerLink]="'/' + routes.Catalogue"
+          routerLinkActive="is-active"
+          (click)="closeMobileMenu()"
+        >
+          {{ "core.nav.catalogue" | translate }}
         </a>
         @if (auth.isAuthenticated()) {
-          <a [routerLink]="'/' + routes.MyLearnings" routerLinkActive="is-active" (click)="closeMobileMenu()">
-            {{ 'core.nav.my_learnings' | translate }}
+          <a
+            [routerLink]="'/' + routes.MyLearnings"
+            routerLinkActive="is-active"
+            (click)="closeMobileMenu()"
+          >
+            {{ "core.nav.my_learnings" | translate }}
           </a>
         }
-        <a [routerLink]="'/' + routes.WhoWeAre" routerLinkActive="is-active" (click)="closeMobileMenu()">
-          {{ 'core.nav.who_we_are' | translate }}
+        <a
+          [routerLink]="'/' + routes.WhoWeAre"
+          routerLinkActive="is-active"
+          (click)="closeMobileMenu()"
+        >
+          {{ "core.nav.who_we_are" | translate }}
         </a>
-        <a [routerLink]="'/' + routes.Blogs" routerLinkActive="is-active" (click)="closeMobileMenu()">
-          {{ 'core.nav.blogs' | translate }}
+        <a
+          [routerLink]="'/' + routes.Blogs"
+          routerLinkActive="is-active"
+          (click)="closeMobileMenu()"
+        >
+          {{ "core.nav.blogs" | translate }}
         </a>
       </nav>
 
-      <button type="button" class="app-nav__drawer-lang" (click)="toggleLanguage()">
+      <button
+        type="button"
+        class="app-nav__drawer-lang"
+        (click)="toggleLanguage()"
+      >
         <i class="pi pi-globe"></i>
-        {{ 'core.language.' + language.current() | translate }}
+        {{ "core.language." + language.current() | translate }}
       </button>
 
       <div class="app-nav__drawer-auth">
         @if (auth.isAuthenticated()) {
           <a [routerLink]="'/' + routes.Profile" (click)="closeMobileMenu()">
-            {{ 'core.profile_menu.profile' | translate }}
+            {{ "core.profile_menu.profile" | translate }}
           </a>
-          <button type="button" (click)="logout()">{{ 'core.profile_menu.logout' | translate }}</button>
+          <button type="button" (click)="logout()">
+            {{ "core.profile_menu.logout" | translate }}
+          </button>
         } @else {
           <a [routerLink]="'/' + routes.Login" (click)="closeMobileMenu()">
-            {{ 'core.nav.login' | translate }}
+            {{ "core.nav.login" | translate }}
           </a>
         }
       </div>
 
-      <button type="button" class="app-nav__drawer-cta" [routerLink]="'/' + routes.RequestDemo" (click)="closeMobileMenu()">{{ 'core.nav.request_demo' | translate }}</button>
+      <button
+        type="button"
+        class="app-nav__drawer-cta"
+        [routerLink]="'/' + routes.RequestDemo"
+        (click)="closeMobileMenu()"
+      >
+        {{ "core.nav.request_demo" | translate }}
+      </button>
     </div>
   }
 </header>

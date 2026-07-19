@@ -1,0 +1,2652 @@
+@use 'mixins' as *;
+
+// =============================================================================
+// Landing page — pixel-perfect from Figma desktop 1742:48667 (1440x5847) and
+// mobile 1742:48087 (390). Motion follows nas-lms-landing-page-spec.md: every
+// animation is one-shot (viewport-entry via `.is-live` / hero phase machine),
+// nothing loops, and reduced motion falls back to opacity-only.
+// =============================================================================
+
+// Figma "Shadows/Normal Styles" — kept literal: the landing shadows differ
+// from the app's --shadow-* primitives and must match Figma exactly.
+$shadow-small:
+  0 1px 1px 0 rgba(0, 0, 0, 0.12),
+  0 2px 5px 0 rgba(140, 140, 140, 0.08);
+$shadow-medium:
+  0 2px 5px 0 rgba(103, 110, 118, 0.08),
+  0 0 0 0 rgba(103, 110, 118, 0.16),
+  0 1px 1px 0 rgba(0, 0, 0, 0.12);
+
+$serif: 'Source Serif Pro', Georgia, serif;
+$numeric: 'Inter', sans-serif;
+
+// Strong ease-out used across the page (Figma base transition).
+$ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+// Figma "back" easing for the role-switcher pop-ins.
+$ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+$bp-mobile: 900px;
+
+// -----------------------------------------------------------------------------
+// Responsive visibility helpers (desktop 1440 frame vs mobile 390 frame)
+// -----------------------------------------------------------------------------
+.u-hide-mobile {
+  @media (max-width: $bp-mobile) {
+    display: none !important;
+  }
+}
+
+.u-hide-desktop {
+  @media (min-width: ($bp-mobile + 1)) {
+    display: none !important;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Page shell
+// -----------------------------------------------------------------------------
+.landing {
+  position: relative;
+  overflow-x: clip; // decorative waves bleed past the 1440 canvas
+  background: var(--color-essential-primary);
+
+  // The Figma hero starts at page y0 with the floating header above it —
+  // pull the page up under the fixed header (main layout clears it).
+  margin-block-start: calc(-1 * (var(--spacing-7xs) + var(--size-64) + var(--spacing-7xs)));
+
+  @media (max-width: $bp-mobile) {
+    margin-block-start: 0; // mobile header is a flush 60px bar
+  }
+}
+
+// Mint wave flowing from the hero under the quote band (Figma 1742:48669,
+// 1770x398 at page y499, x-161).
+.landing__wave-quote {
+  position: absolute;
+  top: 499px;
+  // Figma: 1770px spanning -161 … +169 past the 1440 canvas. The SVG has
+  // preserveAspectRatio="none", so wider viewports stretch it (no bare strip
+  // at the trailing edge); narrower ones keep the crest anchored at the end.
+  inline-size: max(1770px, calc(100% + 330px));
+  block-size: 398px;
+  z-index: 0;
+  pointer-events: none;
+
+  :host-context([dir='rtl']) & {
+    transform: scaleX(-1);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 1. Hero (Figma 1742:48671)
+// -----------------------------------------------------------------------------
+.hero {
+  position: relative;
+  z-index: 1;
+  block-size: 733px;
+  overflow: hidden;
+
+  @media (max-width: $bp-mobile) {
+    block-size: auto;
+    overflow: visible;
+    padding: 28px 16px;
+  }
+}
+
+.hero__frame {
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: 1440px;
+  margin-inline: auto;
+  block-size: 100%;
+}
+
+// Pale wave behind the hero (Figma Vector 10, rotated 180°).
+.hero__wave {
+  position: absolute;
+  top: -350px;
+  inset-inline-start: -103px;
+  inline-size: 1440px;
+  block-size: 684px;
+  transform: rotate(180deg);
+  pointer-events: none;
+
+  :host-context([dir='rtl']) & {
+    transform: rotate(180deg) scaleX(-1);
+  }
+}
+
+// Soft radial ellipse, top-right (Figma Ellipse 520px).
+.hero__ellipse {
+  position: absolute;
+  top: -68px;
+  inset-inline-end: -260px;
+  inline-size: 520px;
+  block-size: 520px;
+  pointer-events: none;
+}
+
+.hero__left {
+  position: absolute;
+  inset-inline-start: 80px;
+  top: 420px;
+  transform: translateY(-50%);
+  inline-size: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  z-index: 1; // copy always reads above the edge-anchored artwork
+
+  @media (max-width: $bp-mobile) {
+    position: static;
+    transform: none;
+    inline-size: 100%;
+    gap: 24px;
+    align-items: center;
+  }
+}
+
+.hero__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  inline-size: 100%;
+}
+
+// — Desktop typewriter headline (spec §2) —
+.hero__headline {
+  block-size: 122px;
+  margin: 0;
+}
+
+.hero__line {
+  position: relative;
+  display: block;
+  block-size: 59px;
+  font-size: 54px;
+  line-height: 1.1;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -1.08px;
+  white-space: nowrap;
+}
+
+.hero__line--1 {
+  color: var(--color-primary-1000);
+}
+
+.hero__line--2 {
+  margin-block-start: 4px; // Figma line 2 clip sits at y63 (59 + 4)
+  color: var(--color-primary-700);
+}
+
+.hero__line-text {
+  display: inline-block;
+}
+
+// Caret: 3x44.28px brand teal (Figma Cursor node), y7.36 within the line.
+.hero__caret {
+  position: absolute;
+  top: 7.36px;
+  inset-inline-start: 0;
+  inline-size: 3px;
+  block-size: 44.28px;
+  background: var(--color-primary-700);
+  opacity: 0;
+  pointer-events: none;
+}
+
+// Phase machine: idle → typing-1 → typing-2 → done (one-shot).
+.hero[data-phase='idle'] {
+  .hero__line-text {
+    clip-path: inset(0 100% 0 0);
+
+    :host-context([dir='rtl']) & {
+      clip-path: inset(0 0 0 100%);
+    }
+  }
+}
+
+.hero[data-phase='typing-1'] {
+  .hero__line--1 .hero__line-text {
+    animation: hero-wipe 700ms linear forwards;
+  }
+
+  .hero__line--2 .hero__line-text {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  .hero__caret--1 {
+    opacity: 1;
+    animation:
+      hero-caret-move-1 700ms linear forwards,
+      hero-blink 1060ms steps(1, end) infinite;
+  }
+
+  :host-context([dir='rtl']) & {
+    .hero__line--1 .hero__line-text {
+      animation-name: hero-wipe-rtl;
+    }
+
+    .hero__line--2 .hero__line-text {
+      clip-path: inset(0 0 0 100%);
+    }
+
+    .hero__caret--1 {
+      animation-name: hero-caret-move-1-rtl, hero-blink;
+    }
+  }
+}
+
+.hero[data-phase='typing-2'] {
+  .hero__line--2 .hero__line-text {
+    animation: hero-wipe 700ms linear forwards;
+  }
+
+  .hero__caret--2 {
+    opacity: 1;
+    animation:
+      hero-caret-move-2 700ms linear forwards,
+      hero-blink 1060ms steps(1, end) infinite;
+  }
+
+  :host-context([dir='rtl']) & {
+    .hero__line--2 .hero__line-text {
+      animation-name: hero-wipe-rtl;
+    }
+
+    .hero__caret--2 {
+      animation-name: hero-caret-move-2-rtl, hero-blink;
+    }
+  }
+}
+
+@keyframes hero-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes hero-wipe-rtl {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes hero-caret-move-1 {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(var(--type-w1, 465px));
+  }
+}
+
+@keyframes hero-caret-move-2 {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(var(--type-w2, 401px));
+  }
+}
+
+@keyframes hero-caret-move-1-rtl {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-1 * var(--type-w1, 465px)));
+  }
+}
+
+@keyframes hero-caret-move-2-rtl {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-1 * var(--type-w2, 401px)));
+  }
+}
+
+// ~530ms on / ~530ms off, only while a typing phase is active (spec §2).
+@keyframes hero-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+// — Mobile static headline (Figma 1742:48092 — no typewriter nodes) —
+.hero__headline-mobile {
+  margin: 0;
+  font-size: 32px;
+  line-height: var(--font-height-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-1000);
+  inline-size: 100%;
+}
+
+.hero__headline-mobile-em {
+  color: var(--color-primary-700);
+  font-style: normal;
+}
+
+.hero__subtitle {
+  margin: 0;
+  font-size: var(--font-size-m);
+  line-height: var(--font-height-m);
+  color: var(--color-neutral-700);
+
+  @media (max-width: $bp-mobile) {
+    font-size: var(--font-size-s);
+    line-height: var(--font-height-s);
+  }
+}
+
+// Subhead + button reveal after typing completes: fade up, 250ms ease-out,
+// staggered 80ms (spec §2). Fires once; mobile shows them immediately.
+.hero__subtitle,
+.hero__cta {
+  opacity: 0;
+}
+
+.hero[data-phase='done'] {
+  .hero__subtitle {
+    animation: fade-up 250ms $ease-out forwards;
+  }
+
+  .hero__cta {
+    animation: fade-up 250ms $ease-out 80ms forwards;
+  }
+}
+
+@media (max-width: $bp-mobile) {
+  .hero__subtitle,
+  .hero__cta {
+    opacity: 1;
+    animation: none !important;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-15xs);
+  inline-size: 100%;
+  block-size: 48px;
+  padding: 12px 16px;
+  border: 1px solid var(--color-essential-tertiary);
+  border-radius: 8px;
+  box-shadow: $shadow-medium;
+  font-size: var(--font-size-s);
+  line-height: var(--font-height-s);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-essential-tertiary);
+  background: transparent;
+  transition: transform 150ms $ease-out;
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  @media (max-width: $bp-mobile) {
+    block-size: 40px;
+  }
+}
+
+// — Hero art (desktop: 438px illustration + floating certificate card).
+// Anchored to the viewport edge (16px at the 1440 canvas, per Figma) and
+// scaled down through the tablet range so it never collides with the copy. —
+.hero__art {
+  position: absolute;
+  top: 204px;
+  inset-inline-end: 16px;
+  inline-size: 438px;
+  block-size: 438px;
+  z-index: 0;
+  transform-origin: 100% 50%; // stay glued to the anchored edge while scaling
+
+  :host-context([dir='rtl']) & {
+    transform-origin: 0% 50%;
+  }
+
+  @media (max-width: 1240px) {
+    transform: scale(0.8);
+  }
+
+  @media (max-width: 1080px) {
+    transform: scale(0.62);
+  }
+
+  @media (max-width: 1000px) {
+    transform: scale(0.5);
+  }
+}
+
+.hero__illustration {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.hero__card {
+  position: absolute;
+  top: 153px;
+  left: 145.58px; // physical: the card must stay on the same spot of the artwork
+  inline-size: 142.58px;
+  block-size: 191px;
+}
+
+// Mobile art: 200px illustration + mirrored card (Figma 1742:48094).
+.hero__art-mobile {
+  position: relative;
+  inline-size: 200px;
+  block-size: 200px;
+}
+
+.hero__art-mobile-img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.hero__art-mobile-card {
+  position: absolute;
+  top: 69.86px;
+  left: 1.37px; // physical: anchored to the (unmirrored) artwork
+  inline-size: 65.1px;
+  block-size: 87.2px;
+  transform: scaleX(-1);
+}
+
+// -----------------------------------------------------------------------------
+// 2. Quote banner (Figma 1742:48729 / mobile 1742:48098)
+// -----------------------------------------------------------------------------
+.quote {
+  position: relative;
+  z-index: 1;
+  // 1248px at the 1440 canvas (96px margins); narrower desktops keep margins.
+  inline-size: min(1248px, calc(100% - 48px));
+  margin-inline: auto;
+  padding: 64px 80px 40px;
+  background: var(--color-primary-1000);
+  border-radius: 64px;
+
+  @media (max-width: $bp-mobile) {
+    inline-size: 100%;
+    padding: 24px 16px;
+    border-radius: 24px;
+  }
+}
+
+.quote__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 350ms $ease-out,
+    transform 350ms $ease-out;
+
+  .quote.is-live & {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: $bp-mobile) {
+    gap: 16px;
+  }
+}
+
+.quote__text {
+  margin: 0;
+  max-inline-size: 1000px;
+  font-family: $serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 32px;
+  line-height: var(--font-height-2xl);
+  color: var(--color-neutral-0);
+
+  @media (max-width: $bp-mobile) {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+}
+
+.quote__em {
+  font-weight: var(--font-weight-bold);
+  font-style: italic;
+  color: #75deff;
+}
+
+.quote__author {
+  margin: -8px 0 0; // Figma: 24px text-block gap vs 32px to the dots
+  font-size: var(--font-size-s);
+  line-height: var(--font-height-s);
+  color: var(--color-neutral-400);
+
+  @media (max-width: $bp-mobile) {
+    margin: 0;
+    font-size: var(--font-size-xs);
+    line-height: var(--font-height-xs);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 3. How We Differ (Figma 1742:48730 / mobile 1742:48102 + 1742:48113)
+// -----------------------------------------------------------------------------
+.differ {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 80px;
+  padding: 80px;
+
+  @media (max-width: 1200px) {
+    padding: 64px 24px;
+  }
+
+  @media (max-width: $bp-mobile) {
+    gap: 32px;
+    padding: 32px 16px 0;
+  }
+}
+
+.differ__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-15xs);
+  inline-size: 100%;
+  text-align: center;
+}
+
+.differ__kicker {
+  margin: 0;
+  font-size: var(--font-size-m);
+  line-height: var(--font-height-m);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-additionally-700);
+}
+
+.differ__title {
+  margin: 0;
+  max-inline-size: 800px;
+  font-size: var(--font-size-xl);
+  line-height: var(--font-height-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-1000);
+
+  @media (max-width: $bp-mobile) {
+    font-size: 20px;
+    line-height: var(--font-height-l);
+  }
+}
+
+.differ__subtitle {
+  margin: 0;
+  max-inline-size: 720px;
+  font-size: var(--font-size-s);
+  line-height: var(--font-height-s);
+  color: var(--color-neutral-700);
+}
+
+.differ__video-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  inline-size: 100%;
+
+  @media (max-width: $bp-mobile) {
+    gap: 16px;
+  }
+}
+
+// — 3a. Video player (spec §4a). Sized off the Figma 1120x630 player; the
+// overlay scales with the player width via container-query units so the
+// 390px mobile frame reproduces Figma's 0.32x-scaled controls exactly. —
+.player {
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: 1120px;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--color-neutral-500);
+  border-radius: 24px;
+  overflow: hidden;
+  container-type: inline-size;
+
+  @media (max-width: $bp-mobile) {
+    border-width: 0.32px;
+    border-radius: 7.671px;
+  }
+}
+
+.player__video {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.player__overlay {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4286cqw; // 16px @1120
+  padding: 1.4286cqw 3.5714cqw; // 16 / 40px @1120
+  background: linear-gradient(to bottom, rgba(8, 9, 13, 0) 0%, rgba(8, 9, 13, 0.9) 80.37%);
+  backdrop-filter: blur(1px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms $ease-out;
+
+  .player.is-overlay-visible & {
+    opacity: 1;
+    pointer-events: auto;
+    transition-duration: 200ms;
+  }
+}
+
+.player__info {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  inline-size: 100%;
+}
+
+.player__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7143cqw; // 8px
+}
+
+.player__title {
+  margin: 0;
+  font-size: 2.1429cqw; // 24px
+  line-height: 1.2;
+  color: var(--color-essential-primary);
+}
+
+.player__subtitle {
+  margin: 0;
+  font-size: 1.4286cqw; // 16px
+  line-height: 1.2;
+  color: var(--color-neutral-600);
+}
+
+.player__time {
+  margin: 0;
+  font-size: 1.4286cqw;
+  line-height: 1.2;
+  color: var(--color-essential-primary);
+  font-variant-numeric: tabular-nums;
+  // Keep "current / total" in logical order under RTL (bidi would swap it).
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.player__progress {
+  position: relative;
+  inline-size: 100%;
+  block-size: 0.1786cqw; // 2px
+  min-block-size: 2px;
+  overflow: hidden;
+}
+
+.player__progress-track {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0.3571cqw; // 4px
+  background: #d9d9d9;
+  opacity: 0.4;
+  border-radius: 20px;
+}
+
+// Progress driven by scaleX, not width (spec §4a perf note).
+.player__progress-fill {
+  position: absolute;
+  inset-block: 0;
+  inset-inline: 0;
+  background: var(--color-neutral-0);
+  border-radius: 20px;
+  transform-origin: left center;
+  transform: scaleX(0);
+
+  :host-context([dir='rtl']) & {
+    transform-origin: right center;
+  }
+}
+
+.player__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  inline-size: 100%;
+}
+
+.player__controls-left {
+  display: flex;
+  gap: 0.7143cqw; // 8px
+}
+
+.player__btn {
+  position: relative;
+  inline-size: 4.2857cqw; // 48px
+  block-size: 4.2857cqw;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // Press feedback: 100ms down / 150ms up (spec §4a).
+  transition: transform 150ms $ease-out;
+
+  &:active {
+    transform: scale(0.97);
+    transition-duration: 100ms;
+  }
+
+  img {
+    inline-size: 50%;
+    block-size: 50%;
+    transition: opacity 150ms $ease-out;
+
+    &.is-hidden {
+      opacity: 0;
+      position: absolute;
+    }
+  }
+}
+
+// Pause glyph (no Figma export exists — the design only shows the play state;
+// two bars cross-fade with the play triangle, 150ms, per spec §4a).
+.player__pause-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18.75%;
+  transition: opacity 150ms $ease-out;
+
+  i {
+    inline-size: 8.33%;
+    block-size: 50%;
+    border-radius: 999px;
+    background: var(--color-neutral-0);
+  }
+
+  &.is-hidden {
+    opacity: 0;
+  }
+}
+
+// — 3b. Step tab strip (spec §4b) —
+.differ__tabs {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  inline-size: 100%;
+  max-inline-size: 1120px;
+
+  // The four nowrap labels need ~1120px — wrap to a 2x2 grid below that.
+  @media (max-width: 1200px) {
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: $bp-mobile) {
+    justify-content: space-between;
+    max-inline-size: 356px;
+  }
+}
+
+// Single 4px indicator translated across the strip (spec: translateX, 200ms).
+.differ__tabs-indicator {
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+  block-size: 4px;
+  inline-size: calc((100% - 12px) / 4);
+  background: var(--color-primary-700);
+  transform: translateX(calc(var(--step, 0) * (100% + 4px)));
+  transition: transform 200ms $ease-out;
+  z-index: 1;
+
+  :host-context([dir='rtl']) & {
+    transform: translateX(calc(var(--step, 0) * (-100% - 4px)));
+  }
+
+  @media (max-width: 1200px) {
+    display: none; // wrapped 2x2 strip — active state via per-tab border
+  }
+}
+
+.differ__tab {
+  flex: 1 0 0;
+  min-inline-size: 1px;
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+  border-block-start: 4px solid transparent;
+  background: transparent;
+  transition:
+    background-color 200ms $ease-out,
+    border-color 200ms $ease-out;
+
+  p {
+    margin: 0;
+    font-size: var(--font-size-s);
+    line-height: var(--font-height-s);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-neutral-600);
+    white-space: nowrap;
+    transition: color 200ms $ease-out;
+  }
+
+  &.is-active {
+    background: var(--color-neutral-0);
+
+    p {
+      color: var(--color-essential-secondary);
+    }
+  }
+
+  @media (max-width: 1200px) {
+    flex: 1 0 42%;
+
+    &.is-active {
+      border-block-start-color: var(--color-primary-700);
+    }
+  }
+
+  @media (max-width: $bp-mobile) {
+    flex: 0 0 auto;
+    padding: 16px 8px;
+
+    p {
+      font-size: var(--font-size-2xs);
+      line-height: var(--font-height-2xs);
+    }
+
+    &.is-active {
+      border-block-start-color: var(--color-primary-700);
+    }
+  }
+}
+
+// — 3c. Role switcher panel, desktop (Figma 1742:48743) —
+.roles {
+  inline-size: 100%;
+  max-inline-size: 1280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  padding: 48px 0;
+  background: var(--color-neutral-0);
+  border-radius: 64px;
+  overflow: hidden;
+
+  // The 513 + 80 + 609 row needs 1202px of inner width; with the section's
+  // 80px side padding that isn't available until ~1362px viewport, so stack
+  // vertically below 1380 (safe margin) — the fixed-geometry diagram is then
+  // never clipped by the panel's overflow:hidden.
+  @media (max-width: 1380px) {
+    flex-direction: column;
+    gap: 40px;
+    padding: 48px 24px;
+    border-radius: 40px;
+  }
+}
+
+.roles__intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  inline-size: 513px;
+  flex: 0 0 auto;
+
+  @media (max-width: 1380px) {
+    inline-size: auto;
+    max-inline-size: 513px;
+    flex: 0 1 auto;
+  }
+}
+
+.roles__title {
+  margin: 0;
+  max-inline-size: 362px;
+  font-size: var(--font-size-xl);
+  line-height: var(--font-height-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-1000);
+}
+
+.roles__switcher {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.roles__label {
+  margin: 0;
+  font-size: 12px;
+  line-height: normal;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.72px;
+  text-transform: uppercase;
+  color: var(--color-neutral-600);
+}
+
+.roles__chips {
+  display: flex;
+  gap: 12px;
+}
+
+.roles__chip {
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--color-neutral-400);
+  background: var(--color-neutral-0);
+  font-size: 14px;
+  line-height: normal;
+  font-weight: 600;
+  color: var(--color-neutral-700);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 200ms $ease-out,
+    border-color 200ms $ease-out,
+    color 200ms $ease-out,
+    transform 150ms $ease-out;
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &.is-active {
+    background: var(--color-primary-1000);
+    border-color: var(--color-primary-1000);
+    color: var(--color-neutral-0);
+  }
+}
+
+// Diagram canvas is a fixed 609x280 composition — keep LTR coordinates so the
+// Figma geometry (rotated dashed connectors) holds in both languages.
+.roles__diagram {
+  position: relative;
+  inline-size: 609px;
+  block-size: 280px;
+  flex: 0 0 auto;
+  direction: ltr;
+}
+
+.roles__job-card {
+  position: absolute;
+  left: 0;
+  top: 102px;
+  inline-size: 164px;
+  block-size: 76px;
+  background: var(--color-primary-1000);
+  border-radius: 16px;
+}
+
+.roles__job-label {
+  position: absolute;
+  left: 16px;
+  top: 14px;
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--color-additionally-500);
+}
+
+.roles__job-value {
+  position: absolute;
+  left: 16px;
+  top: 36px;
+  margin: 0;
+  inline-size: 149px;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-0);
+}
+
+.roles__pill {
+  position: absolute;
+  left: 196px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--color-neutral-0);
+  border: 1px solid var(--color-primary-500);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.roles__pill--top {
+  top: 93px;
+}
+
+.roles__pill--bottom {
+  top: 146px;
+}
+
+.roles__pill-dot {
+  inline-size: 8px;
+  block-size: 8px;
+  display: block;
+
+  img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+}
+
+.roles__pill-text {
+  font-size: 14px;
+  line-height: normal;
+  font-weight: 600;
+  color: var(--color-neutral-1000);
+}
+
+.roles__course {
+  position: absolute;
+  left: 389px;
+  inline-size: 220px;
+  // Figma declares 134 fixed with content spilling into the padding; grow
+  // instead so the Enrol row is never clipped (Arabic titles wrap taller).
+  min-block-size: 134px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px;
+  background: var(--color-neutral-0);
+  // Inset ring instead of a border: keeps the inner width at Figma's 188px
+  // so "Winning enterprise deals" stays on one line.
+  border: none;
+  border-radius: 16px;
+  box-shadow:
+    inset 0 0 0 1px var(--color-neutral-300),
+    $shadow-small;
+}
+
+.roles__course--top {
+  top: 0;
+}
+
+.roles__course--bottom {
+  top: 146px;
+}
+
+.roles__course-badge,
+.roles-m__course-badge {
+  padding: 4px 8px;
+  background: #fef3c7; // Figma literal — amber badge, outside the NAS ramps
+  border-radius: 4px;
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: var(--font-weight-bold);
+  color: #92400e; // Figma literal
+  white-space: nowrap;
+}
+
+.roles__course-title {
+  margin: 0;
+  font-size: 16px;
+  line-height: normal;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-1000);
+}
+
+.roles__course-date {
+  margin: 0;
+  font-size: 12px;
+  line-height: normal;
+  color: var(--color-neutral-600);
+}
+
+.roles__course-enrol,
+.roles-m__course-enrol {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  line-height: normal;
+  font-weight: 600;
+  color: var(--color-primary-500);
+}
+
+// Dashed connectors — a single SVG overlay per diagram whose line endpoints
+// are measured from the live node edges (see measureConnectors) so they join
+// job→skill and skill→course exactly, at any role width or viewport.
+.roles__connectors,
+.roles-m__connectors {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0; // behind the nodes
+
+  line {
+    stroke: #a8d8d9; // Figma connector stroke
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 6 4;
+    vector-effect: non-scaling-stroke; // keep 2px despite non-uniform viewBox
+  }
+}
+
+// — Role swap animation (spec §4c): out 150ms, then staggered pop-ins —
+.roles.is-leaving,
+.roles-m.is-leaving {
+  .roles__pill,
+  .roles__course,
+  .roles__connectors,
+  .roles__job-value,
+  .roles-m__pill,
+  .roles-m__course,
+  .roles-m__connectors,
+  .roles-m__job-value {
+    opacity: 0;
+    transition: opacity 150ms ease-out;
+  }
+}
+
+.roles.is-animated:not(.is-leaving),
+.roles-m.is-animated:not(.is-leaving) {
+  .roles__job-value,
+  .roles-m__job-value {
+    animation: role-fade 200ms ease-out both;
+  }
+
+  .roles__pill,
+  .roles-m__pill {
+    animation: role-pill-in 350ms $ease-back both;
+  }
+
+  .roles__pill--top {
+    animation-delay: 100ms;
+  }
+
+  .roles__pill--bottom {
+    animation-delay: 200ms;
+  }
+
+  .roles-m__pill {
+    animation-delay: calc(100ms + var(--i, 0) * 100ms);
+  }
+
+  .roles__pill-dot img,
+  .roles-m__pill-dot img {
+    animation: role-dot-pop 250ms ease-out both;
+    animation-delay: inherit;
+  }
+
+  // Connector lines draw in (stroke wipe) staggered with the nodes they join.
+  .roles__connectors line,
+  .roles-m__connectors line {
+    animation: role-line-draw 400ms $ease-out both;
+    animation-delay: calc(60ms + var(--i, 0) * 100ms);
+  }
+
+  .roles__course,
+  .roles-m__course {
+    animation: role-card-in 350ms $ease-back both;
+  }
+
+  .roles__course--top {
+    animation-delay: 260ms;
+  }
+
+  .roles__course--bottom {
+    animation-delay: 380ms;
+  }
+
+  .roles-m__course {
+    animation-delay: calc(260ms + var(--i, 0) * 120ms);
+  }
+}
+
+@keyframes role-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes role-pill-in {
+  from {
+    opacity: 0;
+    transform: translateX(-20px) scale(0.88);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes role-dot-pop {
+  0% {
+    transform: scale(0);
+  }
+
+  60% {
+    transform: scale(1.4);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes role-line-draw {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes role-card-in {
+  from {
+    opacity: 0;
+    transform: translateX(-12px) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+// — 3c. Role switcher, mobile stacked (Figma 1742:48113) —
+.roles-m {
+  position: relative;
+  inline-size: calc(100% + 32px);
+  margin-inline: -16px; // full-bleed inside the 16px-padded section
+  padding: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  direction: ltr; // fixed Figma connector coordinates
+
+  :host-context([dir='rtl']) & > * {
+    direction: rtl;
+  }
+}
+
+.roles-m__head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.roles-m__title {
+  margin: 0;
+  font-size: 20px;
+  line-height: var(--font-height-l);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-1000);
+}
+
+.roles-m__label {
+  margin: 0;
+  font-size: var(--font-size-2xs);
+  line-height: var(--font-height-2xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  color: var(--color-neutral-700);
+}
+
+.roles-m__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.roles-m__chip {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-neutral-400);
+  background: var(--color-essential-primary);
+  font-size: 13px;
+  line-height: normal;
+  font-weight: 600;
+  color: var(--color-neutral-700);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 200ms $ease-out,
+    border-color 200ms $ease-out,
+    color 200ms $ease-out;
+
+  &.is-active {
+    background: var(--color-primary-1000);
+    border-color: var(--color-primary-1000);
+    color: var(--color-neutral-0);
+  }
+}
+
+.roles-m__stack {
+  position: relative; // anchors the Figma connector geometry to the stack
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.roles-m__job-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 16px;
+  background: var(--color-primary-1000);
+  border-radius: 12px;
+}
+
+.roles-m__job-label {
+  margin: 0;
+  font-size: 10px;
+  line-height: normal;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--color-additionally-500);
+}
+
+.roles-m__job-value {
+  margin: 0;
+  font-size: 18px;
+  line-height: normal;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-0);
+}
+
+.roles-m__skills {
+  display: flex;
+  justify-content: space-between;
+}
+
+.roles-m__pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--color-neutral-0);
+  border: 1px solid var(--color-primary-700); // mobile pills use primary/700
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.roles-m__pill-dot {
+  inline-size: 8px;
+  block-size: 8px;
+
+  img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+}
+
+.roles-m__pill-text {
+  font-size: 14px;
+  line-height: normal;
+  font-weight: 600;
+  color: var(--color-neutral-1000);
+}
+
+.roles-m__courses {
+  display: flex;
+  gap: 12px;
+}
+
+.roles-m__course {
+  flex: 1 0 0;
+  min-inline-size: 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px;
+  background: var(--color-neutral-0);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 16px;
+  box-shadow: $shadow-small;
+}
+
+.roles-m__course-title {
+  margin: 0;
+  font-size: 16px;
+  line-height: normal;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-1000);
+}
+
+.roles-m__course-date {
+  margin: 0;
+  font-size: 13px;
+  line-height: normal;
+  color: var(--color-neutral-700);
+}
+
+// -----------------------------------------------------------------------------
+// 4. Next Step (Figma 1742:49077 / mobile 1742:48325)
+// -----------------------------------------------------------------------------
+.next {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 40px 80px 80px;
+  background: var(--color-essential-primary);
+
+  @media (max-width: $bp-mobile) {
+    padding: 32px 16px;
+    background: transparent;
+  }
+}
+
+.next__title {
+  margin: 0;
+  font-size: var(--font-size-2xl);
+  line-height: var(--font-height-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-essential-secondary);
+  text-align: center;
+
+  @media (max-width: $bp-mobile) {
+    font-size: 20px;
+    line-height: var(--font-height-l);
+    color: var(--color-neutral-1000);
+  }
+}
+
+.next__layout {
+  inline-size: 100%;
+  max-inline-size: 1280px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.next__steps {
+  inline-size: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  @media (max-width: $bp-mobile) {
+    inline-size: 100%;
+    gap: 0;
+  }
+}
+
+.next__step {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  inline-size: 100%;
+
+  // Scroll reveal: fade + translateY(16px→0), staggered 100ms (spec §5).
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 300ms $ease-out,
+    transform 300ms $ease-out;
+  transition-delay: calc(var(--i, 0) * 100ms);
+
+  .next.is-live & {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: $bp-mobile) {
+    gap: 16px;
+  }
+}
+
+.next__indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 auto;
+  inline-size: 32px;
+}
+
+.next__circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 32px;
+  block-size: 32px;
+  border-radius: 16px;
+  background: var(--color-primary-700);
+  font-family: $numeric;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-neutral-0);
+}
+
+.next__connector {
+  display: block;
+  inline-size: 80px;
+  block-size: 2px;
+  margin-block: 39px; // occupies the 80px column Figma leaves between circles
+  background: url('/assets/landing/step-connector.svg') center / contain no-repeat;
+  transform: rotate(90deg);
+
+  @media (max-width: $bp-mobile) {
+    inline-size: 60px;
+    margin-block: 29px;
+    background-image: url('/assets/landing/step-connector-mobile.svg');
+  }
+}
+
+.next__text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 0 0;
+  min-inline-size: 1px;
+
+  @media (max-width: $bp-mobile) {
+    gap: 6px;
+  }
+}
+
+.next__step-title {
+  margin: 0;
+  font-size: var(--font-size-m);
+  line-height: var(--font-height-m);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-essential-secondary);
+
+  @media (max-width: $bp-mobile) {
+    font-size: var(--font-size-s);
+    line-height: var(--font-height-s);
+    color: var(--color-neutral-1000);
+  }
+}
+
+.next__step-desc {
+  margin: 0;
+  max-inline-size: 320px;
+  font-size: var(--font-size-s);
+  line-height: var(--font-height-s);
+  color: var(--color-neutral-700);
+
+  @media (max-width: $bp-mobile) {
+    max-inline-size: none;
+    font-size: var(--font-size-xs);
+    line-height: var(--font-height-xs);
+  }
+}
+
+.next__mockups {
+  position: relative;
+  inline-size: 290px;
+  block-size: 415px;
+  flex: 0 0 auto;
+
+  // Scroll reveal: fade + slide from the trailing side (spec §5).
+  opacity: 0;
+  transform: translateX(32px);
+  transition:
+    opacity 400ms $ease-out,
+    transform 400ms $ease-out;
+  transition-delay: 150ms;
+
+  :host-context([dir='rtl']) & {
+    transform: translateX(-32px);
+  }
+
+  .next.is-live & {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.next__mockup-banner {
+  position: absolute;
+  top: 0;
+  left: 16.52%;
+  inline-size: 66.96%;
+  border-radius: 16.57px;
+  z-index: 1;
+  transform: translateY(15%);
+}
+
+.next__mockup-dashboard {
+  position: absolute;
+  top: calc(50% + 13px);
+  transform: translateY(-50%);
+  left: 0.34%;
+  inline-size: 99.32%;
+  border-radius: 23.77px;
+  box-shadow:
+    0 0 0 4px var(--color-additionally-400-16),
+    0 2px 5px 0 var(--color-additionally-400-08),
+    0 0 0 1px var(--color-additionally-400-16),
+    0 1px 1px 0 rgba(0, 0, 0, 0.12);
+}
+
+// -----------------------------------------------------------------------------
+// 5. Testimonials (Figma 1742:49107 / mobile 1742:48351)
+// -----------------------------------------------------------------------------
+.testimonials {
+  position: relative;
+  background: var(--color-primary-1000);
+  overflow: hidden;
+}
+
+// Fixed 1440x820 collage canvas. Narrower desktops scale the whole canvas
+// down (zoom keeps the layout box in sync); if zoom maths is unsupported the
+// canvas gracefully center-clips instead.
+.testimonials__canvas {
+  position: relative;
+  inline-size: 1440px;
+  block-size: 820px;
+  margin-inline: calc((100% - 1440px) / 2);
+  direction: ltr; // fixed Figma coordinates
+
+  // Below 1440 the component sets [style.zoom] (vw/1440) to scale the whole
+  // collage; the layout box shrinks with it, so no clipping and no dead space.
+  @media (max-width: 1440px) {
+    margin-inline: 0;
+  }
+}
+
+.testimonials__pattern {
+  position: absolute;
+  inline-size: 1342.21px;
+  block-size: 482.98px;
+  pointer-events: none;
+}
+
+.testimonials__pattern--top {
+  left: -66px;
+  top: -44px;
+}
+
+.testimonials__pattern--bottom {
+  left: 102px;
+  top: 337px;
+}
+
+.testimonials__kicker {
+  position: absolute;
+  top: 309px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-size: var(--font-size-m);
+  line-height: var(--font-height-m);
+  font-weight: var(--font-weight-bold);
+  color: #75deff;
+}
+
+.testimonials__headline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-size: 64px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-neutral-0);
+}
+
+.testimonials__headline--1 {
+  top: 339px;
+  line-height: 60px;
+}
+
+.testimonials__headline--2 {
+  top: 431px;
+  line-height: 50px;
+}
+
+// Headline + kicker reveal (spec §6): translateY(24px→0) + fade, 250ms.
+.testimonials__kicker,
+.testimonials__headline {
+  opacity: 0;
+  translate: 0 24px;
+  transition:
+    opacity 250ms $ease-out,
+    translate 250ms $ease-out;
+
+  .testimonials.is-live & {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.t-card {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+
+  // One-shot directional slide-in, staggered per card (spec §6).
+  opacity: 0;
+  transform: translateX(-40px);
+  transition:
+    opacity 350ms $ease-out,
+    transform 350ms $ease-out;
+  transition-delay: var(--d, 0ms);
+
+  &--from-end {
+    transform: translateX(40px);
+  }
+
+  .testimonials.is-live & {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.t-card--wide {
+  inline-size: 410.67px;
+}
+
+.t-card:not(.t-card--wide) {
+  padding-inline-end: 48px;
+}
+
+// Speech-bubble corner: the square corner faces the nearest canvas edge.
+.t-card--tail-start {
+  border-bottom-left-radius: 0;
+}
+
+.t-card--tail-end {
+  border-bottom-right-radius: 0;
+}
+
+.t-card__quote {
+  margin: 0;
+  font-family: $serif;
+  font-style: italic;
+  font-size: var(--font-size-xs);
+  line-height: var(--font-height-s);
+  color: var(--color-essential-primary);
+}
+
+.t-card__stars {
+  inline-size: 90.67px;
+  block-size: 16px;
+}
+
+.t-card__person {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.t-card__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 32px;
+  block-size: 32px;
+  border-radius: 16px;
+  background: var(--color-primary-500);
+  font-family: $numeric;
+  font-weight: 700;
+  font-size: 8px;
+  color: var(--color-essential-primary);
+}
+
+.t-card__who {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.t-card__name {
+  font-size: var(--font-size-xs);
+  line-height: var(--font-height-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-essential-primary);
+}
+
+.t-card__job {
+  font-size: var(--font-size-2xs);
+  line-height: var(--font-height-2xs);
+  color: var(--color-neutral-400);
+}
+
+// — Mobile testimonials (Figma 1742:48351) —
+.testimonials__mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 38px 16px;
+}
+
+.testimonials__m-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.testimonials__m-kicker {
+  margin: 0;
+  font-size: var(--font-size-m);
+  line-height: var(--font-height-m);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-additionally-500);
+}
+
+.testimonials__m-title {
+  margin: 0;
+  font-size: 20px;
+  line-height: var(--font-height-l);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-0);
+}
+
+.tm-card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+
+  opacity: 0;
+  translate: 0 16px;
+  transition:
+    opacity 350ms $ease-out,
+    translate 350ms $ease-out;
+  transition-delay: var(--d, 0ms);
+
+  .testimonials.is-live & {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.tm-card__quote {
+  margin: 0;
+  font-family: $serif;
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--color-neutral-0);
+}
+
+.tm-card__stars {
+  display: flex;
+  gap: 4px;
+
+  img {
+    display: block;
+  }
+}
+
+.tm-card__person {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tm-card__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 32px;
+  block-size: 32px;
+  border-radius: 16px;
+  background: var(--color-primary-700);
+  font-family: $numeric;
+  font-weight: 700;
+  font-size: 10px;
+  color: var(--color-neutral-0);
+}
+
+.tm-card__who {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tm-card__name {
+  font-size: var(--font-size-xs);
+  line-height: var(--font-height-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-neutral-0);
+}
+
+.tm-card__job {
+  font-size: var(--font-size-2xs);
+  line-height: var(--font-height-2xs);
+  color: var(--color-neutral-500);
+}
+
+// -----------------------------------------------------------------------------
+// 6. FAQ (Figma 1742:49361 / mobile 1742:48394)
+// -----------------------------------------------------------------------------
+.faq-band {
+  position: relative;
+}
+
+// Pale wave behind the bottom of the FAQ, ending at the CTA (Figma 1742:48668).
+.faq-band__wave {
+  position: absolute;
+  inset-block-end: 0;
+  // Figma: x12 … 1440. Stretches on wider viewports (the SVG has
+  // preserveAspectRatio="none") instead of exposing a gap at the start.
+  inset-inline-end: 0;
+  inline-size: max(1428px, calc(100% - 12px));
+  block-size: 806px;
+  transform: scaleX(-1); // Figma: rotate(180°) + scaleY(-1)
+  pointer-events: none;
+
+  :host-context([dir='rtl']) & {
+    transform: none;
+  }
+}
+
+.faq {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 120px 80px;
+
+  @media (max-width: $bp-mobile) {
+    gap: 24px;
+    padding: 38px 16px;
+  }
+}
+
+.faq__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+
+  @media (max-width: $bp-mobile) {
+    gap: 6px;
+  }
+}
+
+.faq__kicker {
+  margin: 0;
+  font-size: var(--font-size-m);
+  line-height: var(--font-height-m);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-additionally-700);
+}
+
+.faq__title {
+  margin: 0;
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-1000);
+
+  @media (max-width: $bp-mobile) {
+    font-size: 20px;
+    line-height: var(--font-height-l);
+  }
+}
+
+.faq__list {
+  inline-size: 100%;
+  max-inline-size: 960px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  @media (max-width: $bp-mobile) {
+    gap: 12px;
+  }
+}
+
+.faq__item {
+  inline-size: 100%;
+  padding: 24px;
+  background: var(--color-neutral-300);
+  border: 1px solid var(--color-neutral-400);
+  border-radius: 12px;
+  transition:
+    background-color 200ms $ease-out,
+    border-color 200ms $ease-out,
+    box-shadow 200ms $ease-out;
+
+  // Figma: 20px between the open item and the closed list (vs 8px in-list).
+  &:first-child {
+    margin-block-end: 12px;
+  }
+
+  &.is-open {
+    background: var(--color-essential-primary);
+    border-color: var(--color-neutral-300);
+    box-shadow: $shadow-small;
+  }
+
+  @media (max-width: $bp-mobile) {
+    padding: 16px;
+
+    &:first-child {
+      margin-block-end: 0;
+    }
+
+    &.is-open {
+      background: var(--color-neutral-0);
+    }
+  }
+}
+
+.faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  inline-size: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  text-align: start;
+  cursor: pointer;
+  font-size: var(--font-size-s);
+  line-height: var(--font-height-s);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-neutral-1000);
+
+  .faq__item.is-open & {
+    font-weight: var(--font-weight-bold);
+  }
+
+  &[aria-disabled='true'] {
+    cursor: default;
+  }
+
+  @media (max-width: $bp-mobile) {
+    font-size: var(--font-size-xs);
+    line-height: var(--font-height-xs);
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+// '+' → '−': the vertical bar rotates onto the horizontal one (spec §7).
+.faq__icon {
+  position: relative;
+  flex: 0 0 auto;
+  inline-size: 24px;
+  block-size: 24px;
+
+  @media (max-width: $bp-mobile) {
+    inline-size: 18px;
+    block-size: 18px;
+  }
+}
+
+.faq__icon-v,
+.faq__icon-h {
+  position: absolute;
+  background: var(--color-primary-700);
+  border-radius: 1px;
+  transition:
+    transform 200ms $ease-out,
+    background-color 200ms $ease-out;
+}
+
+.faq__icon-v {
+  left: calc(50% - 1px);
+  top: calc(50% - 8px);
+  inline-size: 2px;
+  block-size: 16px;
+
+  @media (max-width: $bp-mobile) {
+    left: calc(50% - 0.75px);
+    top: calc(50% - 6px);
+    inline-size: 1.5px;
+    block-size: 12px;
+  }
+}
+
+.faq__icon-h {
+  left: calc(50% - 8px);
+  top: calc(50% - 1px);
+  inline-size: 16px;
+  block-size: 2px;
+
+  @media (max-width: $bp-mobile) {
+    left: calc(50% - 6px);
+    top: calc(50% - 0.75px);
+    inline-size: 12px;
+    block-size: 1.5px;
+  }
+}
+
+.faq__item.is-open {
+  .faq__icon-v {
+    transform: rotate(90deg);
+  }
+
+  .faq__icon-v,
+  .faq__icon-h {
+    background: var(--color-neutral-800);
+  }
+}
+
+// Measured-height expand via grid rows 0fr → 1fr (spec §7 — never height:auto).
+.faq__answer-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 250ms $ease-out;
+
+  .faq__item.is-open & {
+    grid-template-rows: 1fr;
+  }
+}
+
+.faq__answer-clip {
+  overflow: hidden;
+  min-block-size: 0;
+}
+
+.faq__answer {
+  margin: 0;
+  padding-block-start: 12px;
+  font-size: var(--font-size-s);
+  line-height: var(--font-height-s);
+  color: var(--color-neutral-800);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 150ms $ease-out 60ms,
+    transform 150ms $ease-out 60ms;
+
+  .faq__item.is-open & {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: $bp-mobile) {
+    padding-block-start: 10px;
+    font-size: var(--font-size-xs);
+    line-height: var(--font-height-xs);
+    color: var(--color-neutral-700);
+  }
+}
+
+.faq__contact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  p {
+    margin: 0;
+    font-size: var(--font-size-s);
+    line-height: var(--font-height-s);
+    color: var(--color-neutral-700);
+  }
+}
+
+.faq__contact-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-15xs);
+  block-size: 36px;
+  padding: 8px 8px 8px 12px;
+  border-radius: 8px;
+  font-size: var(--font-size-xs);
+  line-height: var(--font-height-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary-700);
+  text-decoration: underline;
+  transition: color 150ms ease-out;
+
+  &:hover {
+    color: var(--color-primary-500);
+  }
+
+  :host-context([dir='rtl']) & {
+    padding: 8px 12px 8px 8px;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 7. Closing CTA (Figma 1742:49384 / mobile 1742:48427)
+// -----------------------------------------------------------------------------
+.cta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  block-size: 527px;
+  background: var(--color-essential-tertiary);
+  overflow: hidden;
+
+  @media (max-width: $bp-mobile) {
+    block-size: auto;
+    padding: 56px 16px;
+  }
+}
+
+.cta__glow {
+  position: absolute;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.cta__glow--right {
+  inline-size: 897px;
+  block-size: 897px;
+  left: calc(50% + 706.5px);
+  top: calc(50% - 182px);
+}
+
+.cta__glow--center {
+  inline-size: 790px;
+  block-size: 790px;
+  left: calc(50% + 34.5px);
+  top: calc(50% - 167.5px);
+}
+
+.cta__glow--left {
+  inline-size: 1087px;
+  block-size: 1087px;
+  left: calc(50% - 957.5px);
+  top: calc(50% - 219px);
+}
+
+.cta__shape {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+
+  img {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+}
+
+// Decorative shape geometry on the 1440 canvas (left = 50% - 720 + Figma x).
+.cta__shape--diamond {
+  left: calc(50% + 286px);
+  top: 306px;
+  inline-size: 247.01px;
+  block-size: 247.01px;
+
+  img {
+    inline-size: 193.01px;
+    block-size: 193.01px;
+    transform: rotate(70.19deg);
+  }
+}
+
+.cta__shape--circle-lg {
+  left: calc(50% - 643px);
+  top: 43px;
+  inline-size: 125px;
+  block-size: 125px;
+}
+
+.cta__shape--circle-sm {
+  left: calc(50% - 688px);
+  top: 333px;
+  inline-size: 58px;
+  block-size: 58px;
+}
+
+.cta__shape--outline {
+  left: calc(50% - 520px);
+  top: 422px;
+  inline-size: 120px;
+  block-size: 40px;
+  border: 1px solid #75deff;
+  border-radius: 60px;
+  opacity: 0.3;
+}
+
+.cta__shape--ellipse {
+  left: calc(50% - 220px);
+  top: 431px;
+  inline-size: 80px;
+  block-size: 80px;
+}
+
+.cta__shape--rect {
+  left: calc(50% + 486.59px);
+  top: 57px;
+  inline-size: 248.86px;
+  block-size: 248.86px;
+
+  &::before {
+    content: '';
+    inline-size: 203.2px;
+    block-size: 203.2px;
+    border-radius: 40.64px;
+    background: var(--color-primary-700);
+    opacity: 0.15;
+    transform: rotate(15deg);
+  }
+}
+
+// Mobile shapes (Figma 1742:48427).
+.cta__shape--m-circle {
+  left: -10px;
+  top: 150.63px;
+  inline-size: 73px;
+  block-size: 73px;
+}
+
+.cta__shape--m-diamond {
+  left: -46px;
+  top: 13.63px;
+  inline-size: 124.33px;
+  block-size: 124.33px;
+
+  img {
+    inline-size: 97.15px;
+    block-size: 97.15px;
+    transform: rotate(70.19deg);
+  }
+}
+
+.cta__shape--m-rect {
+  left: 295px;
+  top: -19.38px;
+  inline-size: 157.1px;
+  block-size: 157.1px;
+
+  &::before {
+    content: '';
+    inline-size: 128.27px;
+    block-size: 128.27px;
+    border-radius: 40.64px;
+    background: var(--color-primary-700);
+    opacity: 0.15;
+    transform: rotate(15deg);
+  }
+}
+
+// Shapes fade + settle once on section entry, staggered (spec §8) — no loops.
+.cta__shape {
+  opacity: 0;
+  translate: 0 10px;
+  rotate: -3deg;
+  transition:
+    opacity 350ms $ease-out,
+    translate 350ms $ease-out,
+    rotate 350ms $ease-out;
+
+  @for $i from 1 through 9 {
+    &:nth-of-type(#{$i}) {
+      transition-delay: #{($i - 1) * 60}ms;
+    }
+  }
+
+  .cta.is-live & {
+    opacity: 1;
+    translate: 0 0;
+    rotate: 0deg;
+  }
+}
+
+.cta__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  inline-size: 100%;
+
+  // Standard scroll-reveal fade + translateY (spec §8).
+  opacity: 0;
+  translate: 0 16px;
+  transition:
+    opacity 350ms $ease-out 120ms,
+    translate 350ms $ease-out 120ms;
+
+  .cta.is-live & {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  @media (max-width: $bp-mobile) {
+    gap: 32px;
+  }
+}
+
+.cta__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  inline-size: 100%;
+  text-align: center;
+}
+
+.cta__kicker {
+  margin: 0;
+  font-size: var(--font-size-m);
+  line-height: var(--font-height-m);
+  font-weight: var(--font-weight-bold);
+  color: #75deff;
+
+  @media (max-width: $bp-mobile) {
+    color: var(--color-additionally-500);
+  }
+}
+
+.cta__headline {
+  margin: 0;
+  max-inline-size: 800px;
+  font-size: 52px;
+  line-height: normal;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-0);
+
+  @media (max-width: $bp-mobile) {
+    max-inline-size: none;
+    font-size: 20px;
+    line-height: var(--font-height-l);
+  }
+}
+
+.cta__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-15xs);
+  block-size: 56px;
+  padding: 12px 46px;
+  border-radius: 8px;
+  background: var(--color-primary-700);
+  box-shadow: $shadow-medium;
+  font-size: var(--font-size-s);
+  line-height: var(--font-height-s);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-essential-primary);
+  transition: transform 150ms $ease-out;
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  @media (max-width: $bp-mobile) {
+    inline-size: 100%;
+    block-size: auto;
+    padding: 12px 16px;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// RTL refinements. The role diagram keeps its Figma LTR geometry (the dashed
+// connectors are directional artwork), but text containers read RTL and
+// directional arrow glyphs mirror.
+// -----------------------------------------------------------------------------
+:host-context([dir='rtl']) {
+  // Arabic copy inside the diagram cards reads right-to-left.
+  .roles__course,
+  .roles__pill-text {
+    direction: rtl;
+  }
+
+  .roles__job-label,
+  .roles__job-value {
+    left: auto;
+    right: 16px;
+    direction: rtl;
+    text-align: right;
+  }
+
+  // Arabic course titles wrap to two lines — drop the bottom card so the
+  // grown top card (min-height 134, auto-grow) can't overlap it.
+  .roles__course--bottom {
+    top: 170px;
+  }
+
+  // Forward-pointing arrows flip with the reading direction.
+  .hero__cta img,
+  .cta__button img,
+  .faq__contact-link img,
+  .roles__course-enrol img,
+  .roles-m__course-enrol img {
+    transform: scaleX(-1);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Reduced motion: entrances become opacity-only, nothing translates or types
+// (spec global rules). The FAQ height transition stays — it is functional.
+// -----------------------------------------------------------------------------
+@media (prefers-reduced-motion: reduce) {
+  .hero__line-text {
+    clip-path: none !important;
+    animation: none !important;
+  }
+
+  .hero__caret {
+    display: none !important;
+  }
+
+  .hero__subtitle,
+  .hero__cta {
+    animation-name: role-fade !important; // opacity-only fade
+  }
+
+  .quote__inner,
+  .next__step,
+  .next__mockups,
+  .testimonials__kicker,
+  .testimonials__headline,
+  .t-card,
+  .tm-card,
+  .cta__shape,
+  .cta__content {
+    transform: none !important;
+    translate: 0 0 !important;
+    rotate: 0deg !important;
+    transition-property: opacity !important;
+  }
+
+  .roles.is-animated .roles__pill,
+  .roles.is-animated .roles__course,
+  .roles.is-animated .roles__connectors line,
+  .roles-m.is-animated .roles-m__pill,
+  .roles-m.is-animated .roles-m__course,
+  .roles-m.is-animated .roles-m__connectors line {
+    animation-name: role-fade !important;
+  }
+
+  .roles.is-animated .roles__pill-dot img,
+  .roles-m.is-animated .roles-m__pill-dot img {
+    animation: none !important;
+  }
+
+  .faq__icon-v {
+    transition-property: background-color !important;
+  }
+}

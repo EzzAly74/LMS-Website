@@ -1,0 +1,756 @@
+<div class="landing">
+  <!-- ═══════════════ 1. Hero (Figma 1742:48671 / mobile 1742:48089) ═══════════════ -->
+  <section class="hero" #hero [attr.data-phase]="heroPhase()">
+    <img
+      class="hero__wave u-hide-mobile"
+      src="assets/landing/hero-wave.svg"
+      alt=""
+    />
+    <img
+      class="hero__ellipse u-hide-mobile"
+      src="assets/landing/hero-ellipse.svg"
+      alt=""
+    />
+
+    <div class="hero__frame">
+      <div class="hero__left">
+        <div class="hero__copy">
+          <!-- Desktop typewriter headline: two clipped lines + caret (spec §2) -->
+          <h1
+            class="hero__headline u-hide-mobile"
+            attr.aria-label="{{
+              'feature.landing.hero.title_l1' | translate
+            }} {{ 'feature.landing.hero.title_l2' | translate }}"
+          >
+            <span class="hero__line hero__line--1" aria-hidden="true">
+              <span class="hero__line-text" #heroLine1>{{
+                "feature.landing.hero.title_l1" | translate
+              }}</span>
+              <span class="hero__caret hero__caret--1"></span>
+            </span>
+            <span class="hero__line hero__line--2" aria-hidden="true">
+              <span class="hero__line-text" #heroLine2>{{
+                "feature.landing.hero.title_l2" | translate
+              }}</span>
+              <span class="hero__caret hero__caret--2"></span>
+            </span>
+          </h1>
+
+          <!-- Mobile static headline (Figma 1742:48092 — no typewriter nodes) -->
+          <h1 class="hero__headline-mobile u-hide-desktop">
+            {{ "feature.landing.hero.title_m_l1" | translate }}<br />
+            {{ "feature.landing.hero.title_m_l2_plain" | translate
+            }}<span class="hero__headline-mobile-em">{{
+              "feature.landing.hero.title_m_l2_em" | translate
+            }}</span>
+          </h1>
+
+          <p class="hero__subtitle">
+            {{ "feature.landing.hero.subtitle" | translate }}
+          </p>
+        </div>
+
+        <div class="hero__art-mobile u-hide-desktop">
+          <img
+            class="hero__art-mobile-img"
+            src="assets/landing/hero-illustration.png"
+            alt=""
+          />
+          <img
+            class="hero__art-mobile-card"
+            src="assets/landing/hero-card.png"
+            alt=""
+          />
+        </div>
+
+        <a class="hero__cta" [routerLink]="requestDemoRoute">
+          <span>{{ "feature.landing.hero.cta" | translate }}</span>
+          <img
+            src="assets/landing/icon-arrow-circle-right-dark.svg"
+            alt=""
+            width="24"
+            height="24"
+          />
+        </a>
+      </div>
+
+      <div class="hero__art u-hide-mobile">
+        <img
+          class="hero__illustration"
+          src="assets/landing/hero-illustration.png"
+          alt=""
+        />
+        <img class="hero__card" src="assets/landing/hero-card.png" alt="" />
+      </div>
+    </div>
+
+    <!-- Edge-anchored to the viewport (16px off the edge at Figma's 1440),
+         so wide screens never show a dead gap beside the illustration. -->
+  </section>
+
+  <!-- Mint wave flowing under the quote band (Figma 1742:48669, desktop only) -->
+  <img
+    class="landing__wave-quote u-hide-mobile"
+    src="assets/landing/wave-quote.svg"
+    alt=""
+  />
+
+  <!-- ═══════════════ 2. Quote banner (Figma 1742:48729 / mobile 1742:48098) ═══════════════ -->
+  <section class="quote" #quote>
+    <div class="quote__inner">
+      <blockquote class="quote__text">
+        <span>{{ "feature.landing.quote.text_pre" | translate }}</span
+        ><em class="quote__em">{{
+          "feature.landing.quote.text_em" | translate
+        }}</em
+        ><span>{{ "feature.landing.quote.text_post" | translate }}</span>
+      </blockquote>
+      <p class="quote__author">
+        {{ "feature.landing.quote.author" | translate }}
+      </p>
+      <img
+        class="quote__dots u-hide-mobile"
+        src="assets/landing/carousel-dots.svg"
+        alt=""
+        width="32"
+        height="12"
+      />
+    </div>
+  </section>
+
+  <!-- ═══════════════ 3. How We Differ (Figma 1742:48730 / mobile 1742:48102) ═══════════════ -->
+  <section class="differ">
+    <div class="differ__head">
+      <p class="differ__kicker">
+        {{ "feature.landing.differ.kicker" | translate }}
+      </p>
+      <h2 class="differ__title">
+        {{ "feature.landing.differ.title" | translate }}
+      </h2>
+      <p class="differ__subtitle">
+        {{ "feature.landing.differ.subtitle" | translate }}
+      </p>
+    </div>
+
+    <!-- 3a. Video player (spec §4a) -->
+    <div class="differ__video-wrap">
+      <div
+        class="player"
+        [class.is-overlay-visible]="overlayVisible()"
+        (mouseenter)="onPlayerEnter()"
+        (mouseleave)="onPlayerLeave()"
+      >
+        <video
+          #videoEl
+          class="player__video"
+          [src]="videoSrc"
+          preload="metadata"
+          playsinline
+          (click)="onVideoSurfaceClick()"
+          (play)="onVideoPlay()"
+          (pause)="onVideoPause()"
+          (timeupdate)="onTimeUpdate()"
+          (loadedmetadata)="onLoadedMetadata()"
+        ></video>
+
+        <div class="player__overlay">
+          <div class="player__info">
+            <div class="player__titles">
+              <p class="player__title">
+                {{ "feature.landing.video.title" | translate }}
+              </p>
+              <p class="player__subtitle">
+                {{ "feature.landing.video.subtitle" | translate }}
+              </p>
+            </div>
+            <p class="player__time">
+              {{ formatTime(currentTime()) }} / {{ formatTime(duration()) }}
+            </p>
+          </div>
+          <div class="player__progress">
+            <div class="player__progress-track"></div>
+            <div
+              class="player__progress-fill"
+              [style.transform]="'scaleX(' + progressFraction() + ')'"
+            ></div>
+          </div>
+          <div class="player__controls">
+            <div class="player__controls-left">
+              <button
+                type="button"
+                class="player__btn"
+                (click)="togglePlay()"
+                [attr.aria-label]="
+                  (isPlaying()
+                    ? 'feature.landing.video.pause'
+                    : 'feature.landing.video.play'
+                  ) | translate
+                "
+              >
+                <img
+                  [class.is-hidden]="isPlaying()"
+                  src="assets/landing/icon-play.svg"
+                  alt=""
+                />
+                <span
+                  class="player__pause-icon"
+                  [class.is-hidden]="!isPlaying()"
+                  aria-hidden="true"
+                  ><i></i><i></i
+                ></span>
+              </button>
+              <button
+                type="button"
+                class="player__btn"
+                (click)="skip(-15)"
+                [attr.aria-label]="'feature.landing.video.back_15' | translate"
+              >
+                <img src="assets/landing/icon-skip-back-15.svg" alt="" />
+              </button>
+              <button
+                type="button"
+                class="player__btn"
+                (click)="skip(15)"
+                [attr.aria-label]="'feature.landing.video.fwd_15' | translate"
+              >
+                <img src="assets/landing/icon-skip-forward-15.svg" alt="" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3b. Step tab strip synced to playback (spec §4b) -->
+      <div class="differ__tabs" [style.--step]="activeStep()">
+        <span class="differ__tabs-indicator" aria-hidden="true"></span>
+        @for (stepKey of stepKeys; track stepKey; let i = $index) {
+          <div class="differ__tab" [class.is-active]="activeStep() === i">
+            <p>{{ stepKey | translate }}</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- 3c. Role switcher panel — desktop (Figma 1742:48743) -->
+    <div
+      class="roles u-hide-mobile"
+      #rolePanel
+      [class.is-animated]="roleAnimated()"
+      [class.is-leaving]="roleLeaving()"
+    >
+      <div class="roles__intro">
+        <h3 class="roles__title">
+          {{ "feature.landing.roles.title" | translate }}
+        </h3>
+        <div class="roles__switcher">
+          <p class="roles__label">
+            {{ "feature.landing.roles.see_for_role" | translate }}
+          </p>
+          <div class="roles__chips">
+            @for (role of roles; track role.key) {
+              <button
+                type="button"
+                class="roles__chip"
+                [class.is-active]="activeRoleKey() === role.key"
+                (click)="onRoleChipClick(role.key)"
+              >
+                {{ role.nameKey | translate }}
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="roles__diagram" #roleDiagram>
+        <!-- Connectors drawn to live-measured node edges (viewBox = 609x280,
+             the diagram's own pixel box) so each dashed line bridges exactly. -->
+        <svg
+          class="roles__connectors"
+          viewBox="0 0 609 280"
+          preserveAspectRatio="none"
+          fill="none"
+          aria-hidden="true"
+        >
+          @for (c of connectors(); track $index) {
+            <line
+              [attr.x1]="c.x1"
+              [attr.y1]="c.y1"
+              [attr.x2]="c.x2"
+              [attr.y2]="c.y2"
+              [style.--i]="$index"
+            />
+          }
+        </svg>
+
+        <div class="roles__job-card">
+          <p class="roles__job-label">
+            {{ "feature.landing.roles.job_title" | translate }}
+          </p>
+          @for (role of roles; track role.key) {
+            @if (activeRoleKey() === role.key) {
+              <p class="roles__job-value">{{ role.nameKey | translate }}</p>
+            }
+          }
+        </div>
+
+        <!-- Keyed by role so pills/cards re-mount (and re-animate) per swap -->
+        @for (roleKey of [activeRoleKey()]; track roleKey) {
+          @for (
+            qualKey of activeRole().qualificationKeys;
+            track qualKey;
+            let i = $index
+          ) {
+            <div
+              class="roles__pill"
+              [class.roles__pill--top]="i === 0"
+              [class.roles__pill--bottom]="i === 1"
+            >
+              <span class="roles__pill-dot"
+                ><img src="assets/landing/role-dot.svg" alt=""
+              /></span>
+              <span class="roles__pill-text">{{ qualKey | translate }}</span>
+            </div>
+          }
+          @for (
+            course of activeRole().courses;
+            track course.titleKey;
+            let i = $index
+          ) {
+            <div
+              class="roles__course"
+              [class.roles__course--top]="i === 0"
+              [class.roles__course--bottom]="i === 1"
+            >
+              <span class="roles__course-badge">{{
+                "feature.landing.roles.course_badge" | translate
+              }}</span>
+              <p class="roles__course-title">
+                {{ course.titleKey | translate }}
+              </p>
+              <p class="roles__course-date">{{ course.dateKey | translate }}</p>
+              <span class="roles__course-enrol">
+                <span>{{ "feature.landing.roles.enrol" | translate }}</span>
+                <img
+                  src="assets/landing/icon-arrow-right-16.svg"
+                  alt=""
+                  width="16"
+                  height="16"
+                />
+              </span>
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    <!-- 3c. Role switcher — mobile stacked layout (Figma 1742:48113) -->
+    <div
+      class="roles-m u-hide-desktop"
+      #rolePanelMobile
+      [class.is-animated]="roleAnimated()"
+      [class.is-leaving]="roleLeaving()"
+    >
+      <div class="roles-m__head">
+        <h3 class="roles-m__title">
+          {{ "feature.landing.roles.title_mobile" | translate }}
+        </h3>
+        <p class="roles-m__label">
+          {{ "feature.landing.roles.see_for_role" | translate }}
+        </p>
+        <div class="roles-m__chips">
+          @for (role of rolesMobile; track role.key) {
+            <button
+              type="button"
+              class="roles-m__chip"
+              [class.is-active]="activeRoleKey() === role.key"
+              (click)="onRoleChipClick(role.key)"
+            >
+              {{ role.nameShortKey | translate }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="roles-m__stack" #roleStackMobile>
+        <svg
+          class="roles-m__connectors"
+          [attr.viewBox]="'0 0 ' + mobileConnectorBox().w + ' ' + mobileConnectorBox().h"
+          preserveAspectRatio="none"
+          fill="none"
+          aria-hidden="true"
+        >
+          @for (c of connectorsMobile(); track $index) {
+            <line
+              [attr.x1]="c.x1"
+              [attr.y1]="c.y1"
+              [attr.x2]="c.x2"
+              [attr.y2]="c.y2"
+              [style.--i]="$index"
+            />
+          }
+        </svg>
+
+        <div class="roles-m__job-card">
+          <p class="roles-m__job-label">
+            {{ "feature.landing.roles.job_title" | translate }}
+          </p>
+          @for (role of roles; track role.key) {
+            @if (activeRoleKey() === role.key) {
+              <p class="roles-m__job-value">{{ role.nameKey | translate }}</p>
+            }
+          }
+        </div>
+
+        @for (roleKey of [activeRoleKey()]; track roleKey) {
+          <div class="roles-m__skills">
+            @for (
+              qualKey of activeRole().qualificationKeys;
+              track qualKey;
+              let i = $index
+            ) {
+              <div class="roles-m__pill" [style.--i]="i">
+                <span class="roles-m__pill-dot"
+                  ><img src="assets/landing/role-dot.svg" alt=""
+                /></span>
+                <span class="roles-m__pill-text">{{
+                  qualKey | translate
+                }}</span>
+              </div>
+            }
+          </div>
+          <div class="roles-m__courses">
+            @for (
+              course of activeRole().courses;
+              track course.titleKey;
+              let i = $index
+            ) {
+              <div class="roles-m__course" [style.--i]="i">
+                <span class="roles-m__course-badge">{{
+                  "feature.landing.roles.course_badge_short" | translate
+                }}</span>
+                <p class="roles-m__course-title">
+                  {{ course.titleKey | translate }}
+                </p>
+                <p class="roles-m__course-date">
+                  {{ course.dateKey | translate }}
+                </p>
+                <span class="roles-m__course-enrol">
+                  <span>{{ "feature.landing.roles.enrol" | translate }}</span>
+                  <img
+                    src="assets/landing/icon-arrow-right-14.svg"
+                    alt=""
+                    width="14"
+                    height="14"
+                  />
+                </span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ 4. Next Step (Figma 1742:49077 / mobile 1742:48325) ═══════════════ -->
+  <section class="next" #nextStep>
+    <h2 class="next__title u-hide-mobile">
+      {{ "feature.landing.next.title" | translate }}
+    </h2>
+    <h2 class="next__title u-hide-desktop">
+      {{ "feature.landing.next.title_mobile" | translate }}
+    </h2>
+
+    <div class="next__layout">
+      <div class="next__steps">
+        @for (
+          step of nextSteps;
+          track step.titleKey;
+          let i = $index;
+          let last = $last
+        ) {
+          <div class="next__step" [style.--i]="i">
+            <div class="next__indicator">
+              <span class="next__circle">{{ i + 1 }}</span>
+              @if (!last) {
+                <span class="next__connector" aria-hidden="true"></span>
+              }
+            </div>
+            <div class="next__text">
+              <h3 class="next__step-title">{{ step.titleKey | translate }}</h3>
+              <p class="next__step-desc u-hide-mobile">
+                {{ step.descKey | translate }}
+              </p>
+              <p class="next__step-desc u-hide-desktop">
+                {{ step.descMobileKey | translate }}
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="next__mockups u-hide-mobile" aria-hidden="true">
+        <img
+          class="next__mockup-banner"
+          src="assets/landing/next-mockup-banner.png"
+          alt=""
+        />
+        <img
+          class="next__mockup-dashboard"
+          src="assets/landing/next-mockup-dashboard.png"
+          alt=""
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ 5. Testimonials (Figma 1742:49107 / mobile 1742:48351) ═══════════════ -->
+  <section class="testimonials" #testimonials>
+    <!-- Desktop scattered collage on the 1440x820 canvas -->
+    <div
+      class="testimonials__canvas u-hide-mobile"
+      [style.zoom]="testimonialZoom()"
+    >
+      <img
+        class="testimonials__pattern testimonials__pattern--top"
+        src="assets/landing/testimonial-pattern.svg"
+        alt=""
+      />
+      <img
+        class="testimonials__pattern testimonials__pattern--bottom"
+        src="assets/landing/testimonial-pattern.svg"
+        alt=""
+      />
+
+      <p class="testimonials__kicker">
+        {{ "feature.landing.testimonials.kicker" | translate }}
+      </p>
+      <h2 class="testimonials__headline testimonials__headline--1">
+        {{ "feature.landing.testimonials.title_l1" | translate }}
+      </h2>
+      <h2 class="testimonials__headline testimonials__headline--2">
+        {{ "feature.landing.testimonials.title_l2" | translate }}
+      </h2>
+
+      @for (card of testimonialCards; track card.order) {
+        <figure
+          class="t-card"
+          [class.t-card--wide]="card.wide"
+          [class.t-card--tail-start]="card.tail === 'start'"
+          [class.t-card--tail-end]="card.tail === 'end'"
+          [class.t-card--from-end]="card.from === 'end'"
+          [style.--x.px]="card.left"
+          [style.--y.px]="card.top"
+          [style.--d.ms]="card.order * 80"
+        >
+          @if (card.quoteKey) {
+            <blockquote class="t-card__quote">
+              {{ card.quoteKey | translate }}
+            </blockquote>
+          }
+          <img
+            class="t-card__stars"
+            [src]="
+              card.quoteKey
+                ? 'assets/landing/stars-comment.svg'
+                : 'assets/landing/stars-rating.svg'
+            "
+            alt=""
+            width="91"
+            height="16"
+          />
+          <figcaption class="t-card__person">
+            <span class="t-card__avatar">{{
+              card.initialsKey | translate
+            }}</span>
+            <span class="t-card__who">
+              <span class="t-card__name">{{ card.nameKey | translate }}</span>
+              <span class="t-card__job">{{ card.jobKey | translate }}</span>
+            </span>
+          </figcaption>
+        </figure>
+      }
+    </div>
+
+    <!-- Mobile trimmed 4-card stack -->
+    <div class="testimonials__mobile u-hide-desktop">
+      <div class="testimonials__m-head">
+        <p class="testimonials__m-kicker">
+          {{ "feature.landing.testimonials.kicker" | translate }}
+        </p>
+        <h2 class="testimonials__m-title">
+          {{ "feature.landing.testimonials.title_mobile" | translate }}
+        </h2>
+      </div>
+      @for (card of testimonialCardsMobile; track $index; let i = $index) {
+        <figure class="tm-card" [style.--d.ms]="i * 80">
+          @if (card.quoteKey) {
+            <blockquote class="tm-card__quote">
+              {{ card.quoteKey | translate }}
+            </blockquote>
+          }
+          <span class="tm-card__stars">
+            @for (
+              star of card.quoteKey ? starSetComment : starSetRating;
+              track $index
+            ) {
+              <img
+                [src]="'assets/landing/' + star + '.svg'"
+                alt=""
+                width="14"
+                height="14"
+              />
+            }
+          </span>
+          <figcaption class="tm-card__person">
+            <span class="tm-card__avatar">{{
+              card.initialsKey | translate
+            }}</span>
+            <span class="tm-card__who">
+              <span class="tm-card__name">{{ card.nameKey | translate }}</span>
+              <span class="tm-card__job">{{ card.jobKey | translate }}</span>
+            </span>
+          </figcaption>
+        </figure>
+      }
+    </div>
+  </section>
+
+  <!-- ═══════════════ 6. FAQ (Figma 1742:49361 / mobile 1742:48394) ═══════════════ -->
+  <div class="faq-band">
+    <img
+      class="faq-band__wave u-hide-mobile"
+      src="assets/landing/wave-bottom.svg"
+      alt=""
+    />
+
+    <section class="faq">
+      <div class="faq__head">
+        <p class="faq__kicker">
+          {{ "feature.landing.faq.kicker" | translate }}
+        </p>
+        <h2 class="faq__title">
+          {{ "feature.landing.faq.title" | translate }}
+        </h2>
+      </div>
+
+      <div class="faq__list">
+        @for (item of faqItems; track item.questionKey; let i = $index) {
+          <div
+            class="faq__item"
+            [class.is-open]="openFaqIndex() === i"
+            [class.u-hide-mobile]="!item.mobile"
+          >
+            <button
+              type="button"
+              class="faq__question"
+              (click)="toggleFaq(i)"
+              [attr.aria-expanded]="openFaqIndex() === i"
+              [attr.aria-disabled]="!item.answerKey"
+            >
+              @if (item.questionMobileKey) {
+                <span class="u-hide-mobile">{{
+                  item.questionKey | translate
+                }}</span>
+                <span class="u-hide-desktop">{{
+                  item.questionMobileKey | translate
+                }}</span>
+              } @else {
+                <span>{{ item.questionKey | translate }}</span>
+              }
+              <span class="faq__icon" aria-hidden="true"
+                ><i class="faq__icon-v"></i><i class="faq__icon-h"></i
+              ></span>
+            </button>
+            @if (item.answerKey) {
+              <div class="faq__answer-wrap">
+                <div class="faq__answer-clip">
+                  <p class="faq__answer u-hide-mobile">
+                    {{ item.answerKey | translate }}
+                  </p>
+                  <p class="faq__answer u-hide-desktop">
+                    {{ item.answerMobileKey ?? item.answerKey | translate }}
+                  </p>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="faq__contact u-hide-mobile">
+        <p>{{ "feature.landing.faq.contact_q" | translate }}</p>
+        <a class="faq__contact-link" [routerLink]="requestDemoRoute">
+          <span>{{ "feature.landing.faq.contact_cta" | translate }}</span>
+          <img
+            src="assets/landing/icon-arrow-right-20.svg"
+            alt=""
+            width="20"
+            height="20"
+          />
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══════════════ 7. Closing CTA (Figma 1742:49384 / mobile 1742:48427) ═══════════════ -->
+  <section class="cta" #cta>
+    <img
+      class="cta__glow cta__glow--right u-hide-mobile"
+      src="assets/landing/cta-glow-right.svg"
+      alt=""
+    />
+    <img
+      class="cta__glow cta__glow--center u-hide-mobile"
+      src="assets/landing/cta-glow-center.svg"
+      alt=""
+    />
+    <img
+      class="cta__glow cta__glow--left u-hide-mobile"
+      src="assets/landing/cta-glow-left.svg"
+      alt=""
+    />
+
+    <span class="cta__shape cta__shape--diamond u-hide-mobile"
+      ><img src="assets/landing/cta-diamond.svg" alt=""
+    /></span>
+    <span class="cta__shape cta__shape--circle-lg u-hide-mobile"
+      ><img src="assets/landing/cta-circle-lg.svg" alt=""
+    /></span>
+    <span class="cta__shape cta__shape--circle-sm u-hide-mobile"
+      ><img src="assets/landing/cta-circle-sm.svg" alt=""
+    /></span>
+    <span class="cta__shape cta__shape--outline u-hide-mobile"></span>
+    <span class="cta__shape cta__shape--ellipse u-hide-mobile"
+      ><img src="assets/landing/cta-ellipse.svg" alt=""
+    /></span>
+    <span class="cta__shape cta__shape--rect u-hide-mobile"></span>
+
+    <span class="cta__shape cta__shape--m-circle u-hide-desktop"
+      ><img src="assets/landing/cta-circle-mobile.svg" alt=""
+    /></span>
+    <span class="cta__shape cta__shape--m-diamond u-hide-desktop"
+      ><img src="assets/landing/cta-diamond-mobile.svg" alt=""
+    /></span>
+    <span class="cta__shape cta__shape--m-rect u-hide-desktop"></span>
+
+    <div class="cta__content">
+      <div class="cta__text">
+        <p class="cta__kicker">
+          {{ "feature.landing.cta.kicker" | translate }}
+        </p>
+        <h2 class="cta__headline">
+          {{ "feature.landing.cta.title" | translate }}
+        </h2>
+      </div>
+      <a class="cta__button" [routerLink]="requestDemoRoute">
+        <span>{{ "feature.landing.cta.button" | translate }}</span>
+        <img
+          src="assets/landing/icon-arrow-circle-right-light.svg"
+          alt=""
+          width="24"
+          height="24"
+        />
+      </a>
+    </div>
+  </section>
+</div>

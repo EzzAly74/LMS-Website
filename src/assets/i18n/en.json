@@ -30,7 +30,8 @@
       "login": "Login",
       "request_demo": "Request a Demo",
       "notifications": "Notifications",
-      "language": "Language"
+      "language": "Language",
+      "home": "Home"
     },
     "language": {
       "en": "English",
@@ -67,7 +68,7 @@
         "terms": "Terms & Conditions",
         "privacy": "Privacy Policy"
       },
-      "copyright": "Design with love © TanahAirStudio {{year}}. All right reserved"
+      "copyright": "© NAS {{year}}. All rights reserved."
     }
   },
   "feature": {
@@ -240,7 +241,9 @@
         "intermediate": "Intermediate",
         "professional": "Professional"
       },
-      "card": { "starts": "Starts" },
+      "card": {
+        "starts": "Starts"
+      },
       "empty": {
         "title": "No courses found",
         "message": "Try adjusting your search or filters to find more courses."
@@ -474,6 +477,150 @@
         "points_earned": "{{count}} pts",
         "pending": "Pending",
         "earned_label": "Earned"
+      }
+    },
+    "landing": {
+      "hero": {
+        "title_l1": "Learn anything and",
+        "title_l2": "master your role",
+        "title_m_l1": "Learn anything",
+        "title_m_l2_plain": "and ",
+        "title_m_l2_em": "master your role",
+        "subtitle": "Not a catalogue. A map. Built from your job title, pointing straight to the competences and courses that get you where you're going.",
+        "cta": "Request a Demo Now"
+      },
+      "quote": {
+        "text_pre": "An investment in knowledge pays the ",
+        "text_em": "best interest",
+        "text_post": ".",
+        "author": "Benjamin Franklin"
+      },
+      "differ": {
+        "kicker": "How we differ",
+        "title": "One system, two connected views",
+        "subtitle": "A role or qualification set on the admin dashboard flows straight through to the courses each employee sees — automatically."
+      },
+      "video": {
+        "title": "LMS Demo",
+        "subtitle": "Take a sneak peak",
+        "play": "Play",
+        "pause": "Pause",
+        "back_15": "Go backwards 15 seconds",
+        "fwd_15": "Go forward 15 seconds",
+        "step1": "1 — Admin sets the role",
+        "step2": "2 — System maps qualifications",
+        "step3": "3 — Instructor creates course",
+        "step4": "4 — Employee gets the course"
+      },
+      "roles": {
+        "title": "Define roles, build capabilities & grow your team.",
+        "title_mobile": "Define roles, build capabilities & grow your team",
+        "see_for_role": "SEE IT FOR A ROLE",
+        "job_title": "JOB TITLE",
+        "enrol": "Enrol",
+        "course_badge": "COURSE · EARNS QUALIFICATION",
+        "course_badge_short": "COURSE · QUALIFICATION",
+        "sales_executive": {
+          "name": "Sales Executive",
+          "name_short": "Sales Exec",
+          "q1": "Consultative selling",
+          "q2": "CRM proficiency",
+          "c1_title": "Winning enterprise deals",
+          "c1_date": "Next · Tue 14 Jul",
+          "c2_title": "Salesforce for sales teams",
+          "c2_date": "Next · Mon 20 Jul"
+        },
+        "branch_manager": {
+          "name": "Branch Manager",
+          "name_short": "Branch Manager",
+          "q1": "Team leadership",
+          "q2": "Risk and compliance",
+          "c1_title": "Leading high-trust teams",
+          "c1_date": "Next · Wed 16 Jul",
+          "c2_title": "Branch risk essentials",
+          "c2_date": "Next · Thu 24 Jul"
+        },
+        "data_analyst": {
+          "name": "Data Analyst",
+          "name_short": "Data Analyst",
+          "q1": "Data visualization",
+          "q2": "SQL for analysts",
+          "c1_title": "Turning data into decisions",
+          "c1_date": "Next · Wed 15 Jul",
+          "c2_title": "Advanced SQL for analysts",
+          "c2_date": "Next · Fri 18 Jul"
+        },
+        "hr_specialist": {
+          "name": "HR Specialist",
+          "name_short": "HR Specialist",
+          "q1": "Employee relations",
+          "q2": "HR compliance",
+          "c1_title": "Building strong employee relations",
+          "c1_date": "Next · Tue 21 Jul",
+          "c2_title": "HR compliance essentials",
+          "c2_date": "Next · Thu 23 Jul"
+        }
+      },
+      "next": {
+        "title": "Next Step",
+        "title_mobile": "How to get started",
+        "book": {
+          "title": "Book a demo",
+          "desc": "Book a demo with our workforce consultants. We'll set you up a meeting to suit your team's needs.",
+          "desc_mobile": "Book a demo with our consultants to suit your team's specific needs."
+        },
+        "explore": {
+          "title": "Explore the system",
+          "desc": "See the system in action to understand how it can empower your team, unlock employee potential, and elevate performance across the board.",
+          "desc_mobile": "See the platform in action to understand how it can empower your team and elevate performance."
+        },
+        "onboarding": {
+          "title": "Dedicated onboarding",
+          "desc": "Get a fully tailored, ready-to-use system. A dedicated consultant will handle all your data entry and configuration for you.",
+          "desc_mobile": "Get a fully tailored, ready-to-use setup with consultant guidance."
+        }
+      },
+      "testimonials": {
+        "kicker": "Testimonials",
+        "title_l1": "Proven By",
+        "title_l2": "Actual Users",
+        "title_mobile": "Proven By Actual Users",
+        "q1": "“We stopped hand-assigning courses. Set the role once, and every employee sees exactly the path their qualifications require.”",
+        "q2": "“The perfect blend of theory and practice”",
+        "q3": "“The perfect blend of theory and practice—I finally feel confident in my new skillset”",
+        "q4": "“This course was a total game-changer, breaking down complex topics into actionable steps that helped me succeed immediately”",
+        "q5": "“I walked away with practical, real-world skills that I started applying to my work the very next day”",
+        "manager_name": "Manager name",
+        "employee_name": "Employee’s name",
+        "job_title": "Job Title",
+        "marcus": "Marcus Aurelius",
+        "ops_manager": "Operations Manager",
+        "emily": "Emily Lam",
+        "tech_lead": "Technical Lead",
+        "initials_ma": "MA",
+        "initials_el": "EL"
+      },
+      "faq": {
+        "kicker": "We’re here to help",
+        "title": "Frequently Asked Questions",
+        "q1": "What should I expect during my demo call?",
+        "a1": "During your demo call, our team will walk you through the key features of NAS LMS, tailored to your organization's needs. We'll answer any questions you have and discuss how NAS LMS can help you achieve your HR goals.",
+        "a1_mobile": "During your demo call, our team will walk you through the key features of NAS LMS, tailored to your organization's needs. We'll answer any questions you have and discuss how NAS LMS can help.",
+        "q2": "What integrations do you offer?",
+        "q3": "Does the contract include dedicated human support?",
+        "q3_mobile": "Does the contract include human support?",
+        "q4": "Can I purchase Performance or OKRs and Goals separately?",
+        "q5": "Is there a minimum spend?",
+        "q6": "In what currency will I be billed?",
+        "q7": "Is the contract billed monthly, quarterly, or annually?",
+        "q8": "Are there additional fees for implementation or change management?",
+        "contact_q": "Have a question we didn't answer?",
+        "contact_cta": "Contact Us"
+      },
+      "cta": {
+        "kicker": "Get started",
+        "title": "Go beyond generic catalogues. Get NAS LMS.",
+        "button": "Book a Demo"
       }
     }
   }
