@@ -76,14 +76,6 @@ export const routes: Routes = [
           ),
       },
       {
-        path: LmsRoutes.Notifications,
-        canActivate: [authGuard],
-        loadChildren: () =>
-          import('./feature/notifications/notifications.routes').then(
-            (m) => m.NOTIFICATIONS_ROUTES,
-          ),
-      },
-      {
         path: LmsRoutes.Profile,
         canActivate: [authGuard],
         loadChildren: () =>

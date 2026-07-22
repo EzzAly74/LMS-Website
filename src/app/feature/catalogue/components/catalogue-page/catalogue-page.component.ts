@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { AuthService } from '../../../../core/auth/auth.service';
+import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { CardSkeletonComponent } from '../../../../shared/components/card-skeleton/card-skeleton.component';
@@ -12,6 +14,7 @@ import {
 import { FilterSidebarComponent } from '../../../../shared/components/filter-sidebar/filter-sidebar.component';
 import { FilterSection, FilterSelection, FilterSidebarConfig } from '../../../../shared/components/filter-sidebar/filter-sidebar.model';
 import { LoadMoreComponent } from '../../../../shared/components/load-more/load-more.component';
+import { LoginRequiredDialogComponent } from '../../../../shared/components/login-required-dialog/login-required-dialog.component';
 import { SearchInputComponent } from '../../../../shared/components/search-input/search-input.component';
 import {
   ToggleOption,
@@ -28,6 +31,7 @@ import {
 } from '../../models/catalogue.models';
 import { CatalogueService } from '../../services/catalogue.service';
 import { CourseCardComponent } from '../course-card/course-card.component';
+import { EnrolmentDialogComponent } from '../enrolment-dialog/enrolment-dialog.component';
 
 const PER_PAGE = 12;
 const TYPE_VALUES: DeliveryType[] = ['online', 'offline', 'hybrid'];
@@ -47,6 +51,8 @@ const SORT_VALUES: SortOption[] = ['most_relevant', 'highest_rated', 'soonest_st
     CardSkeletonComponent,
     EmptyStateComponent,
     LoadMoreComponent,
+    EnrolmentDialogComponent,
+    LoginRequiredDialogComponent,
   ],
   templateUrl: './catalogue-page.component.html',
   styleUrl: './catalogue-page.component.scss',
@@ -58,6 +64,7 @@ export class CataloguePageComponent implements OnInit {
   private readonly translate = inject(TranslateService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  protected readonly auth = inject(AuthService);
 
   protected readonly courses = signal<CatalogueCourse[]>([]);
   protected readonly scopes = signal<ScopeChip[]>([]);
@@ -74,8 +81,15 @@ export class CataloguePageComponent implements OnInit {
     sort: [SORT_VALUES[0]],
   });
 
+  /** Course awaiting enrolment confirmation — drives the enrolment dialog. */
+  protected readonly enrolCandidate = signal<CatalogueCourse | null>(null);
+  /** Whether the guest "please sign in" prompt is open. */
+  protected readonly loginPromptOpen = signal(false);
+
   protected searchTerm = '';
   private page = 1;
+  /** Tracks auth transitions so login/logout refreshes the catalogue in place. */
+  private lastAuthState: boolean | null = null;
 
   protected readonly hasMore = computed(() => this.courses().length < this.totalRecords());
   protected readonly skeletons = Array.from({ length: 8 });
@@ -94,6 +108,28 @@ export class CataloguePageComponent implements OnInit {
     // Backend course/filter text is localized via Accept-Language — refetch
     // instead of leaving stale-language content on screen after a switch.
     reloadOnLanguageChange(() => {
+      this.loadJobRoles();
+      this.loadScopes();
+      this.loadCourses(true);
+    });
+
+    // Login/logout while sitting on the catalogue must refresh it in place:
+    // scope tabs + job-role filter appear/disappear and the course set changes
+    // between the guest (public) view and the personalised learner view.
+    effect(() => {
+      const authed = this.auth.isAuthenticated();
+      if (this.lastAuthState === null) {
+        this.lastAuthState = authed;
+        return; // initial run — ngOnInit already did the first load
+      }
+      if (authed === this.lastAuthState) {
+        return;
+      }
+      this.lastAuthState = authed;
+      if (!authed) {
+        this.selectedScope.set('all'); // guests have no scope tabs
+      }
+      this.page = 1;
       this.loadJobRoles();
       this.loadScopes();
       this.loadCourses(true);
@@ -137,7 +173,42 @@ export class CataloguePageComponent implements OnInit {
     this.loadCourses(false);
   }
 
+  /**
+   * Enrol CTA opens the "Request Enrolment" confirmation dialog — but a guest
+   * (browsing the public catalogue) is sent to login first, since enrolment
+   * requires an authenticated learner.
+   */
   protected onEnrol(course: CatalogueCourse): void {
+    if (!this.auth.isAuthenticated()) {
+      this.loginPromptOpen.set(true);
+      return;
+    }
+    this.enrolCandidate.set(course);
+  }
+
+  protected onLoginPromptCancel(): void {
+    this.loginPromptOpen.set(false);
+  }
+
+  /** Guest confirmed the prompt — go to login, returning to the catalogue. */
+  protected onLoginPromptConfirm(): void {
+    this.loginPromptOpen.set(false);
+    this.router.navigate(['/' + LmsRoutes.Login], {
+      queryParams: { returnUrl: this.router.url },
+    });
+  }
+
+  protected onEnrolCancel(): void {
+    this.enrolCandidate.set(null);
+  }
+
+  /** Dialog confirmed — send the enrolment request for the pending course. */
+  protected onEnrolConfirm(): void {
+    const course = this.enrolCandidate();
+    if (!course) {
+      return;
+    }
+    this.enrolCandidate.set(null);
     this.catalogue.enrol(course.id, course.next_cohort?.id).subscribe({
       next: (res) => {
         if (res.status === 'success' && res.result?.is_success) {
@@ -156,6 +227,10 @@ export class CataloguePageComponent implements OnInit {
   }
 
   protected onNotifyMe(course: CatalogueCourse): void {
+    if (!this.auth.isAuthenticated()) {
+      this.loginPromptOpen.set(true);
+      return;
+    }
     this.catalogue.notifyMe(course.id).subscribe({
       next: () => this.notify.success(this.translate.instant('feature.catalogue.notify.success')),
       error: () => this.showEnrolError(),
@@ -178,6 +253,11 @@ export class CataloguePageComponent implements OnInit {
   }
 
   private loadJobRoles(): void {
+    // The Job Role filter is authenticated-only; don't fetch it for guests.
+    if (!this.auth.isAuthenticated()) {
+      this.jobRoles.set([]);
+      return;
+    }
     this.catalogue.getJobRoles().subscribe({
       next: (res) => {
         if (res.status === 'success' && res.result) {
@@ -275,14 +355,20 @@ export class CataloguePageComponent implements OnInit {
           count: countFor(meta?.duration, v),
         })),
       },
-      {
-        key: 'job_role',
-        icon: 'pi-briefcase',
-        label: this.translate.instant('feature.catalogue.filters.job_role'),
-        type: 'chip',
-        expanded: false,
-        options: jobRoles.map((jr) => ({ value: String(jr.id), label: jr.name })),
-      },
+      // Job Role is a learner-facing filter — hidden for guests (who only see
+      // public, no-qualification courses that no job role maps to anyway).
+      ...(this.auth.isAuthenticated()
+        ? [
+            {
+              key: 'job_role',
+              icon: 'pi-briefcase',
+              label: this.translate.instant('feature.catalogue.filters.job_role'),
+              type: 'chip' as const,
+              expanded: false,
+              options: jobRoles.map((jr) => ({ value: String(jr.id), label: jr.name })),
+            },
+          ]
+        : []),
       {
         key: 'sort',
         icon: 'pi-sort-alt',

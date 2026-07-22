@@ -19,6 +19,12 @@
   "shared": {
     "filter_sidebar": {
       "title": "Filters"
+    },
+    "login_required": {
+      "title": "Enrolment Failed",
+      "message": "Please sign in first. Once logged in, you can enroll in any course and explore what fits you best.",
+      "cancel": "Cancel",
+      "login": "Login to my account"
     }
   },
   "core": {
@@ -31,7 +37,12 @@
       "request_demo": "Request a Demo",
       "notifications": "Notifications",
       "language": "Language",
-      "home": "Home"
+      "home": "Home",
+      "home_page": "Home Page",
+      "menu": "Menu",
+      "menu_back": "Back",
+      "more_options": "More Options",
+      "languages": "Languages"
     },
     "language": {
       "en": "English",
@@ -251,7 +262,15 @@
       "enrol": {
         "success": "You're enrolled — find it in My Learnings.",
         "success_title": "Enrolled Successfully",
-        "error_title": "Something Went Wrong!"
+        "error_title": "Something Went Wrong!",
+        "dialog": {
+          "title": "Request Enrolment",
+          "cohort_starting": "Cohort starting {{date}}",
+          "note": "You'll be enrolled immediately. This course will appear in Profile \"My Learning\" section.",
+          "cancel": "Cancel Request",
+          "confirm": "Confirm Request",
+          "close": "Close"
+        }
       },
       "notify": {
         "success": "We'll notify you when the next cohort opens."
@@ -490,10 +509,21 @@
         "cta": "Request a Demo Now"
       },
       "quote": {
-        "text_pre": "An investment in knowledge pays the ",
-        "text_em": "best interest",
-        "text_post": ".",
-        "author": "Benjamin Franklin"
+        "items": [
+          {
+            "text_pre": "An investment in knowledge pays the ",
+            "text_em": "best interest",
+            "text_post": ".",
+            "author": "Benjamin Franklin"
+          },
+          {
+            "text_pre": "The growth and development of people is the highest ",
+            "text_em": "calling of leadership",
+            "text_post": ".",
+            "author": "Harvey S. Firestone"
+          }
+        ],
+        "go_to": "Show quote"
       },
       "differ": {
         "kicker": "How we differ",

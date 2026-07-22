@@ -1,0 +1,271 @@
+@use "mixins" as *;
+
+// Full-viewport layer that centers the modal (web) / anchors the sheet (mobile).
+// Top-most z-index (32-bit max): a modal must clear every page layer, including
+// grid/flex items that establish a stacking context above the normal flow.
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.enrol-dialog__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--elevation-surface-overlay);
+  animation: enrol-fade 200ms ease both;
+}
+
+// ── Web: 512px centered card (Figma 1787:92020) ──────────────────────────────
+.enrol-dialog {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 512px;
+  max-width: calc(100vw - 32px);
+  background: var(--color-essential-primary);
+  border-radius: var(--radius-container-md, 8px);
+  box-shadow: var(--elevation-shadow-xl);
+  overflow: hidden;
+  animation: enrol-pop 200ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+// Drag handle — mobile bottom-sheet only.
+.enrol-dialog__handle {
+  display: none;
+}
+
+.enrol-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-13xs);
+  padding: 20px 24px;
+  border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
+}
+
+.enrol-dialog__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--color-essential-secondary);
+  @include typography("h2", "bold");
+}
+
+// The leading icon is a mobile-only affordance (Figma 963:51293).
+.enrol-dialog__title-icon {
+  display: none;
+  font-size: 18px;
+}
+
+.enrol-dialog__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-control-xs, 6px);
+  background: none;
+  color: var(--color-neutral-800);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background: var(--color-neutral-100);
+  }
+
+  .pi {
+    font-size: 16px;
+  }
+}
+
+.enrol-dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px;
+}
+
+// Course summary card.
+.enrol-dialog__course {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-md, 8px);
+}
+
+.enrol-dialog__cover {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-control-xs, 6px);
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .pi {
+    font-size: 20px;
+  }
+}
+
+.enrol-dialog__course-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.enrol-dialog__course-title {
+  margin: 0;
+  color: var(--color-essential-secondary);
+  @include typography("subtitle", "bold");
+}
+
+.enrol-dialog__course-cohort {
+  margin: 0;
+  color: var(--color-neutral-800);
+  @include typography("caption", "regular");
+}
+
+.enrol-dialog__note {
+  margin: 0;
+  color: var(--color-neutral-800);
+  @include typography("body-small", "regular");
+}
+
+.enrol-dialog__footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px 24px;
+}
+
+.enrol-dialog__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 12px 16px;
+  border-radius: var(--radius-control-sm, 8px);
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    transform 120ms ease;
+  @include typography("button-large", "medium");
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &--secondary {
+    flex: 0 0 auto;
+    border: var(--stroke-width-default) solid var(--color-neutral-400);
+    background: var(--color-essential-primary);
+    color: var(--color-essential-secondary);
+
+    &:hover {
+      background: var(--color-neutral-100);
+    }
+  }
+
+  &--primary {
+    flex: 1 1 auto;
+    border: none;
+    background: var(--color-essential-tertiary);
+    color: var(--color-neutral-0);
+
+    &:hover {
+      background: var(--color-primary-900);
+    }
+  }
+}
+
+@keyframes enrol-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes enrol-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// ── Mobile: bottom sheet (Figma 963:51293) ───────────────────────────────────
+@media (max-width: 900px) {
+  :host {
+    align-items: flex-end;
+  }
+
+  .enrol-dialog {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+    animation: enrol-slide-up 250ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .enrol-dialog__handle {
+    display: block;
+    width: 36px;
+    height: 4px;
+    margin: 8px auto 0;
+    border-radius: 999px;
+    background: var(--color-neutral-500);
+  }
+
+  .enrol-dialog__title-icon {
+    display: inline-flex;
+  }
+
+  .enrol-dialog__footer {
+    .enrol-dialog__btn {
+      flex: 1 1 0;
+    }
+  }
+}
+
+@keyframes enrol-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+// RTL: motion + layout are direction-agnostic; nothing to mirror here.
+
+@media (prefers-reduced-motion: reduce) {
+  .enrol-dialog,
+  .enrol-dialog__backdrop {
+    animation: none;
+  }
+}

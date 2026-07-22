@@ -46,15 +46,8 @@
     gap: var(--spacing-17xs);
     padding: var(--spacing-15xs);
     overflow-y: auto;
+    // Scrolls in place when the inbox is long — the panel is the only surface
+    // for notifications now (no separate route/page).
     max-height: 380px;
-  }
-
-  &__view-all {
-    display: block;
-    text-align: center;
-    padding: var(--spacing-13xs) var(--spacing-9xs);
-    border-top: var(--stroke-width-default) solid var(--color-neutral-300);
-    color: var(--color-primary-700);
-    @include typography('body-small', 'medium');
   }
 }

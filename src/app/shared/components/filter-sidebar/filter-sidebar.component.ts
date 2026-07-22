@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { BodyPortalDirective } from '../../directives/body-portal.directive';
 import { FilterOption, FilterSection, FilterSelection, FilterSidebarConfig } from './filter-sidebar.model';
 
 /**
@@ -17,7 +18,7 @@ import { FilterOption, FilterSection, FilterSelection, FilterSidebarConfig } fro
 @Component({
   selector: 'app-filter-sidebar',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, BodyPortalDirective],
   templateUrl: './filter-sidebar.component.html',
   styleUrl: './filter-sidebar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

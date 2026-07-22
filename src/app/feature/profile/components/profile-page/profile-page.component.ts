@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { AuthService } from '../../../../core/auth/auth.service';
+import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
 import { ShimmerComponent } from '../../../../shared/components/shimmer/shimmer.component';
@@ -53,6 +55,7 @@ const STAT_COUNTERS: StatCounter[] = [
 export class ProfilePageComponent implements OnInit {
   private readonly service = inject(ProfileService);
   protected readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
 
   protected readonly summary = signal<ProfileSummary | null>(null);
   protected readonly qualifications = signal<QualificationProgress[]>([]);
@@ -92,7 +95,10 @@ export class ProfilePageComponent implements OnInit {
   }
 
   protected logout(): void {
-    this.auth.logout().subscribe();
+    // Profile is an auth-only route, so leave it as the session ends —
+    // guards don't re-run reactively, so the redirect must be explicit.
+    const leave = () => this.router.navigateByUrl(`/${LmsRoutes.Catalogue}`);
+    this.auth.logout().subscribe({ next: leave, error: leave });
   }
 
   private load(): void {

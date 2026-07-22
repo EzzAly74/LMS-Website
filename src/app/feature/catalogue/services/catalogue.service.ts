@@ -48,8 +48,12 @@ export class CatalogueService {
     return this.api.post<void>(`${this.base}/courses/${courseId}/notify-me`, {});
   }
 
-  /** Public job-title lookup, used to build the Job Role filter chips. */
+  /**
+   * Job Role filter chips — only the job titles actually reachable from a
+   * catalogue course (via its qualification skills), not the full active list,
+   * so every chip maps to a real result. Mirrors the blogs job-title filter.
+   */
   getJobRoles(): Observable<ApiResponse<{ id: number; name: string }[]>> {
-    return this.api.get<{ id: number; name: string }[]>('job-titles/active');
+    return this.api.get<{ id: number; name: string }[]>(`${this.base}/job-role-filters`);
   }
 }

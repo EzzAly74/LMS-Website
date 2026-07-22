@@ -1,15 +1,21 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { AuthService } from '../../../../core/auth/auth.service';
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { LanguageService } from '../../../../core/services/language.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { EmptyStateComponent, EmptyStateConfig } from '../../../../shared/components/empty-state/empty-state.component';
+import { LoginRequiredDialogComponent } from '../../../../shared/components/login-required-dialog/login-required-dialog.component';
 import { RatingStarsComponent } from '../../../../shared/components/rating-stars/rating-stars.component';
+import {
+  EnrolmentDialogComponent,
+  EnrolmentDialogCourse,
+} from '../../../catalogue/components/enrolment-dialog/enrolment-dialog.component';
 import { CourseDetail, CourseDetailTab } from '../../models/course-detail.models';
 import { CourseDetailService } from '../../services/course-detail.service';
 import { CourseDetailSkeletonComponent } from '../course-detail-skeleton/course-detail-skeleton.component';
@@ -31,6 +37,8 @@ import { OverviewTabComponent } from '../overview-tab/overview-tab.component';
     OverviewTabComponent,
     CurriculumTabComponent,
     InstructorTabComponent,
+    EnrolmentDialogComponent,
+    LoginRequiredDialogComponent,
   ],
   templateUrl: './course-detail-page.component.html',
   styleUrl: './course-detail-page.component.scss',
@@ -42,11 +50,32 @@ export class CourseDetailPageComponent implements OnInit {
   private readonly notify = inject(NotificationService);
   private readonly translate = inject(TranslateService);
   private readonly language = inject(LanguageService);
+  private readonly router = inject(Router);
+  protected readonly auth = inject(AuthService);
 
   protected readonly catalogueRoute = `/${LmsRoutes.Catalogue}`;
   protected readonly course = signal<CourseDetail | null>(null);
   protected readonly loading = signal(true);
   protected readonly activeTab = signal<CourseDetailTab>('overview');
+
+  /** True while the "Request Enrolment" confirmation dialog is open. */
+  protected readonly enrolDialogOpen = signal(false);
+  /** True while the guest "please sign in" prompt is open. */
+  protected readonly loginPromptOpen = signal(false);
+  /** Course view-model handed to the enrolment dialog. */
+  protected readonly enrolDialogCourse = computed<EnrolmentDialogCourse | null>(
+    () => {
+      const c = this.course();
+      if (!c) {
+        return null;
+      }
+      return {
+        title: c.title,
+        image: c.image,
+        next_cohort: c.anchor_cohort,
+      };
+    },
+  );
 
   protected readonly instructor = computed(() => this.course()?.instructors?.[0] ?? null);
 
@@ -156,27 +185,60 @@ export class CourseDetailPageComponent implements OnInit {
     if (!c) {
       return;
     }
+    // Both enrol and notify-me require an authenticated learner — a guest gets
+    // the "please sign in" prompt first.
+    if (!this.auth.isAuthenticated()) {
+      this.loginPromptOpen.set(true);
+      return;
+    }
     if (c.cta.state === 'get_notified') {
       this.service.notifyMe(c.id).subscribe({
         next: () => this.notify.success(this.translate.instant('feature.catalogue.notify.success')),
         error: () => this.showError(),
       });
     } else if (c.cta.state === 'enrol_now') {
-      this.service.enrol(c.id, c.anchor_cohort?.id).subscribe({
-        next: (res) => {
-          if (res.status === 'success' && res.result?.is_success) {
-            this.notify.success(
-              this.translate.instant('feature.catalogue.enrol.success'),
-              this.translate.instant('feature.catalogue.enrol.success_title'),
-            );
-            this.loadCourse(false);
-          } else {
-            this.showError();
-          }
-        },
-        error: () => this.showError(),
-      });
+      // Confirm before enrolling — same "Request Enrolment" dialog as the catalogue.
+      this.enrolDialogOpen.set(true);
     }
+  }
+
+  protected onEnrolCancel(): void {
+    this.enrolDialogOpen.set(false);
+  }
+
+  protected onLoginPromptCancel(): void {
+    this.loginPromptOpen.set(false);
+  }
+
+  /** Guest confirmed the prompt — go to login, returning to this course. */
+  protected onLoginPromptConfirm(): void {
+    this.loginPromptOpen.set(false);
+    this.router.navigate(['/' + LmsRoutes.Login], {
+      queryParams: { returnUrl: this.router.url },
+    });
+  }
+
+  /** Dialog confirmed — send the enrolment request for the current course. */
+  protected onEnrolConfirm(): void {
+    const c = this.course();
+    this.enrolDialogOpen.set(false);
+    if (!c) {
+      return;
+    }
+    this.service.enrol(c.id, c.anchor_cohort?.id).subscribe({
+      next: (res) => {
+        if (res.status === 'success' && res.result?.is_success) {
+          this.notify.success(
+            this.translate.instant('feature.catalogue.enrol.success'),
+            this.translate.instant('feature.catalogue.enrol.success_title'),
+          );
+          this.loadCourse(false);
+        } else {
+          this.showError();
+        }
+      },
+      error: () => this.showError(),
+    });
   }
 
   private showError(): void {

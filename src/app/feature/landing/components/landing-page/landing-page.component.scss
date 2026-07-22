@@ -16,6 +16,10 @@ $shadow-medium:
   0 2px 5px 0 rgba(103, 110, 118, 0.08),
   0 0 0 0 rgba(103, 110, 118, 0.16),
   0 1px 1px 0 rgba(0, 0, 0, 0.12);
+// Hover lift for the request-demo pill.
+$shadow-large:
+  0 8px 20px 0 rgba(12, 36, 39, 0.24),
+  0 2px 6px 0 rgba(12, 36, 39, 0.12);
 
 $serif: 'Source Serif Pro', Georgia, serif;
 $numeric: 'Inter', sans-serif;
@@ -413,7 +417,30 @@ $bp-mobile: 900px;
   font-weight: var(--font-weight-medium);
   color: var(--color-essential-tertiary);
   background: transparent;
-  transition: transform 150ms $ease-out;
+  transition:
+    transform 150ms $ease-out,
+    background-color 200ms $ease-out,
+    color 200ms $ease-out,
+    box-shadow 200ms $ease-out;
+
+  img {
+    transition: filter 200ms $ease-out;
+  }
+
+  // Hover fills the pill with the dark CTA colour and flips the label + arrow
+  // to white for a smooth, high-contrast state (Figma request-demo hover).
+  @media (hover: hover) {
+    &:hover {
+      background: var(--color-essential-tertiary);
+      color: var(--color-neutral-0);
+      box-shadow: $shadow-large;
+
+      img {
+        // The arrow asset is dark navy — recolour it to white on the fill.
+        filter: brightness(0) invert(1);
+      }
+    }
+  }
 
   &:active {
     transform: scale(0.97);
@@ -554,15 +581,70 @@ $bp-mobile: 900px;
 }
 
 .quote__author {
-  margin: -8px 0 0; // Figma: 24px text-block gap vs 32px to the dots
+  margin: 0;
   font-size: var(--font-size-s);
   line-height: var(--font-height-s);
   color: var(--color-neutral-400);
 
   @media (max-width: $bp-mobile) {
-    margin: 0;
     font-size: var(--font-size-xs);
     line-height: var(--font-height-xs);
+  }
+}
+
+// Each carousel slide cross-fades in when it re-mounts (spec §2).
+.quote__slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px; // Figma: 24px text → author
+  inline-size: 100%;
+  animation: quote-fade 400ms $ease-out both;
+
+  @media (max-width: $bp-mobile) {
+    gap: 8px;
+  }
+}
+
+@keyframes quote-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Carousel dots (Figma carousel-dots.svg: 12px circles, active #75DEFF).
+.quote__dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quote__dot {
+  inline-size: 12px;
+  block-size: 12px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #cfd0d1;
+  cursor: pointer;
+  transition:
+    background-color 250ms $ease-out,
+    transform 250ms $ease-out;
+
+  &.is-active {
+    background: #75deff;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      transform: scale(1.15);
+    }
   }
 }
 
@@ -2450,26 +2532,83 @@ $bp-mobile: 900px;
   }
 }
 
-// Shapes fade + settle once on section entry, staggered (spec §8) — no loops.
-.cta__shape {
-  opacity: 0;
-  translate: 0 10px;
-  rotate: -3deg;
-  transition:
-    opacity 350ms $ease-out,
-    translate 350ms $ease-out,
-    rotate 350ms $ease-out;
+// Decorative shapes drift/settle once on section entry — mirrors the
+// who-we-are CTA accent animation (same keyframes, offsets and easings).
+$cta-drift-ease: ease-in-out;
+$cta-settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
-  @for $i from 1 through 9 {
-    &:nth-of-type(#{$i}) {
-      transition-delay: #{($i - 1) * 60}ms;
-    }
+@keyframes cta-drift-in-out {
+  from {
+    translate: 30px 30px;
+  }
+  50% {
+    translate: 0 0;
+  }
+  to {
+    translate: 30px 30px;
+  }
+}
+@keyframes cta-settle-pill {
+  from {
+    opacity: 0;
+    rotate: 8deg;
+    translate: -60px 0;
+    scale: 0.8;
+  }
+  to {
+    opacity: 0.3;
+    rotate: 0deg;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+@keyframes cta-rect-drift {
+  from {
+    translate: 50px 30px;
+  }
+  50% {
+    translate: 20px 0;
+  }
+  to {
+    translate: 40px 0;
+  }
+}
+
+// The outline pill fades + settles in; the solid shapes drift and are visible
+// at rest (they only ever sit off in the margins before the section reveals).
+.cta:not(.is-live) .cta__shape--outline {
+  opacity: 0;
+}
+
+.cta.is-live {
+  .cta__shape--diamond {
+    animation: cta-drift-in-out 2000ms $cta-drift-ease 77ms both;
+  }
+  .cta__shape--circle-lg {
+    animation: cta-drift-in-out 2000ms $cta-drift-ease 252ms both;
+  }
+  .cta__shape--circle-sm {
+    animation: cta-drift-in-out 2000ms $cta-drift-ease 529ms both;
+  }
+  .cta__shape--ellipse {
+    animation: cta-drift-in-out 2000ms $cta-drift-ease 400ms both;
+  }
+  .cta__shape--outline {
+    animation: cta-settle-pill 1700ms $cta-settle-ease 400ms both;
+  }
+  .cta__shape--rect {
+    animation: cta-rect-drift 2813ms $cta-drift-ease both;
   }
 
-  .cta.is-live & {
-    opacity: 1;
-    translate: 0 0;
-    rotate: 0deg;
+  // Mobile accents drift with the same rhythm.
+  .cta__shape--m-diamond {
+    animation: cta-drift-in-out 2000ms $cta-drift-ease 77ms both;
+  }
+  .cta__shape--m-circle {
+    animation: cta-drift-in-out 2000ms $cta-drift-ease 252ms both;
+  }
+  .cta__shape--m-rect {
+    animation: cta-rect-drift 2813ms $cta-drift-ease both;
   }
 }
 
@@ -2615,6 +2754,15 @@ $bp-mobile: 900px;
   .hero__subtitle,
   .hero__cta {
     animation-name: role-fade !important; // opacity-only fade
+  }
+
+  .quote__slide {
+    animation: none !important;
+  }
+
+  // Decorative CTA shapes rest at their Figma position with no drift.
+  .cta.is-live .cta__shape {
+    animation: none !important;
   }
 
   .quote__inner,

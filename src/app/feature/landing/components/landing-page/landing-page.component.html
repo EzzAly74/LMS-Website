@@ -98,23 +98,36 @@
   <!-- ═══════════════ 2. Quote banner (Figma 1742:48729 / mobile 1742:48098) ═══════════════ -->
   <section class="quote" #quote>
     <div class="quote__inner">
-      <blockquote class="quote__text">
-        <span>{{ "feature.landing.quote.text_pre" | translate }}</span
-        ><em class="quote__em">{{
-          "feature.landing.quote.text_em" | translate
-        }}</em
-        ><span>{{ "feature.landing.quote.text_post" | translate }}</span>
-      </blockquote>
-      <p class="quote__author">
-        {{ "feature.landing.quote.author" | translate }}
-      </p>
-      <img
-        class="quote__dots u-hide-mobile"
-        src="assets/landing/carousel-dots.svg"
-        alt=""
-        width="32"
-        height="12"
-      />
+      <!-- Swappable quote (carousel): the slide re-mounts per index so it
+           cross-fades between quotes; dots drive it and it auto-advances. -->
+      @for (qi of quoteSlides(); track qi) {
+        <div class="quote__slide">
+          <blockquote class="quote__text">
+            <span>{{ quoteKeyBase() + ".text_pre" | translate }}</span
+            ><em class="quote__em">{{
+              quoteKeyBase() + ".text_em" | translate
+            }}</em
+            ><span>{{ quoteKeyBase() + ".text_post" | translate }}</span>
+          </blockquote>
+          <p class="quote__author">
+            {{ quoteKeyBase() + ".author" | translate }}
+          </p>
+        </div>
+      }
+      <div class="quote__dots" role="tablist">
+        @for (i of quoteIndices; track i) {
+          <button
+            type="button"
+            class="quote__dot"
+            [class.is-active]="quoteIndex() === i"
+            [attr.aria-selected]="quoteIndex() === i"
+            [attr.aria-label]="
+              ('feature.landing.quote.go_to' | translate) + ' ' + (i + 1)
+            "
+            (click)="setQuote(i)"
+          ></button>
+        }
+      </div>
     </div>
   </section>
 
@@ -491,12 +504,14 @@
       <div class="next__mockups u-hide-mobile" aria-hidden="true">
         <img
           class="next__mockup-banner"
-          src="assets/landing/next-mockup-banner.png"
+          [src]="'assets/landing/next-mockup-banner' + mockupSuffix() + '.png'"
           alt=""
         />
         <img
           class="next__mockup-dashboard"
-          src="assets/landing/next-mockup-dashboard.png"
+          [src]="
+            'assets/landing/next-mockup-dashboard' + mockupSuffix() + '.png'
+          "
           alt=""
         />
       </div>

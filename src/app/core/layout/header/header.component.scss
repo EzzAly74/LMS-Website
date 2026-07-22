@@ -156,100 +156,177 @@
     }
   }
 
-  // Drawer/backdrop are only ever opened by the mobile burger, but keep an
-  // explicit desktop-width kill switch: a viewport resized past the
-  // breakpoint while the drawer is open (e.g. rotating a tablet, or a
-  // manual browser resize) must not leave a stray overlay on the desktop
-  // layout, since the open/close signal isn't tied to breakpoint changes.
-  &__backdrop,
-  &__drawer {
+  // Full-screen mobile menu (Figma 963:50056 / 963:50706) — a page takeover,
+  // not a drawer. Sits under the fixed header bar and fills the viewport.
+  // Desktop-width kill switch: never leave a stray overlay past the breakpoint.
+  &__menu {
     @media (min-width: 900.02px) {
       display: none;
     }
-  }
 
-  &__backdrop {
     position: fixed;
-    inset: 0;
-    background: var(--elevation-surface-overlay);
-    z-index: 105;
-  }
-
-  &__drawer {
-    position: fixed;
-    inset-inline: var(--spacing-13xs);
-    inset-block-start: calc(var(--size-64) + var(--spacing-9xs));
-    z-index: 106;
+    inset-block-start: var(--size-60);
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: 99;
+    pointer-events: auto;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-11xs);
-    max-height: calc(100vh - var(--size-64) - var(--spacing-11xl));
-    overflow-y: auto;
-    padding: var(--spacing-9xs);
+    padding: 24px;
     background: var(--color-essential-primary);
-    border-radius: var(--radius-container-md);
-    box-shadow: var(--elevation-shadow-xl);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
-  &__drawer-links {
-    display: flex;
-    flex-direction: column;
-
-    a {
-      padding: var(--spacing-11xs) var(--spacing-9xs);
-      border-radius: var(--radius-control-xs);
-      color: var(--color-essential-secondary);
-      @include typography("body", "medium");
-
-      &.is-active {
-        color: var(--color-primary-700);
-        background: var(--color-primary-100);
-      }
-    }
-  }
-
-  &__drawer-lang {
-    display: flex;
+  // "Back to …" chip (Figma Component 4).
+  &__menu-back {
+    align-self: flex-start;
+    display: inline-flex;
     align-items: center;
-    gap: var(--spacing-15xs);
-    padding: var(--spacing-11xs) var(--spacing-9xs);
-    border: var(--stroke-width-default) solid var(--color-neutral-300);
-    border-radius: var(--radius-control-xs);
-    background: none;
+    gap: 6px;
+    margin-block-end: 24px;
+    padding: 4px 10px;
+    border: none;
+    border-radius: 8px;
+    background: var(--color-neutral-100, #f1f2f2);
     color: var(--color-essential-secondary);
+    cursor: pointer;
     @include typography("body-small", "medium");
 
     .pi {
-      font-size: var(--size-18);
+      font-size: 16px;
+    }
+
+    :host-context([dir="rtl"]) & .pi {
+      transform: scaleX(-1);
     }
   }
 
-  &__drawer-auth {
+  &__menu-title {
+    margin: 0 0 16px;
+    color: var(--color-essential-secondary);
+    @include typography("h2", "bold");
+  }
+
+  &__menu-list {
     display: flex;
     flex-direction: column;
-    border-top: var(--stroke-width-default) solid var(--color-neutral-300);
-    padding-top: var(--spacing-11xs);
+    gap: 24px;
+  }
 
-    a,
-    button {
-      padding: var(--spacing-11xs) var(--spacing-9xs);
-      border: none;
-      border-radius: var(--radius-control-xs);
-      background: none;
-      text-align: start;
-      color: var(--color-essential-secondary);
-      cursor: pointer;
-      @include typography("body", "medium");
+  // Section label between the primary nav and the "more options" group.
+  &__menu-section {
+    margin: 24px 0;
+    color: var(--color-neutral-800);
+    @include typography("caption", "medium");
+  }
+
+  // A menu row: full-width, label + optional trailing control, divider under.
+  &__menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-13xs);
+    width: 100%;
+    padding: 0 0 12px;
+    border: none;
+    border-block-end: var(--stroke-width-default) solid
+      var(--color-neutral-400);
+    background: none;
+    text-align: start;
+    color: var(--color-essential-secondary);
+    cursor: pointer;
+    @include typography("button-large", "medium");
+
+    &.is-active {
+      color: var(--color-primary-700);
+    }
+
+    // Blogs and Request-a-demo close their groups without a divider (Figma).
+    &--plain {
+      border-block-end: none;
+      padding-block-end: 0;
     }
   }
 
-  &__drawer-cta {
-    height: var(--size-44);
+  &__menu-chevron {
+    font-size: 16px;
+    color: var(--color-essential-secondary);
+    transition: transform 200ms ease;
+  }
+
+  &__menu-accordion.is-open &__menu-chevron {
+    transform: rotate(180deg);
+  }
+
+  // Expanded language choices, indented under the Languages row.
+  &__menu-suboptions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 0 0;
+  }
+
+  &__menu-suboption {
+    display: flex;
+    padding: 8px 12px;
     border: none;
-    border-radius: var(--radius-control-sm);
-    background: var(--color-essential-tertiary);
-    color: var(--color-essential-primary);
+    border-radius: 8px;
+    background: none;
+    text-align: start;
+    color: var(--color-essential-secondary);
+    cursor: pointer;
     @include typography("body-small", "medium");
+
+    &.is-active {
+      color: var(--color-primary-700);
+      background: var(--color-primary-100);
+    }
+  }
+
+  // Unread-count badge on the Notification row (Figma span.nav-badge).
+  &__menu-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #4cb4b5;
+    color: #ffffff;
+    @include typography("caption", "bold");
+  }
+
+  // Full-screen notifications view (Figma 963:50814): the shared panel,
+  // un-styled from its dropdown chrome and stretched to fill.
+  &__menu-notif {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+
+    app-notification-panel {
+      position: static;
+      width: 100%;
+      display: flex;
+    }
+
+    ::ng-deep .notif-panel {
+      flex: 1 1 auto;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    ::ng-deep .notif-panel__header {
+      padding-inline: 0;
+    }
+
+    ::ng-deep .notif-panel__list {
+      max-height: none;
+      flex: 1 1 auto;
+      padding-inline: 0;
+    }
   }
 
   @media (max-width: 900px) {

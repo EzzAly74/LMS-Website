@@ -193,18 +193,21 @@
   }
 }
 
+// Top-most z-index (32-bit max): the mobile sheet is rendered inside the
+// catalogue layout, so it must clear any stacking context that layout (or its
+// content cards) establishes — otherwise cards paint over the open sheet.
 .filter-sheet-backdrop {
   position: fixed;
   inset: 0;
   background: var(--surface-bg-overlay);
-  z-index: 1000;
+  z-index: 2147483646;
 }
 
 .filter-sheet {
   position: fixed;
   inset-inline: 0;
   bottom: 0;
-  z-index: 1001;
+  z-index: 2147483647;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-13xs);

@@ -7,12 +7,14 @@ import {
   OnDestroy,
   ViewChild,
   computed,
+  inject,
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
+import { LanguageService } from '../../../../core/services/language.service';
 
 /** Role keys of the "See it for a role" switcher (Figma Role Switcher). */
 type RoleKey =
@@ -82,8 +84,9 @@ interface Connector {
 }
 
 /** Video step tab thresholds, in ms of video playback (spec §4b — cumulative
- * currentTime at which steps 2/3/4 activate; re-derive if the cut changes). */
-const STEP_THRESHOLDS_MS = [0, 8130, 14430, 21130] as const;
+ * currentTime at which steps 2/3/4 activate; re-derive if the cut changes).
+ * Timecodes from the current cut: step2 05:13, step3 11:15, step4 17:21. */
+const STEP_THRESHOLDS_MS = [0, 5130, 11150, 17210] as const;
 
 /** Duration of the two-line hero typewriter (700ms per line + 100ms gap). */
 const TYPE_LINE_MS = 700;
@@ -97,6 +100,9 @@ const ROLE_SWAP_OUT_MS = 150;
 
 /** Touch overlay auto-hide delay while the video is playing (spec §4a). */
 const OVERLAY_IDLE_HIDE_MS = 2500;
+
+/** Auto-advance interval for the quote-band carousel (spec §2). */
+const QUOTE_ROTATE_MS = 6000;
 
 /**
  * NAS LMS landing page — pixel-perfect from Figma desktop 1742:48667 and
@@ -129,7 +135,33 @@ export class LandingPageComponent implements AfterViewInit, OnDestroy {
   @ViewChild('cta') private ctaRef?: ElementRef<HTMLElement>;
   @ViewChild('videoEl') private videoRef?: ElementRef<HTMLVideoElement>;
 
+  private readonly language = inject(LanguageService);
+
   protected readonly requestDemoRoute = `/${LmsRoutes.RequestDemo}`;
+
+  /**
+   * Filename suffix for the Next-Step mockups: Arabic uses pre-localised
+   * exports (next-mockup-*-ar.png) so the baked-in UI text reads RTL.
+   */
+  protected readonly mockupSuffix = computed(() =>
+    this.language.isRtl() ? '-ar' : '',
+  );
+
+  // ── Quote carousel (§2) ────────────────────────────────────────────
+  /** One entry per i18n `feature.landing.quote.items[i]` — drives the dots. */
+  protected readonly quoteIndices = [0, 1];
+  protected readonly quoteIndex = signal(0);
+  /**
+   * Single-item collection for the slide `@for`, memoised so it re-creates
+   * (and replays the cross-fade) only when the index actually changes — an
+   * inline `[quoteIndex()]` literal would rebuild every change-detection pass.
+   */
+  protected readonly quoteSlides = computed(() => [this.quoteIndex()]);
+  /** i18n key prefix of the currently shown quote (fields appended in template). */
+  protected readonly quoteKeyBase = computed(
+    () => `feature.landing.quote.items.${this.quoteIndex()}`,
+  );
+  private quoteTimer?: ReturnType<typeof setInterval>;
 
   // ── Hero typewriter ────────────────────────────────────────────────
   /** idle → typing-1 → typing-2 → done; reduced motion jumps to done. */
@@ -571,6 +603,7 @@ export class LandingPageComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.onWindowResize();
+    this.startQuoteRotation();
     // Measure connectors once layout/fonts have settled (the default role is
     // already rendered), then again shortly after in case metrics shifted.
     this.timers.push(setTimeout(() => this.measureConnectors(), 0));
@@ -641,6 +674,26 @@ export class LandingPageComponent implements AfterViewInit, OnDestroy {
     for (const t of this.timers) clearTimeout(t);
     clearTimeout(this.roleSwapTimer);
     clearTimeout(this.overlayIdleTimer);
+    clearInterval(this.quoteTimer);
+  }
+
+  // ── Quote carousel ─────────────────────────────────────────────────
+  /** Rotate the quote band on a timer; reduced motion keeps it click-only. */
+  private startQuoteRotation(): void {
+    if (this.reducedMotion) return;
+    this.quoteTimer = setInterval(() => {
+      this.quoteIndex.update(
+        (i) => (i + 1) % this.quoteIndices.length,
+      );
+    }, QUOTE_ROTATE_MS);
+  }
+
+  /** Dot click: jump to a quote and restart the auto-advance timer. */
+  protected setQuote(index: number): void {
+    if (index === this.quoteIndex()) return;
+    this.quoteIndex.set(index);
+    clearInterval(this.quoteTimer);
+    this.startQuoteRotation();
   }
 
   // ── Hero ───────────────────────────────────────────────────────────

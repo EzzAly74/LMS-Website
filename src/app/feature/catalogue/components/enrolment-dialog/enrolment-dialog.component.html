@@ -1,0 +1,75 @@
+<div class="enrol-dialog__backdrop" (click)="cancel.emit()"></div>
+
+<div
+  class="enrol-dialog"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-label]="'feature.catalogue.enrol.dialog.title' | translate"
+>
+  <span class="enrol-dialog__handle" aria-hidden="true"></span>
+
+  <div class="enrol-dialog__header">
+    <h2 class="enrol-dialog__title">
+      <i
+        class="pi pi-question-circle enrol-dialog__title-icon"
+        aria-hidden="true"
+      ></i>
+      <span>{{ "feature.catalogue.enrol.dialog.title" | translate }}</span>
+    </h2>
+    <button
+      type="button"
+      class="enrol-dialog__close"
+      (click)="cancel.emit()"
+      [attr.aria-label]="'feature.catalogue.enrol.dialog.close' | translate"
+    >
+      <i class="pi pi-times" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <div class="enrol-dialog__body">
+    <div class="enrol-dialog__course">
+      <span class="enrol-dialog__cover">
+        @if (course.image) {
+          <img [src]="course.image" alt="" />
+        } @else {
+          <i class="pi pi-book" aria-hidden="true"></i>
+        }
+      </span>
+      <div class="enrol-dialog__course-text">
+        <p class="enrol-dialog__course-title">{{ course.title }}</p>
+        @if (course.next_cohort) {
+          <p class="enrol-dialog__course-cohort">
+            {{
+              "feature.catalogue.enrol.dialog.cohort_starting"
+                | translate
+                  : {
+                      date: course.next_cohort.start_date | date: "mediumDate"
+                    }
+            }}
+          </p>
+        }
+      </div>
+    </div>
+
+    <p class="enrol-dialog__note">
+      {{ "feature.catalogue.enrol.dialog.note" | translate }}
+    </p>
+  </div>
+
+  <div class="enrol-dialog__footer">
+    <button
+      type="button"
+      class="enrol-dialog__btn enrol-dialog__btn--secondary"
+      (click)="cancel.emit()"
+    >
+      {{ "feature.catalogue.enrol.dialog.cancel" | translate }}
+    </button>
+    <button
+      type="button"
+      class="enrol-dialog__btn enrol-dialog__btn--primary"
+      (click)="confirm.emit()"
+    >
+      {{ "feature.catalogue.enrol.dialog.confirm" | translate }}
+    </button>
+  </div>
+</div>

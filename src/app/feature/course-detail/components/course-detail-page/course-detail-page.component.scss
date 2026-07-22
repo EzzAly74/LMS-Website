@@ -1,4 +1,4 @@
-@use 'mixins' as *;
+@use "mixins" as *;
 
 :host {
   display: block;
@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-16xs);
-  @include typography('body-small', 'regular');
+  @include typography("body-small", "regular");
   color: var(--color-neutral-700);
 
   a {
@@ -51,7 +51,7 @@
     align-items: center;
     gap: var(--spacing-16xs);
     margin-top: var(--spacing-13xs);
-    @include typography('caption', 'bold');
+    @include typography("caption", "bold");
     color: var(--color-primary-700);
     letter-spacing: var(--font-tracking-label);
 
@@ -62,14 +62,14 @@
 
   .detail-hero__title {
     margin-top: var(--spacing-13xs);
-    @include typography('h1', 'bold');
+    @include typography("h1", "bold");
     color: var(--color-essential-secondary);
   }
 
   .detail-hero__desc {
     margin-top: var(--spacing-14xs);
     max-width: 640px;
-    @include typography('body', 'regular');
+    @include typography("body", "regular");
     color: var(--color-neutral-800);
   }
 
@@ -79,7 +79,7 @@
     align-items: center;
     gap: var(--spacing-3xl);
     margin-top: var(--spacing-3xs);
-    @include typography('body-small', 'regular');
+    @include typography("body-small", "regular");
     color: var(--color-neutral-800);
 
     span {
@@ -99,7 +99,7 @@
     align-items: center;
     gap: var(--spacing-16xs);
     margin-top: var(--spacing-13xs);
-    @include typography('body-small', 'regular');
+    @include typography("body-small", "regular");
     color: var(--color-neutral-800);
   }
 
@@ -108,7 +108,7 @@
     border-radius: var(--radius-full);
     background: var(--color-primary-200);
     color: var(--color-primary-900);
-    @include typography('body-small', 'bold');
+    @include typography("body-small", "bold");
   }
 }
 
@@ -128,7 +128,16 @@
 
   &__media {
     height: 200px;
-    background-image: linear-gradient(130deg, var(--color-primary-700) 0%, var(--color-additionally-400) 100%);
+    // Gradient is the fallback; the real course image (when present) is set
+    // inline via [style.background-image] and covers it.
+    background-image: linear-gradient(
+      130deg,
+      var(--color-primary-700) 0%,
+      var(--color-additionally-400) 100%
+    );
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 
   &__body {
@@ -144,13 +153,13 @@
   }
 
   &__label {
-    @include typography('caption', 'regular');
+    @include typography("caption", "regular");
     color: var(--color-neutral-700);
   }
 
   &__value {
     margin-top: var(--spacing-17xs);
-    @include typography('body-small', 'medium');
+    @include typography("body-small", "medium");
     color: var(--color-essential-secondary);
   }
 
@@ -170,7 +179,7 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-15xs);
-    @include typography('body-small', 'regular');
+    @include typography("body-small", "regular");
     color: var(--color-neutral-800);
 
     i {
@@ -199,7 +208,7 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-15xs);
-    @include typography('body-small', 'regular');
+    @include typography("body-small", "regular");
     color: var(--color-neutral-800);
   }
 
@@ -223,7 +232,7 @@
     box-shadow: var(--elevation-shadow-sm);
     cursor: pointer;
     text-align: center;
-    @include typography('button', 'medium');
+    @include typography("button", "medium");
     @include touch-target;
 
     &--static {
@@ -263,7 +272,7 @@
     border: none;
     border-bottom: var(--stroke-width-2) solid transparent;
     cursor: pointer;
-    @include typography('body-small', 'medium');
+    @include typography("body-small", "medium");
     color: var(--color-neutral-700);
 
     &.is-active {

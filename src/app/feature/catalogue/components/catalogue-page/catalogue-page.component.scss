@@ -1,4 +1,4 @@
-@use 'mixins' as *;
+@use "mixins" as *;
 
 .catalogue {
   display: flex;
@@ -16,7 +16,7 @@
   }
 
   &__title {
-    @include typography('h1', 'bold');
+    @include typography("h1", "bold");
     color: var(--color-essential-secondary);
   }
 
@@ -31,7 +31,6 @@
   &__search {
     flex: 1 1 320px;
   }
-
 }
 
 .catalogue-layout {
@@ -48,6 +47,8 @@
 .filter-container {
   position: sticky;
   top: var(--spacing-3xs);
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .grid-container {
@@ -57,7 +58,7 @@
   min-width: 0;
 
   &__meta {
-    @include typography('body-small', 'regular');
+    @include typography("body-small", "regular");
     color: var(--color-neutral-700);
   }
 }

@@ -8,7 +8,9 @@
         [value]="searchTerm"
         (search)="onSearch($event)"
       />
-      @if (scopeOptions().length) {
+      <!-- Scope (All / Special / General) is a per-learner split — hidden for
+           guests, who only ever see the public (no-qualification) courses. -->
+      @if (auth.isAuthenticated() && scopeOptions().length) {
         <app-toggle-tabs
           [options]="scopeOptions()"
           [value]="selectedScope()"
@@ -58,3 +60,18 @@
     </section>
   </div>
 </div>
+
+@if (enrolCandidate(); as candidate) {
+  <app-enrolment-dialog
+    [course]="candidate"
+    (confirm)="onEnrolConfirm()"
+    (cancel)="onEnrolCancel()"
+  />
+}
+
+@if (loginPromptOpen()) {
+  <app-login-required-dialog
+    (login)="onLoginPromptConfirm()"
+    (cancel)="onLoginPromptCancel()"
+  />
+}

@@ -11,7 +11,6 @@ export const LmsRoutes = {
   RequestDemo: 'request-demo',
   Blogs: 'blogs',
   Profile: 'profile',
-  Notifications: 'notifications',
 } as const;
 
 export type LmsRoute = (typeof LmsRoutes)[keyof typeof LmsRoutes];

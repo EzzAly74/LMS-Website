@@ -1,0 +1,47 @@
+<div class="login-dialog__backdrop" (click)="cancel.emit()"></div>
+
+<div
+  class="login-dialog"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-label]="'shared.login_required.title' | translate"
+>
+  <span class="login-dialog__handle" aria-hidden="true"></span>
+
+  <div class="login-dialog__header">
+    <h2 class="login-dialog__title">
+      {{ "shared.login_required.title" | translate }}
+    </h2>
+    <button
+      type="button"
+      class="login-dialog__close"
+      (click)="cancel.emit()"
+      [attr.aria-label]="'common.close' | translate"
+    >
+      <i class="pi pi-times" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <div class="login-dialog__body">
+    <p class="login-dialog__note">
+      {{ "shared.login_required.message" | translate }}
+    </p>
+  </div>
+
+  <div class="login-dialog__footer">
+    <button
+      type="button"
+      class="login-dialog__btn login-dialog__btn--secondary"
+      (click)="cancel.emit()"
+    >
+      {{ "shared.login_required.cancel" | translate }}
+    </button>
+    <button
+      type="button"
+      class="login-dialog__btn login-dialog__btn--primary"
+      (click)="login.emit()"
+    >
+      {{ "shared.login_required.login" | translate }}
+    </button>
+  </div>
+</div>

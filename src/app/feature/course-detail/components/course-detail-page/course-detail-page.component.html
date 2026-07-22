@@ -86,7 +86,10 @@
     </div>
 
     <aside class="enrolment-card">
-      <div class="enrolment-card__media"></div>
+      <div
+        class="enrolment-card__media"
+        [style.background-image]="c.image ? 'url(\'' + c.image + '\')' : null"
+      ></div>
       <div class="enrolment-card__body">
         @if (c.anchor_cohort) {
           <div class="enrolment-card__dates">
@@ -154,4 +157,19 @@
       </div>
     </aside>
   </div>
+
+  @if (enrolDialogOpen() && enrolDialogCourse(); as enrolCourse) {
+    <app-enrolment-dialog
+      [course]="enrolCourse"
+      (confirm)="onEnrolConfirm()"
+      (cancel)="onEnrolCancel()"
+    />
+  }
+
+  @if (loginPromptOpen()) {
+    <app-login-required-dialog
+      (login)="onLoginPromptConfirm()"
+      (cancel)="onLoginPromptCancel()"
+    />
+  }
 }

@@ -92,85 +92,170 @@
         class="app-nav__burger"
         (click)="toggleMobileMenu()"
         [attr.aria-expanded]="isMobileMenuOpen()"
-        [attr.aria-label]="'core.nav.language' | translate"
+        [attr.aria-label]="'core.nav.menu' | translate"
       >
-        <i class="pi pi-bars"></i>
+        <i
+          class="pi"
+          [class.pi-bars]="!isMobileMenuOpen()"
+          [class.pi-times]="isMobileMenuOpen()"
+        ></i>
       </button>
     </div>
   </div>
 
+  <!-- Full-screen mobile menu (Figma 963:50056 / 963:50706) — a page takeover,
+       not a drawer. It sits under the fixed header and fills the viewport. -->
   @if (isMobileMenuOpen()) {
-    <div class="app-nav__backdrop" (click)="closeMobileMenu()"></div>
-    <div
-      class="app-nav__drawer"
-      appClickOutside
-      (appClickOutside)="closeMobileMenu()"
-    >
-      <nav class="app-nav__drawer-links" aria-label="Primary">
-        <a
-          [routerLink]="'/' + routes.Catalogue"
-          routerLinkActive="is-active"
+    <div class="app-nav__menu">
+      @if (!isMobileNotifOpen()) {
+        <button
+          type="button"
+          class="app-nav__menu-back"
           (click)="closeMobileMenu()"
         >
-          {{ "core.nav.catalogue" | translate }}
-        </a>
-        @if (auth.isAuthenticated()) {
+          <i class="pi pi-arrow-left" aria-hidden="true"></i>
+          <span>{{ "core.nav.menu_back" | translate }}</span>
+        </button>
+
+        <h2 class="app-nav__menu-title">{{ "core.nav.menu" | translate }}</h2>
+
+        <nav class="app-nav__menu-list" aria-label="Primary">
           <a
-            [routerLink]="'/' + routes.MyLearnings"
+            class="app-nav__menu-item"
+            [routerLink]="'/'"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closeMobileMenu()"
+          >
+            <span>{{ "core.nav.home_page" | translate }}</span>
+          </a>
+          <a
+            class="app-nav__menu-item"
+            [routerLink]="'/' + routes.Catalogue"
             routerLinkActive="is-active"
             (click)="closeMobileMenu()"
           >
-            {{ "core.nav.my_learnings" | translate }}
+            <span>{{ "core.nav.catalogue" | translate }}</span>
           </a>
-        }
-        <a
-          [routerLink]="'/' + routes.WhoWeAre"
-          routerLinkActive="is-active"
-          (click)="closeMobileMenu()"
+          @if (auth.isAuthenticated()) {
+            <a
+              class="app-nav__menu-item"
+              [routerLink]="'/' + routes.MyLearnings"
+              routerLinkActive="is-active"
+              (click)="closeMobileMenu()"
+            >
+              <span>{{ "core.nav.my_learnings" | translate }}</span>
+            </a>
+          }
+          <a
+            class="app-nav__menu-item"
+            [routerLink]="'/' + routes.WhoWeAre"
+            routerLinkActive="is-active"
+            (click)="closeMobileMenu()"
+          >
+            <span>{{ "core.nav.who_we_are" | translate }}</span>
+          </a>
+          <a
+            class="app-nav__menu-item app-nav__menu-item--plain"
+            [routerLink]="'/' + routes.Blogs"
+            routerLinkActive="is-active"
+            (click)="closeMobileMenu()"
+          >
+            <span>{{ "core.nav.blogs" | translate }}</span>
+          </a>
+        </nav>
+
+        <p class="app-nav__menu-section">
+          {{ "core.nav.more_options" | translate }}
+        </p>
+
+        <div class="app-nav__menu-list">
+          <!-- Languages accordion -->
+          <div
+            class="app-nav__menu-accordion"
+            [class.is-open]="isLangExpanded()"
+          >
+            <button
+              type="button"
+              class="app-nav__menu-item app-nav__menu-item--btn"
+              [attr.aria-expanded]="isLangExpanded()"
+              (click)="toggleLangExpanded()"
+            >
+              <span>{{ "core.nav.languages" | translate }}</span>
+              <i
+                class="pi pi-chevron-down app-nav__menu-chevron"
+                aria-hidden="true"
+              ></i>
+            </button>
+            @if (isLangExpanded()) {
+              <div class="app-nav__menu-suboptions">
+                @for (lang of languages; track lang) {
+                  <button
+                    type="button"
+                    class="app-nav__menu-suboption"
+                    [class.is-active]="language.current() === lang"
+                    (click)="setLanguage(lang)"
+                  >
+                    {{ "core.language." + lang | translate }}
+                  </button>
+                }
+              </div>
+            }
+          </div>
+
+          @if (auth.isAuthenticated()) {
+            <button
+              type="button"
+              class="app-nav__menu-item app-nav__menu-item--btn"
+              (click)="openMobileNotifications()"
+            >
+              <span>{{ "core.nav.notifications" | translate }}</span>
+              @if (inbox.unreadCount() > 0) {
+                <span class="app-nav__menu-badge">{{
+                  inbox.unreadCount() > 99 ? "99+" : inbox.unreadCount()
+                }}</span>
+              }
+            </button>
+
+            <a
+              class="app-nav__menu-item"
+              [routerLink]="'/' + routes.Profile"
+              (click)="closeMobileMenu()"
+            >
+              <span>{{ "core.profile_menu.profile" | translate }}</span>
+            </a>
+          } @else {
+            <a
+              class="app-nav__menu-item"
+              [routerLink]="'/' + routes.Login"
+              (click)="closeMobileMenu()"
+            >
+              <span>{{ "core.nav.login" | translate }}</span>
+            </a>
+          }
+
+          <a
+            class="app-nav__menu-item app-nav__menu-item--plain"
+            [routerLink]="'/' + routes.RequestDemo"
+            (click)="closeMobileMenu()"
+          >
+            <span>{{ "core.nav.request_demo" | translate }}</span>
+          </a>
+        </div>
+      } @else {
+        <!-- Full-screen notifications view (Figma 963:50814) -->
+        <button
+          type="button"
+          class="app-nav__menu-back"
+          (click)="closeMobileNotifications()"
         >
-          {{ "core.nav.who_we_are" | translate }}
-        </a>
-        <a
-          [routerLink]="'/' + routes.Blogs"
-          routerLinkActive="is-active"
-          (click)="closeMobileMenu()"
-        >
-          {{ "core.nav.blogs" | translate }}
-        </a>
-      </nav>
-
-      <button
-        type="button"
-        class="app-nav__drawer-lang"
-        (click)="toggleLanguage()"
-      >
-        <i class="pi pi-globe"></i>
-        {{ "core.language." + language.current() | translate }}
-      </button>
-
-      <div class="app-nav__drawer-auth">
-        @if (auth.isAuthenticated()) {
-          <a [routerLink]="'/' + routes.Profile" (click)="closeMobileMenu()">
-            {{ "core.profile_menu.profile" | translate }}
-          </a>
-          <button type="button" (click)="logout()">
-            {{ "core.profile_menu.logout" | translate }}
-          </button>
-        } @else {
-          <a [routerLink]="'/' + routes.Login" (click)="closeMobileMenu()">
-            {{ "core.nav.login" | translate }}
-          </a>
-        }
-      </div>
-
-      <button
-        type="button"
-        class="app-nav__drawer-cta"
-        [routerLink]="'/' + routes.RequestDemo"
-        (click)="closeMobileMenu()"
-      >
-        {{ "core.nav.request_demo" | translate }}
-      </button>
+          <i class="pi pi-arrow-left" aria-hidden="true"></i>
+          <span>{{ "core.nav.menu_back" | translate }}</span>
+        </button>
+        <div class="app-nav__menu-notif">
+          <app-notification-panel (closed)="closeMobileNotifications()" />
+        </div>
+      }
     </div>
   }
 </header>

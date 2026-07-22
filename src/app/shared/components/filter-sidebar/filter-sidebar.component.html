@@ -71,8 +71,11 @@
 </nav>
 
 @if (mobileSheetSection(); as section) {
-  <div class="filter-sheet-backdrop" (click)="closeMobileSheet()"></div>
-  <div class="filter-sheet" role="dialog" aria-modal="true" [attr.aria-label]="section.label">
+  <!-- Hoisted to <body> so the sheet always paints above catalogue content,
+       even under an ancestor stacking context (see BodyPortalDirective). -->
+  <div class="filter-sheet-portal" appBodyPortal>
+    <div class="filter-sheet-backdrop" (click)="closeMobileSheet()"></div>
+    <div class="filter-sheet" role="dialog" aria-modal="true" [attr.aria-label]="section.label">
     <div class="filter-sheet__handle"></div>
     <div class="filter-sheet__header">
       <span class="filter-sheet__title">
@@ -121,8 +124,9 @@
       }
     </div>
 
-    <button type="button" class="filter-sheet__apply" (click)="applyMobileSheet()">
-      {{ 'common.apply' | translate }}
-    </button>
+      <button type="button" class="filter-sheet__apply" (click)="applyMobileSheet()">
+        {{ 'common.apply' | translate }}
+      </button>
+    </div>
   </div>
 }

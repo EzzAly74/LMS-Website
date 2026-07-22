@@ -9,12 +9,11 @@ import { ApiService } from './api.service';
 const PAGE_SIZE = 10;
 
 /**
- * Learner activity-notification inbox (bell/panel/page) — distinct from
+ * Learner activity-notification inbox (bell/panel) — distinct from
  * {@link import('./notification.service').NotificationService}, which only
- * handles app-wide toast messages. Backed by /api/v1/notifications/mine/*,
- * which is shared by the header bell (core) and the full notifications page
- * (feature/notifications), mirroring how AuthService backs both the header
- * and the login page.
+ * handles app-wide toast messages. Backed by /api/v1/notifications/mine/*.
+ * Notifications render only in the bell's dropdown panel, which scrolls when
+ * the inbox is long (there is no separate notifications route/page).
  */
 @Injectable({ providedIn: 'root' })
 export class NotificationInboxService {
