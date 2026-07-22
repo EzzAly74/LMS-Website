@@ -26,6 +26,9 @@ export interface BlogListItem {
   image: string | null;
   level: BlogLevel | null;
   reading_time: number | null;
+  /** All qualifications a blog is tagged with. */
+  qualifications: BlogTopic[];
+  /** First qualification — backward-compat; prefer `qualifications`. */
   qualification: BlogTopic | null;
   author: BlogAuthor;
   added_by: string | null;
@@ -53,7 +56,7 @@ export interface BlogAuthorBio {
 export interface BlogDetail extends BlogListItem {
   author_user_id: number | null;
   is_anonymous: boolean;
-  qualification_skill_id: number | null;
+  qualification_skill_ids: number[];
   author_bio: BlogAuthorBio | null;
   sections: BlogSection[];
 }

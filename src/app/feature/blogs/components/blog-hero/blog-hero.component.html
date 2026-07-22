@@ -7,8 +7,12 @@
   </div>
 
   <div class="blog-hero__content">
-    @if (blog.qualification?.name) {
-      <span class="blog-hero__topic">{{ blog.qualification!.name }}</span>
+    @if (blog.qualifications.length) {
+      <div class="blog-hero__topics">
+        @for (topic of blog.qualifications; track topic.id) {
+          <span class="blog-hero__topic">{{ topic.name }}</span>
+        }
+      </div>
     }
     <h2 class="blog-hero__title">{{ blog.title }}</h2>
     @if (blog.subtitle) {

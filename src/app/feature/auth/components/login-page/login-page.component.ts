@@ -10,7 +10,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AuthService } from '../../../../core/auth/auth.service';
@@ -31,7 +31,6 @@ export class LoginPageComponent {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
   private readonly translate = inject(TranslateService);
 
   protected readonly loading = signal(false);
@@ -63,7 +62,8 @@ export class LoginPageComponent {
       next: (res) => {
         this.loading.set(false);
         if (res.status === 'success') {
-          void this.router.navigateByUrl(this.returnUrl());
+          // Always land on the learner profile after signing in.
+          void this.router.navigateByUrl(`/${LmsRoutes.Profile}`);
         }
       },
       error: (error: HttpErrorResponse) => {
@@ -83,9 +83,5 @@ export class LoginPageComponent {
       );
     }
     return this.translate.instant('common.error_generic');
-  }
-
-  private returnUrl(): string {
-    return this.route.snapshot.queryParamMap.get('returnUrl') ?? `/`;
   }
 }

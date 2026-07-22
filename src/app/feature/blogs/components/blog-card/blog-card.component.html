@@ -14,8 +14,12 @@
         <a [routerLink]="['/blogs', blog.slug]">{{ blog.title }}</a>
       </h3>
 
-      @if (blog.qualification?.name) {
-        <span class="blog-card__topic">{{ blog.qualification!.name }}</span>
+      @if (blog.qualifications.length) {
+        <div class="blog-card__topics">
+          @for (topic of blog.qualifications; track topic.id) {
+            <span class="blog-card__topic">{{ topic.name }}</span>
+          }
+        </div>
       }
 
       @if (blog.subtitle) {

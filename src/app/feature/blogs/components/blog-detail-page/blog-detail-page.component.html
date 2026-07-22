@@ -18,8 +18,12 @@
     </a>
 
     <header class="blog-detail__head">
-      @if (post.qualification?.name) {
-        <span class="blog-detail__topic">{{ post.qualification!.name }}</span>
+      @if (post.qualifications.length) {
+        <div class="blog-detail__topics">
+          @for (topic of post.qualifications; track topic.id) {
+            <span class="blog-detail__topic">{{ topic.name }}</span>
+          }
+        </div>
       }
       <h1 class="blog-detail__title">{{ post.title }}</h1>
       @if (post.subtitle) {

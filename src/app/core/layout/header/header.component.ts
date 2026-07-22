@@ -102,9 +102,10 @@ export class HeaderComponent {
   protected logout(): void {
     this.closeProfileMenu();
     this.closeMobileMenu();
+    // Always return to the public home page after signing out.
     this.auth.logout().subscribe({
-      next: () => this.router.navigateByUrl(`/${this.routes.Catalogue}`),
-      error: () => this.router.navigateByUrl(`/${this.routes.Catalogue}`),
+      next: () => this.router.navigateByUrl('/'),
+      error: () => this.router.navigateByUrl('/'),
     });
   }
 }

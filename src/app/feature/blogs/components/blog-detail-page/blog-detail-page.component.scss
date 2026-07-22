@@ -41,8 +41,13 @@
     gap: var(--spacing-14xs);
   }
 
+  &__topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-16xs);
+  }
+
   &__topic {
-    align-self: flex-start;
     padding: var(--spacing-17xs) var(--spacing-15xs);
     border-radius: var(--radius-control-xs);
     background: var(--color-primary-200);

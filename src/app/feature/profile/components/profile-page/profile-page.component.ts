@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } 
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../../../core/auth/auth.service';
-import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
 import { ShimmerComponent } from '../../../../shared/components/shimmer/shimmer.component';
@@ -97,7 +96,8 @@ export class ProfilePageComponent implements OnInit {
   protected logout(): void {
     // Profile is an auth-only route, so leave it as the session ends —
     // guards don't re-run reactively, so the redirect must be explicit.
-    const leave = () => this.router.navigateByUrl(`/${LmsRoutes.Catalogue}`);
+    // Always return to the public home page.
+    const leave = () => this.router.navigateByUrl('/');
     this.auth.logout().subscribe({ next: leave, error: leave });
   }
 
