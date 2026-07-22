@@ -1,8 +1,18 @@
-@use 'mixins' as *;
+@use "mixins" as *;
+
+// Fill the grid cell so sibling cards are always equal height — otherwise a
+// card with more content (e.g. a two-line title) makes its grid row taller
+// and the shorter card no longer fills it.
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
 
 .blog-card {
   display: flex;
   flex-direction: column;
+  height: 100%;
   overflow: hidden;
   background: var(--color-essential-primary);
   border: var(--stroke-width-default) solid var(--color-neutral-400);
@@ -52,7 +62,7 @@
   }
 
   &__title {
-    @include typography('subtitle', 'bold');
+    @include typography("subtitle", "bold");
     margin: 0;
 
     a {
@@ -63,7 +73,9 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
 
-      &:hover { text-decoration: underline; }
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 
@@ -78,11 +90,11 @@
     border-radius: var(--radius-control-xs);
     background: var(--color-primary-200);
     color: var(--color-primary-800);
-    @include typography('caption', 'medium');
+    @include typography("caption", "medium");
   }
 
   &__excerpt {
-    @include typography('body-small', 'regular');
+    @include typography("body-small", "regular");
     color: var(--color-neutral-800);
     margin: 0;
     display: -webkit-box;
@@ -108,7 +120,7 @@
   }
 
   &__author-name {
-    @include typography('body-small', 'regular');
+    @include typography("body-small", "regular");
     color: var(--color-neutral-900);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -120,9 +132,11 @@
     align-items: center;
     gap: var(--spacing-17xs);
     flex-shrink: 0;
-    @include typography('caption', 'regular');
+    @include typography("caption", "regular");
     color: var(--color-neutral-800);
 
-    i { font-size: 14px; }
+    i {
+      font-size: 14px;
+    }
   }
 }
