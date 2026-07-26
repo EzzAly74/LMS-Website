@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { NotificationService } from '../../../../core/services/notification.service';
 import { EmptyStateComponent, EmptyStateConfig } from '../../../../shared/components/empty-state/empty-state.component';
 import { ShimmerComponent } from '../../../../shared/components/shimmer/shimmer.component';
 import { QualificationProgress } from '../../models/profile.models';
+import { ProfileService } from '../../services/profile.service';
 
 /**
  * Qualifications tab — one expandable card per required qualification, each
@@ -28,9 +30,14 @@ export class QualificationsTabComponent {
     this._search.set(value ?? '');
   }
 
+  private readonly translate = inject(TranslateService);
+  private readonly profile = inject(ProfileService);
+  private readonly notify = inject(NotificationService);
+
   private readonly _qualifications = signal<QualificationProgress[]>([]);
   private readonly _search = signal('');
   private readonly expanded = signal<Set<number>>(new Set());
+  protected readonly downloadingId = signal<number | null>(null);
 
   protected readonly skeletons = Array.from({ length: 4 });
 
@@ -48,11 +55,13 @@ export class QualificationsTabComponent {
     );
   });
 
-  protected readonly emptyState: EmptyStateConfig = {
-    icon: 'pi-verified',
-    title: 'feature.profile.qualifications.empty.title',
-    message: 'feature.profile.qualifications.empty.message',
-  };
+  protected get emptyState(): EmptyStateConfig {
+    return {
+      icon: 'pi-verified',
+      title: this.translate.instant('feature.profile.qualifications.empty.title'),
+      message: this.translate.instant('feature.profile.qualifications.empty.message'),
+    };
+  }
 
   protected isExpanded(id: number): boolean {
     return this.expanded().has(id);
@@ -62,5 +71,39 @@ export class QualificationsTabComponent {
     const next = new Set(this.expanded());
     next.has(id) ? next.delete(id) : next.add(id);
     this.expanded.set(next);
+  }
+
+  /**
+   * Download a certificate through HttpClient (so the auth interceptor
+   * attaches the bearer token) and save the returned blob. A plain
+   * `<a href>` was used before, which sent no token and pointed at a JSON
+   * endpoint — so it never produced a file.
+   */
+  protected downloadCertificate(certificateId: number): void {
+    if (this.downloadingId() !== null) {
+      return;
+    }
+    this.downloadingId.set(certificateId);
+    this.profile.downloadCertificate(certificateId).subscribe({
+      next: (blob) => {
+        this.saveBlob(blob, `certificate-${certificateId}.jpg`);
+        this.downloadingId.set(null);
+      },
+      error: () => {
+        this.downloadingId.set(null);
+        this.notify.error(this.translate.instant('feature.profile.qualifications.download_failed'));
+      },
+    });
+  }
+
+  private saveBlob(blob: Blob, filename: string): void {
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
   }
 }

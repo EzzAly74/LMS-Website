@@ -63,6 +63,20 @@ export class ApiService {
     });
   }
 
+  /**
+   * Fetch a binary file (e.g. a certificate JPEG/PDF) as a Blob. Goes
+   * through HttpClient so the auth + locale interceptors still attach the
+   * bearer token and Accept-Language — unlike a raw `<a href>` navigation,
+   * which sends neither and would be rejected by the auth middleware.
+   */
+  getBlob(path: string, options: RequestOptions = {}): Observable<Blob> {
+    return this.http.get(this.url(path), {
+      params: this.buildParams(options.params),
+      context: options.context,
+      responseType: 'blob',
+    });
+  }
+
   private url(path: string): string {
     const normalized = path.startsWith('/') ? path.slice(1) : path;
     return `${this.baseUrl}/${normalized}`;

@@ -202,3 +202,34 @@
     color: var(--color-neutral-700);
   }
 }
+
+.course-player__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 60vh;
+  padding: 48px 24px;
+  text-align: center;
+
+  &-icon {
+    font-size: 48px;
+    color: var(--color-neutral-400);
+  }
+
+  &-title {
+    @include typography('heading-6', 'semibold');
+    color: var(--color-neutral-900);
+  }
+
+  &-message {
+    @include typography('body-medium', 'regular');
+    color: var(--color-neutral-600);
+    max-width: 420px;
+  }
+
+  &-back {
+    margin-top: 8px;
+  }
+}

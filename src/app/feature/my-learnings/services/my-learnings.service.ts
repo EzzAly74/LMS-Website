@@ -13,4 +13,9 @@ export class MyLearningsService {
   getActiveCourses(): Observable<ApiResponse<ActiveCourse[]>> {
     return this.api.get<ActiveCourse[]>('my/learnings');
   }
+
+  /** Download an earned certificate as a binary blob (authenticated). */
+  downloadCertificate(certificateId: number): Observable<Blob> {
+    return this.api.getBlob(`learner/profile/certificates/${certificateId}/download`);
+  }
 }

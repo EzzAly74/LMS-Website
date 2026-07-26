@@ -47,10 +47,22 @@
                     [label]="'feature.my_learnings.certificate.' + status | translate"
                   />
                 }
-                <a class="uc-card__cta" [routerLink]="playerRoute(course)">
-                  {{ 'feature.my_learnings.actions.continue' | translate }}
-                  <i class="pi pi-arrow-right"></i>
-                </a>
+                @if (course.certificate_id) {
+                  <button
+                    type="button"
+                    class="uc-card__cta"
+                    [disabled]="downloadingId() === course.certificate_id"
+                    (click)="downloadCertificate(course)"
+                  >
+                    {{ 'feature.my_learnings.actions.download_certificate' | translate }}
+                    <i class="pi" [class.pi-download]="downloadingId() !== course.certificate_id" [class.pi-spin]="downloadingId() === course.certificate_id" [class.pi-spinner]="downloadingId() === course.certificate_id"></i>
+                  </button>
+                } @else {
+                  <a class="uc-card__cta" [routerLink]="playerRoute(course)">
+                    {{ 'feature.my_learnings.actions.continue' | translate }}
+                    <i class="pi pi-arrow-right"></i>
+                  </a>
+                }
               </div>
             </div>
           </article>

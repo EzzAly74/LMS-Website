@@ -2,6 +2,7 @@
   <app-course-player-skeleton />
 } @else if (outline()) {
   @let o = outline()!;
+  @if (o.weeks.length) {
   <div class="course-player">
     <aside class="course-player__sidebar">
       <div class="course-player__sidebar-header">
@@ -112,4 +113,15 @@
       </div>
     </section>
   </div>
+  } @else {
+    <div class="course-player__empty">
+      <i class="pi pi-inbox course-player__empty-icon"></i>
+      <p class="course-player__empty-title">{{ 'feature.course_player.empty.title' | translate }}</p>
+      <p class="course-player__empty-message">{{ 'feature.course_player.empty.message' | translate }}</p>
+      <a class="course-player__back course-player__empty-back" [routerLink]="myLearningsRoute">
+        <i class="pi pi-arrow-left"></i>
+        {{ 'feature.course_player.back' | translate }}
+      </a>
+    </div>
+  }
 }

@@ -48,6 +48,11 @@ export class ProfileService {
     return this.api.get<SessionAttendance[]>(`${this.base}/courses/${courseId}/sessions`);
   }
 
+  /** Download a certificate as a binary blob (authenticated via HttpClient). */
+  downloadCertificate(certificateId: number): Observable<Blob> {
+    return this.api.getBlob(`${this.base}/certificates/${certificateId}/download`);
+  }
+
   submitRating(
     courseId: number,
     rating: number,

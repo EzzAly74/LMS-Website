@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
+import { NotificationService } from '../../../../core/services/notification.service';
 import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { CardSkeletonComponent } from '../../../../shared/components/card-skeleton/card-skeleton.component';
@@ -23,11 +24,13 @@ import { MyLearningsService } from '../../services/my-learnings.service';
 export class MyLearningsPageComponent implements OnInit {
   private readonly service = inject(MyLearningsService);
   private readonly translate = inject(TranslateService);
+  private readonly notify = inject(NotificationService);
 
   private readonly allCourses = signal<ActiveCourse[]>([]);
   protected readonly loading = signal(true);
   protected readonly skeletons = Array.from({ length: 4 });
   private readonly searchTerm = signal('');
+  protected readonly downloadingId = signal<number | null>(null);
 
   /** GET my/learnings returns the learner's whole (unpaginated) course list — filter client-side. */
   protected readonly courses = computed(() => {
@@ -66,6 +69,35 @@ export class MyLearningsPageComponent implements OnInit {
       title: this.translate.instant('feature.my_learnings.empty.title'),
       message: this.translate.instant('feature.my_learnings.empty.message'),
     };
+  }
+
+  /** Download the earned certificate for a completed course. */
+  protected downloadCertificate(course: ActiveCourse): void {
+    if (course.certificate_id === null || this.downloadingId() !== null) {
+      return;
+    }
+    this.downloadingId.set(course.certificate_id);
+    this.service.downloadCertificate(course.certificate_id).subscribe({
+      next: (blob) => {
+        this.saveBlob(blob, `certificate-${course.certificate_id}.jpg`);
+        this.downloadingId.set(null);
+      },
+      error: () => {
+        this.downloadingId.set(null);
+        this.notify.error(this.translate.instant('feature.my_learnings.download_failed'));
+      },
+    });
+  }
+
+  private saveBlob(blob: Blob, filename: string): void {
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
   }
 
   private loadCourses(): void {

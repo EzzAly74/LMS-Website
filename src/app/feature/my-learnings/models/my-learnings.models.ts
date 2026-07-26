@@ -35,4 +35,6 @@ export interface ActiveCourse {
   cohort: ActiveCourseCohort;
   module_progress_percent: number;
   certificate_status: CertificateStatus;
+  completed: boolean;
+  certificate_id: number | null;
 }

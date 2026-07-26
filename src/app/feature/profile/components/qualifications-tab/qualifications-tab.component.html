@@ -46,15 +46,15 @@
                       }
                     </div>
                     @if (c.certificate_id) {
-                      <a
+                      <button
+                        type="button"
                         class="qual-course__cert"
-                        [href]="'/api/v1/learner/profile/certificates/' + c.certificate_id + '/download'"
-                        target="_blank"
-                        rel="noopener"
+                        [disabled]="downloadingId() === c.certificate_id"
+                        (click)="downloadCertificate(c.certificate_id!)"
                       >
-                        <i class="pi pi-download"></i>
+                        <i class="pi" [class.pi-download]="downloadingId() !== c.certificate_id" [class.pi-spin]="downloadingId() === c.certificate_id" [class.pi-spinner]="downloadingId() === c.certificate_id"></i>
                         {{ 'feature.profile.qualifications.download_certificate' | translate }}
-                      </a>
+                      </button>
                     }
                   </div>
                 }
