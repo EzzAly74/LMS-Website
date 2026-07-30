@@ -15,9 +15,19 @@
   background: none;
   color: var(--color-essential-secondary);
   cursor: pointer;
+  transition:
+    border-color 0.25s ease-in-out,
+    color 0.25s ease-in-out;
 
   .pi {
     font-size: var(--size-18);
+  }
+
+  // Same tint-on-hover treatment as the header's globe/language button.
+  &:hover,
+  &[aria-expanded="true"] {
+    color: var(--color-primary-700);
+    border-color: var(--color-primary-700);
   }
 }
 

@@ -144,7 +144,10 @@
       inline-size: 372px;
       max-inline-size: 100%;
       block-size: auto;
-      align-self: center;
+      // Flush to the true viewport edge (Figma review: "no white gap"),
+      // countering the section's own 20px inline padding.
+      align-self: flex-end;
+      margin-inline-end: -20px;
     }
   }
 }
@@ -662,28 +665,20 @@ $pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
     margin-block-start: 40px;
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 20px;
-    padding-inline-start: 28px;
-    background: var(--color-additionally-400);
-    border-radius: var(--radius-control-sm);
-    text-decoration: none;
-    color: var(--color-essential-tertiary);
-    @include typography('body', 'medium');
-  }
-
-  &__button-arrow {
-    display: inline-flex;
-    align-items: center;
     justify-content: center;
-    inline-size: 28px;
-    block-size: 28px;
-    background: var(--color-essential-tertiary);
-    border-radius: var(--radius-full);
+    gap: var(--spacing-15xs);
+    block-size: 56px;
+    padding: 12px 46px;
+    border-radius: 8px;
+    background: var(--color-primary-700);
+    box-shadow: var(--elevation-shadow-md);
+    text-decoration: none;
+    color: var(--color-essential-primary);
+    transition: transform 150ms ease-out;
+    @include typography('body-small', 'medium');
 
-    img {
-      inline-size: 20px;
-      block-size: 20px;
+    &:active {
+      transform: scale(0.97);
     }
   }
 
@@ -733,17 +728,9 @@ $pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
     }
 
     &__button {
-      padding: 8px 16px;
-      @include typography('body-small', 'medium');
-    }
-    &__button-arrow {
-      inline-size: 20px;
-      block-size: 20px;
-
-      img {
-        inline-size: 14px;
-        block-size: 14px;
-      }
+      inline-size: 100%;
+      block-size: auto;
+      padding: 12px 16px;
     }
   }
 }
@@ -779,6 +766,12 @@ $settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   50% { translate: 20px 0; }
   to { translate: 40px 0; }
 }
+// Idle loop the settled shapes drift into once their entrance completes —
+// matches the landing page CTA band, which floats indefinitely at rest.
+@keyframes who-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -10px; }
+}
 
 .who-cta:not(.is-live) {
   .who-cta__shape--pill,
@@ -789,27 +782,37 @@ $settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
 .who-cta.is-live {
   .who-cta__shape--diamond {
-    animation: who-drift-in-out 2000ms $drift-ease 77ms both;
+    animation:
+      who-drift-in-out 2000ms $drift-ease 77ms both,
+      who-float 4200ms ease-in-out 2077ms infinite;
   }
   .who-cta__shape--circle-lg {
-    animation: who-drift-in-out 2000ms $drift-ease 252ms both;
+    animation:
+      who-drift-in-out 2000ms $drift-ease 252ms both,
+      who-float 4600ms ease-in-out 2252ms infinite;
   }
   .who-cta__shape--circle-sm {
-    animation: who-drift-in-out 2000ms $drift-ease 529ms both;
+    animation:
+      who-drift-in-out 2000ms $drift-ease 529ms both,
+      who-float 3800ms ease-in-out 2529ms infinite;
   }
   .who-cta__shape--pill {
     animation: who-settle-pill 1700ms $settle-ease 400ms both;
   }
   .who-cta__shape--ellipse {
-    animation: who-settle-ellipse 1900ms $settle-ease both;
+    animation:
+      who-settle-ellipse 1900ms $settle-ease both,
+      who-float 4400ms ease-in-out 1900ms infinite;
   }
   .who-cta__shape--rect {
-    animation: who-rect-drift 2813ms $drift-ease both;
+    animation:
+      who-rect-drift 2813ms $drift-ease both,
+      who-float 5000ms ease-in-out 2813ms infinite;
   }
 }
 
 /* RTL: the CTA arrow points forward in reading direction. */
-:host-context([dir='rtl']) .who-cta__button-arrow img {
+:host-context([dir='rtl']) .who-cta__button img {
   transform: scaleX(-1);
 }
 

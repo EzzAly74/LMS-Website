@@ -10,6 +10,7 @@ import {
   ProfileSummary,
   QualificationProgress,
   SessionAttendance,
+  WeekSchedule,
 } from '../models/profile.models';
 
 /**
@@ -40,6 +41,10 @@ export class ProfileService {
     return this.api.get<CompletedCourse[]>(`${this.base}/completed`);
   }
 
+  getWeekSchedule(): Observable<ApiResponse<WeekSchedule>> {
+    return this.api.get<WeekSchedule>(`${this.base}/schedule`);
+  }
+
   getCertificates(): Observable<ApiResponse<ProfileCertificate[]>> {
     return this.api.get<ProfileCertificate[]>(`${this.base}/certificates`);
   }
@@ -59,5 +64,18 @@ export class ProfileService {
     comment: string | null,
   ): Observable<ApiResponse<{ id: number; rating: number }>> {
     return this.api.post(`${this.base}/courses/${courseId}/rating`, { rating, comment });
+  }
+
+  /** Mark the learner present for a live session via passcode (mobile S-06 twin). */
+  markPresent(
+    courseId: number,
+    sessionId: number | null,
+    passcode: string,
+  ): Observable<ApiResponse<unknown>> {
+    return this.api.post(`${this.base}/attendance/mark`, {
+      course_id: courseId,
+      session_id: sessionId,
+      passcode,
+    });
   }
 }

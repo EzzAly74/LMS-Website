@@ -1,6 +1,7 @@
 @use 'mixins' as *;
 
 .course-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -8,6 +9,12 @@
   border: var(--stroke-width-default) solid var(--color-neutral-400);
   border-radius: var(--radius-container-md);
   box-shadow: var(--elevation-shadow-sm);
+
+  &__stretched-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
 
   &__media {
     position: relative;
@@ -122,6 +129,8 @@
   }
 
   &__cta {
+    position: relative;
+    z-index: 2;
     padding: var(--spacing-15xs) var(--spacing-13xs);
     border: none;
     border-radius: var(--radius-control-sm);
@@ -130,7 +139,12 @@
     box-shadow: var(--elevation-shadow-sm);
     white-space: nowrap;
     cursor: pointer;
+    transition: background-color 0.25s ease-in-out;
     @include typography('button', 'medium');
+
+    &:not(&--static):hover {
+      background: var(--color-primary-700);
+    }
 
     &--static {
       display: inline-flex;

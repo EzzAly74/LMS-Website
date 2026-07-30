@@ -1,4 +1,4 @@
-@use 'mixins' as *;
+@use "mixins" as *;
 
 .qual-list {
   display: flex;
@@ -34,7 +34,7 @@
   }
 
   &__title {
-    @include typography('subtitle', 'bold');
+    @include typography("subtitle", "bold");
     color: var(--color-essential-secondary);
   }
 
@@ -50,7 +50,7 @@
   }
 
   &__percent {
-    @include typography('body-small', 'bold');
+    @include typography("body-small", "bold");
     color: var(--color-primary-700);
   }
 
@@ -90,6 +90,7 @@
   &--earned {
     background: var(--color-status-success-08);
     border: var(--stroke-width-default) solid var(--color-status-success-16);
+    margin-top: 16px;
   }
 
   &--uncovered {
@@ -98,7 +99,7 @@
   }
 
   &__title {
-    @include typography('caption', 'bold');
+    @include typography("caption", "bold");
     color: var(--color-neutral-800);
     text-transform: uppercase;
     letter-spacing: var(--font-tracking-label);
@@ -115,7 +116,7 @@
     border: none;
     cursor: pointer;
     color: var(--color-primary-700);
-    @include typography('body-small', 'medium');
+    @include typography("body-small", "medium");
   }
 }
 
@@ -139,17 +140,17 @@
   }
 
   &__title {
-    @include typography('body-small', 'medium');
+    @include typography("body-small", "medium");
     color: var(--color-essential-secondary);
   }
 
   &__meta {
-    @include typography('caption', 'regular');
+    @include typography("caption", "regular");
     color: var(--color-neutral-700);
   }
 
   &__also {
-    @include typography('caption', 'regular');
+    @include typography("caption", "regular");
     color: var(--color-primary-700);
   }
 
@@ -162,6 +163,6 @@
     border-radius: var(--radius-control-sm);
     background: var(--color-essential-tertiary);
     color: var(--color-essential-primary);
-    @include typography('button-small', 'medium');
+    @include typography("button-small", "medium");
   }
 }

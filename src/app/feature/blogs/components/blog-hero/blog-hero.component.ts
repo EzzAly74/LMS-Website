@@ -20,4 +20,6 @@ import { BlogListItem } from '../../models/blog.models';
 })
 export class BlogHeroComponent {
   @Input({ required: true }) blog!: BlogListItem;
+  /** i18n key for the flag badge — defaults to the qualification-tailored copy. */
+  @Input() flagKey = 'feature.blogs.latest_in_role';
 }

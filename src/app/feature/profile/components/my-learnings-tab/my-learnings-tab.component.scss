@@ -33,6 +33,11 @@
   gap: var(--spacing-14xs);
 }
 
+/* Wrapper for the in-profile Course Detail (drops its standalone-page chrome). */
+.ml-detail {
+  margin-top: var(--spacing-13xs);
+}
+
 .ml-row {
   display: flex;
   align-items: flex-start;
@@ -45,6 +50,10 @@
 
   &--skeleton {
     align-items: center;
+  }
+
+  &--clickable {
+    cursor: pointer;
   }
 
   &__thumb {
@@ -144,10 +153,22 @@
     align-items: center;
     gap: var(--spacing-16xs);
     padding: var(--spacing-15xs) var(--spacing-13xs);
+    border: none;
     border-radius: var(--radius-control-sm);
     background: var(--color-essential-tertiary);
     color: var(--color-essential-primary);
+    cursor: pointer;
+    transition: background-color 0.25s ease-in-out;
     @include typography("button-small", "medium");
+
+    &:not(:disabled):hover {
+      background: var(--color-primary-700);
+    }
+
+    &:disabled {
+      opacity: var(--opacity-disabled);
+      cursor: not-allowed;
+    }
   }
 
   &__link {
@@ -156,6 +177,36 @@
     gap: var(--spacing-16xs);
     color: var(--color-primary-700);
     @include typography("button-small", "medium");
+    // Works as both an <a> and a <button> (View Details opens in-place).
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  /* Neutral "Completed" chip for courses that offer no certificate. */
+  &__done {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    padding: var(--spacing-17xs) var(--spacing-15xs);
+    border-radius: var(--radius-pill);
+    background: var(--color-status-success-50);
+    color: var(--color-status-success-500);
+    @include typography("caption", "medium");
+  }
+
+  // Mobile: the CTA fills the card's width instead of hugging its label
+  // (Figma review: "the CTA should fill the card").
+  @media (max-width: 900px) {
+    &__foot {
+      align-items: stretch;
+    }
+
+    &__cta {
+      justify-content: center;
+      width: 100%;
+    }
   }
 }
 
@@ -235,7 +286,12 @@
     box-shadow: var(--elevation-shadow-sm);
     color: var(--color-essential-primary);
     cursor: pointer;
+    transition: background-color 0.25s ease-in-out;
     @include typography("button", "medium");
+
+    &:not(:disabled):hover {
+      background: var(--color-primary-700);
+    }
 
     &:disabled {
       opacity: var(--opacity-disabled);

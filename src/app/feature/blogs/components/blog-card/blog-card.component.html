@@ -32,12 +32,6 @@
         <app-avatar [name]="blog.author.name" [image]="blog.author.image" />
         <span class="blog-card__author-name">{{ blog.author.name }}</span>
       </span>
-      @if (blog.reading_time) {
-        <span class="blog-card__read">
-          <i class="pi pi-clock"></i>
-          {{ blog.reading_time }} {{ 'feature.blogs.min_read' | translate }}
-        </span>
-      }
     </div>
   </div>
 </article>

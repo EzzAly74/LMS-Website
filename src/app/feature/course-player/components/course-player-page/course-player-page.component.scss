@@ -71,15 +71,8 @@
     overflow-y: auto;
   }
 
-  &__outline-heading {
-    padding: var(--spacing-14xs) var(--spacing-3xs) var(--spacing-15xs);
-    @include typography('caption', 'bold');
-    color: var(--color-neutral-700);
-    text-transform: uppercase;
-  }
-
   &__week {
-    border-bottom: var(--stroke-width-default) solid var(--color-neutral-300);
+    border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
   }
 
   &__week-header {
@@ -87,66 +80,112 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: var(--spacing-14xs) var(--spacing-3xs);
+    padding: var(--spacing-11xs) var(--spacing-13xs);
     background: none;
     border: none;
     cursor: pointer;
-    @include typography('body-small', 'medium');
+    @include typography('body-small', 'bold');
     color: var(--color-essential-secondary);
+
+    // The week holding the open module gets a teal label (Figma primary-700).
+    &.is-active {
+      color: var(--color-primary-700);
+    }
+  }
+
+  &__week-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-15xs);
+  }
+
+  &__week-check {
+    color: var(--color-status-success); // completed week → green check-circle
+  }
+
+  &__week-chevron {
+    color: var(--color-neutral-600); // #b8b9ba (Figma)
   }
 
   &__item-list {
     display: flex;
     flex-direction: column;
     margin: 0;
-    padding: 0 var(--spacing-3xs) var(--spacing-15xs);
+    padding: 0;
     list-style: none;
   }
 
   &__item {
     display: flex;
     align-items: center;
-    gap: var(--spacing-15xs);
+    gap: var(--spacing-13xs);
     width: 100%;
-    padding: var(--spacing-15xs);
-    border-radius: var(--radius-control-sm);
-    background: none;
+    // pl 20 + 4px left accent = 24px, so rows stay aligned across states.
+    padding: var(--spacing-12xs) var(--spacing-13xs) var(--spacing-12xs) var(--spacing-9xs);
     border: none;
+    border-left: 4px solid transparent;
+    background: none;
     cursor: pointer;
     text-align: start;
     @include typography('body-small', 'regular');
-    color: var(--color-neutral-800);
+    color: var(--color-neutral-700);
 
+    // Active module — tinted row + teal left accent + teal label (primary-800).
     &.is-active {
       background: var(--color-primary-100);
-      color: var(--color-primary-900);
+      border-left-color: var(--color-primary-800);
+      color: var(--color-primary-800);
+      @include typography('body-small', 'medium');
+
+      .course-player__item-icon {
+        color: var(--color-primary-800);
+      }
     }
 
-    span:not(.course-player__item-dot) {
-      flex: 1;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    // Active Quiz/Assignment gets an orange accent instead of teal (Figma
+    // 1206:18606). #a85e05 has no matching design token — used directly.
+    &.is-active.is-quiz {
+      background: var(--color-status-hold-50);
+      border-left-color: #a85e05;
+      color: #a85e05;
+
+      .course-player__item-icon {
+        color: #a85e05;
+      }
+
+      .course-player__item-dot {
+        background: #a85e05;
+      }
     }
+  }
+
+  &__item-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__item-icon {
-    flex-shrink: 0;
     color: var(--color-neutral-700);
   }
 
-  &__item-status {
-    flex-shrink: 0;
-    color: var(--color-status-success);
+  &__item-check {
+    color: var(--color-status-success); // completed module → green check
   }
 
+  &__item-todo {
+    color: var(--color-neutral-400); // not-started → dashed ring
+  }
+
+  // Current (open, not-yet-complete) module → solid teal dot (Figma).
   &__item-dot {
     flex-shrink: 0;
     width: 8px;
     height: 8px;
     border-radius: var(--radius-full);
-    border: var(--stroke-width-default) solid var(--color-neutral-500);
+    background: var(--color-primary-700);
   }
 
   &__main {
@@ -155,11 +194,12 @@
     min-width: 0;
   }
 
+  // "content-header" (Figma 907:46347): 32px horizontal / 20px vertical.
   &__content-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-3xs);
+    padding: var(--spacing-9xs) var(--spacing-3xs);
     border-bottom: var(--stroke-width-default) solid var(--color-neutral-300);
   }
 
@@ -168,28 +208,44 @@
     color: var(--color-neutral-700);
   }
 
+  // "player-container" (Figma 900:45192): video/lesson inset 40px on every side.
   &__content {
     flex: 1;
-    padding: var(--spacing-3xs);
+    padding: var(--spacing-m);
   }
 
+  // Figma bottom-nav: 40/24px padding, divider (#e0e4e5 ≈ neutral-400).
   &__bottom-nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-3xs);
-    border-top: var(--stroke-width-default) solid var(--color-neutral-300);
+    padding: var(--spacing-7xs) var(--spacing-m);
+    border-top: var(--stroke-width-default) solid var(--color-neutral-400);
   }
 
+  // Outlined teal pill (Figma): border + label in essential-tertiary, arrow icon.
   &__nav-btn {
-    padding: var(--spacing-15xs) var(--spacing-3xs);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-15xs);
+    height: 36px;
+    padding: var(--spacing-15xs) var(--spacing-13xs);
     border-radius: var(--radius-control-sm);
     background: var(--color-essential-primary);
-    border: var(--stroke-width-default) solid var(--color-neutral-500);
-    color: var(--color-essential-secondary);
+    border: var(--stroke-width-default) solid var(--color-essential-tertiary);
+    color: var(--color-essential-tertiary);
+    box-shadow: var(--elevation-shadow-sm);
     cursor: pointer;
-    @include typography('button', 'medium');
+    transition:
+      background-color 0.2s ease-in-out,
+      color 0.2s ease-in-out;
+    @include typography('body-small', 'medium');
     @include touch-target;
+
+    &:not(:disabled):hover {
+      background: var(--color-essential-tertiary);
+      color: var(--color-neutral-0);
+    }
 
     &:disabled {
       opacity: var(--opacity-disabled);
@@ -213,9 +269,9 @@
   padding: 48px 24px;
   text-align: center;
 
-  &-icon {
-    font-size: 48px;
-    color: var(--color-neutral-400);
+  .empty-state__icon {
+    width: 116px;
+    height: 116px;
   }
 
   &-title {
@@ -231,5 +287,76 @@
 
   &-back {
     margin-top: 8px;
+  }
+}
+
+/* ── Figma-exact sidebar icons (900:45220) ─────────────────────────────────
+   Rendered via CSS mask so a single asset takes the row's state colour
+   (grey / teal-active / green-complete) instead of baking a colour per state. */
+.cp-ico {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+
+  // Leading module icons are 18px in Figma; the rest are 16px.
+  &--play,
+  &--file,
+  &--external,
+  &--quiz {
+    width: 18px;
+    height: 18px;
+  }
+
+  &--play {
+    -webkit-mask-image: url('/assets/icons/course-player/play-circle.svg');
+    mask-image: url('/assets/icons/course-player/play-circle.svg');
+  }
+  &--file {
+    -webkit-mask-image: url('/assets/icons/course-player/file-text.svg');
+    mask-image: url('/assets/icons/course-player/file-text.svg');
+  }
+  &--external {
+    -webkit-mask-image: url('/assets/icons/course-player/external-link.svg');
+    mask-image: url('/assets/icons/course-player/external-link.svg');
+  }
+  &--quiz {
+    -webkit-mask-image: url('/assets/icons/course-player/question.svg');
+    mask-image: url('/assets/icons/course-player/question.svg');
+  }
+  &--check {
+    -webkit-mask-image: url('/assets/icons/course-player/check-circle-fill.svg');
+    mask-image: url('/assets/icons/course-player/check-circle-fill.svg');
+  }
+  &--dashed {
+    -webkit-mask-image: url('/assets/icons/course-player/dashed-ring.svg');
+    mask-image: url('/assets/icons/course-player/dashed-ring.svg');
+  }
+  &--chevron-down {
+    -webkit-mask-image: url('/assets/icons/course-player/chevron-down.svg');
+    mask-image: url('/assets/icons/course-player/chevron-down.svg');
+  }
+  &--chevron-up {
+    -webkit-mask-image: url('/assets/icons/course-player/chevron-up.svg');
+    mask-image: url('/assets/icons/course-player/chevron-up.svg');
+  }
+  &--arrow-left {
+    width: 20px;
+    height: 20px;
+    -webkit-mask-image: url('/assets/icons/course-player/arrow-left.svg');
+    mask-image: url('/assets/icons/course-player/arrow-left.svg');
+  }
+  &--arrow-right {
+    width: 20px;
+    height: 20px;
+    -webkit-mask-image: url('/assets/icons/course-player/arrow-right.svg');
+    mask-image: url('/assets/icons/course-player/arrow-right.svg');
   }
 }

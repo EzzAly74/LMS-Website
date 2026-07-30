@@ -3,48 +3,65 @@
 .quiz-runner {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3xs);
+  // 40px between the header block / options / action button (Figma "Frame"
+  // gap-40, node 913:46456).
+  gap: var(--spacing-m);
 
+  // Header block: tag+progress row, then the question text — 16px apart.
   &__header {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-16xs);
+    gap: var(--spacing-11xs);
   }
 
+  // Type tag + progress bar/label — 8px apart (Figma node 1207:19934).
+  &__tag-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-15xs);
+  }
+
+  // Type tag: orange "Quiz"/"Assignment" pill (Figma 1207:19931 — #fef4e6 bg,
+  // #a85e05 text; no matching design token for the text colour).
+  &__type-tag {
+    display: inline-block;
+    width: fit-content;
+    padding: 2px var(--spacing-15xs);
+    border-radius: var(--radius-pill);
+    background: var(--color-status-hold-50);
+    color: #a85e05;
+    @include typography('caption', 'medium');
+
+    // Assignment: purple, not orange (Figma 1207:19636 — neither colour has
+    // a matching design token).
+    &--assignment {
+      background: rgba(191, 170, 224, 0.3);
+      color: #6c49a3;
+    }
+  }
+
+  // Progress row: an 8px bar capped at 320px + "Question X of Y" label,
+  // NOT a full-width bar (Figma 913:46880).
   &__progress-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-  }
-
-  &__type-tag {
-    padding: var(--spacing-17xs) var(--spacing-15xs);
-    border-radius: var(--radius-control-xs);
-    background: var(--color-neutral-300);
-    color: var(--color-neutral-800);
-    @include typography('caption', 'medium');
-  }
-
-  &__score-chip {
-    display: inline-flex;
-    align-items: center;
     gap: var(--spacing-15xs);
-    @include typography('caption', 'medium');
-    color: var(--color-neutral-800);
+    width: 320px;
+    max-width: 100%;
   }
 
-  &__passed {
-    padding: var(--spacing-17xs) var(--spacing-15xs);
-    border-radius: var(--radius-full);
-    background: var(--color-status-success-50);
-    color: var(--color-status-success);
-    @include typography('caption', 'bold');
+  &__progress-label {
+    flex-shrink: 0;
+    @include typography('caption', 'medium');
+    color: var(--color-primary-700);
+    white-space: nowrap;
   }
 
   &__progress-bar {
+    flex: 1;
     height: 8px;
     border-radius: var(--radius-full);
-    background: var(--color-neutral-300);
+    background: var(--color-neutral-400);
     overflow: hidden;
   }
 
@@ -55,22 +72,25 @@
   }
 
   &__question-text {
-    @include typography('h2', 'bold');
+    @include typography('h1-small', 'bold');
     color: var(--color-essential-secondary);
   }
 
+  // 720px column of option cards (Figma 913:46461/46882).
   &__options {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-15xs);
+    gap: var(--spacing-13xs);
+    width: 720px;
+    max-width: 100%;
   }
 
   &__option {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: var(--spacing-13xs);
-    padding: var(--spacing-14xs);
+    padding: var(--spacing-9xs);
     background: var(--color-essential-primary);
     border: var(--stroke-width-default) solid var(--color-neutral-400);
     border-radius: var(--radius-container-sm);
@@ -80,34 +100,51 @@
     @include typography('body-small', 'regular');
     @include touch-target;
 
+    // Picked, not yet submitted — teal tint + dark teal border (Figma
+    // 913:46446, before any feedback exists).
     &.is-selected {
-      border-color: var(--color-primary-700);
+      border-color: var(--color-essential-tertiary);
       background: var(--color-primary-100);
+      color: var(--color-essential-tertiary);
     }
 
-    &.is-correct {
-      background: var(--color-status-success-50);
+    // Picked AND correct — same teal tint, border turns green (913:46659).
+    &.is-correct-selected {
+      background: var(--color-primary-100);
       border-color: var(--color-status-success);
-      color: var(--color-status-success);
-
-      i {
-        color: var(--color-status-success);
-      }
+      color: var(--color-essential-tertiary);
     }
 
-    &.is-incorrect {
-      background: var(--color-status-warning-08);
-      border-color: var(--color-status-warning);
-      color: var(--color-status-warning);
+    // The correct answer, revealed after a wrong guess — box stays neutral,
+    // only the text turns green (913:46867).
+    &.is-correct-reveal {
+      color: var(--color-status-success);
+    }
 
-      i {
-        color: var(--color-status-warning);
-      }
+    // Picked and wrong — red tint + red border, text stays dark, no icon
+    // (913:46867).
+    &.is-incorrect {
+      background: var(--color-status-warning-50);
+      border-color: var(--color-status-warning);
+      color: var(--color-essential-tertiary);
     }
 
     &:disabled {
       cursor: default;
     }
+  }
+
+  // Always-green check (Figma "Icons/Fill/check-circle") regardless of the
+  // option text colour, so it reads consistently on both correct states.
+  &__option-check {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+    background-color: var(--color-status-success);
+    -webkit-mask: url('/assets/icons/course-player/check-circle-fill.svg') center / contain no-repeat;
+    mask: url('/assets/icons/course-player/check-circle-fill.svg') center / contain no-repeat;
   }
 
   &__open-answer {
@@ -128,6 +165,11 @@
     resize: vertical;
     @include typography('body-small', 'regular');
     font-family: inherit;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary-500);
+    }
 
     &:disabled {
       background: var(--color-neutral-250);
@@ -155,6 +197,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: var(--spacing-13xs);
     padding: var(--spacing-15xs) var(--spacing-14xs);
     border-bottom: var(--stroke-width-default) solid var(--color-neutral-300);
     @include typography('body-small', 'medium');
@@ -163,6 +206,17 @@
     &:last-child {
       border-bottom: none;
     }
+
+    // Correctly-placed row once answered (Figma 913:49572).
+    &.is-correct-position {
+      background: var(--color-status-success-50);
+    }
+  }
+
+  &__reorder-item-main {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-13xs);
   }
 
   &__reorder-controls {
@@ -209,20 +263,60 @@
     }
   }
 
+  // "Score  XX/YY" (Figma 913:47077) — sits between the options and the
+  // action button, not in the header.
+  &__score {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-15xs);
+  }
+
+  &__score-label {
+    @include typography('body-small', 'regular');
+    color: var(--color-essential-secondary);
+  }
+
+  &__score-pill {
+    padding: 3px var(--spacing-14xs);
+    border-radius: var(--radius-pill);
+    background: var(--color-neutral-400);
+    color: var(--color-neutral-800);
+    @include typography('caption', 'medium');
+
+    // Finalized + passed (Figma 913:49572) — green pill instead of neutral.
+    &.is-passed {
+      background: var(--color-status-success-50);
+      color: var(--color-status-success);
+    }
+  }
+
+  &__score-passed {
+    @include typography('body-small', 'regular');
+    color: var(--color-essential-secondary);
+  }
+
   &__actions {
     display: flex;
     justify-content: flex-start;
   }
 
   &__submit-btn {
-    padding: var(--spacing-15xs) var(--spacing-3xs);
+    width: 216px;
+    height: 48px;
+    padding: var(--spacing-13xs) var(--spacing-11xs);
     border-radius: var(--radius-control-sm);
     background: var(--color-essential-tertiary);
     color: var(--color-essential-primary);
     border: none;
     cursor: pointer;
-    @include typography('button', 'medium');
+    box-shadow: var(--elevation-shadow-sm);
+    transition: background-color 0.25s ease-in-out;
+    @include typography('button-large', 'medium');
     @include touch-target;
+
+    &:not(:disabled):hover {
+      background: var(--color-primary-700);
+    }
 
     &:disabled {
       opacity: var(--opacity-disabled);

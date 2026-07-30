@@ -1,35 +1,163 @@
 @if (activeSessionCourse(); as course) {
   @if (course.live_session; as session) {
+    <!-- Active Session card (Figma 839:43221 "Upcoming"). -->
     <div class="side-card side-card--session">
-      <p class="side-card__title">{{ 'feature.profile.sidebar.active_session' | translate }}</p>
+      <div class="session__hdr">
+        <p class="side-card__title">{{ 'feature.profile.sidebar.active_session' | translate }}</p>
+      </div>
       <div class="session">
         @if (session.session_date) {
           <div class="session__date">
-            <span class="session__day">{{ session.session_date | date: 'd' }}</span>
             <span class="session__mon">{{ session.session_date | date: 'MMM' }}</span>
+            <span class="session__day">{{ session.session_date | date: 'd' }}</span>
           </div>
         }
         <div class="session__info">
           <p class="session__name">{{ session.title ?? course.session_name ?? course.title }}</p>
           <p class="session__time">
             @if (session.time_from) {
-              {{ session.time_from }}
+              {{ formatMeridiemTime(session.time_from) }}
             }
             @if (session.location) {
               · {{ session.location }}
             }
-            @if (course.isLive) {
-              · <span class="session__live">{{ 'feature.profile.sidebar.live_now' | translate }}</span>
-            }
           </p>
         </div>
+        @if (course.isLive) {
+          <span class="session__dot" [attr.aria-label]="'feature.profile.sidebar.live_now' | translate"></span>
+        }
       </div>
-      <a class="side-card__cta" [routerLink]="[playerBase, course.id, 'learn']">
-        <i class="pi pi-play-circle"></i>
-        {{ 'feature.profile.sidebar.join_session' | translate }}
-      </a>
+      <div class="session__action">
+        @if (liveAttended()) {
+          <div class="side-card__done">
+            <i class="pi pi-check-circle"></i>
+            {{ 'feature.profile.sidebar.marked_present' | translate }}
+          </div>
+        } @else {
+          <button type="button" class="side-card__cta" (click)="openMarkPresent()">
+            <img class="side-card__cta-icon" src="assets/icons/profile/play.svg" alt="" aria-hidden="true" />
+            {{ 'feature.profile.sidebar.mark_present' | translate }}
+          </button>
+        }
+      </div>
     </div>
   }
+}
+
+<!-- ── Mark-as-Present passcode modal (mobile S-06 flow) ─────────────── -->
+@if (showPasscode() && activeSessionCourse(); as course) {
+  <div class="passcode-backdrop" (click)="closeMarkPresent()">
+    <div class="passcode" role="dialog" (click)="$event.stopPropagation()">
+      <div class="passcode__head">
+        <p class="passcode__title">{{ 'feature.profile.sidebar.mark_present' | translate }}</p>
+        <button type="button" class="passcode__close" (click)="closeMarkPresent()" aria-label="Close">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+      <p class="passcode__sub">
+        {{ course.live_session?.title ?? course.title }}
+        @if (course.live_session?.time_from) { · {{ formatMeridiemTime(course.live_session?.time_from ?? null) }} }
+      </p>
+
+      <form (submit)="$event.preventDefault(); submitPasscode()">
+        <label class="passcode__label" id="passcode-otp-label">
+          {{ 'feature.profile.sidebar.passcode_label' | translate }}
+        </label>
+
+        <!-- OTP-style digit boxes — one input per character (mobile S-06 flow). -->
+        <div class="otp" role="group" aria-labelledby="passcode-otp-label" (paste)="onOtpPaste($event)">
+          @for (digit of otpDigits(); track $index) {
+            <input
+              type="text"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              maxlength="1"
+              class="otp__box"
+              [class.is-error]="markError()"
+              [value]="digit"
+              [attr.aria-label]="'feature.profile.sidebar.passcode_digit' | translate: { position: $index + 1 }"
+              (input)="onOtpInput($index, $event)"
+              (keydown)="onOtpKeydown($index, $event)"
+            />
+          }
+        </div>
+
+        @if (markError(); as err) {
+          <p class="passcode__error"><i class="pi pi-exclamation-circle"></i> {{ err }}</p>
+        }
+        <button
+          type="submit"
+          class="passcode__submit"
+          [disabled]="passcode().length < PASSCODE_LENGTH || marking()"
+        >
+          {{ (marking() ? 'common.loading' : 'feature.profile.sidebar.mark_present') | translate }}
+        </button>
+      </form>
+    </div>
+  </div>
+}
+
+@if (calDays().length) {
+  <!-- "This week" time-grid calendar (Figma 841:42118). -->
+  <div class="side-card side-card--cal">
+    <div class="cal__hdr">
+      <p class="cal__title">{{ 'feature.profile.sidebar.this_week' | translate }}</p>
+      @if (weekRange(); as r) {
+        <span class="cal__range">{{ r.start | date: 'MMM d' }} – {{ r.end | date: 'd, y' }}</span>
+      }
+    </div>
+
+    <div class="cal__body">
+      <!-- Day headers: GMT gutter + one column per day. -->
+      <div class="cal__days" [style.gridTemplateColumns]="calColumns()">
+        <span class="cal__gmt">{{ gmtLabel }}</span>
+        @for (day of calDays(); track day.date) {
+          <div class="cal__day-hdr">
+            <span class="cal__dow">{{ day.date | date: 'EEE' }}</span>
+            <span class="cal__daynum" [class.is-today]="day.isToday">{{ day.date | date: 'd' }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- Hour grid: time gutter + day columns with positioned events. -->
+      <div class="cal__grid" [style.gridTemplateColumns]="calColumns()" [style.height.px]="axis().hours.length * HOUR_PX">
+        <div class="cal__times">
+          @for (h of axis().hours; track h) {
+            <div class="cal__time">{{ hourLabel(h) }}</div>
+          }
+        </div>
+        @for (day of calDays(); track day.date) {
+          <div class="cal__col">
+            @for (h of axis().hours; track h) {
+              <div class="cal__slot"></div>
+            }
+            @for (s of day.sessions; track s.id) {
+              <div
+                class="cal__event"
+                [class.is-active]="s.status === 'active'"
+                [class.is-upcoming]="s.status !== 'active'"
+                [style.top.px]="eventTop(s)"
+                [style.height.px]="eventHeight(s)"
+              >
+                <span class="cal__event-title">{{ s.course_title || s.title }}</span>
+                @if (s.time_from) {
+                  <span class="cal__event-time">
+                    {{ formatChipTime(s.time_from) }}@if (s.time_to) {–{{ formatChipTime(s.time_to) }}}
+                    @if (s.status === 'active') { · {{ 'feature.profile.sidebar.live_now' | translate }} }
+                  </span>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="cal__legend">
+        <span class="cal__legend-item"><i class="cal__legend-dot is-active"></i>{{ 'feature.profile.sidebar.legend_active' | translate }}</span>
+        <span class="cal__legend-item"><i class="cal__legend-dot is-upcoming"></i>{{ 'feature.profile.sidebar.legend_upcoming' | translate }}</span>
+      </div>
+    </div>
+  </div>
 }
 
 @if (attendanceCourse(); as course) {
@@ -55,8 +183,20 @@
                 <span class="att-list__date">{{ s.session_date | date: 'mediumDate' }}</span>
               }
             </span>
-            <span class="att-list__status" [class.is-present]="s.attended" [class.is-absent]="!s.attended">
-              {{ (s.attended ? 'feature.profile.sidebar.present' : 'feature.profile.sidebar.absent') | translate }}
+            <span
+              class="att-list__status"
+              [class.is-present]="s.attended"
+              [class.is-absent]="!s.attended && !sessionIsUpcoming(s)"
+              [class.is-upcoming]="!s.attended && sessionIsUpcoming(s)"
+            >
+              {{
+                (s.attended
+                  ? 'feature.profile.sidebar.present'
+                  : sessionIsUpcoming(s)
+                    ? 'feature.profile.sidebar.session_upcoming'
+                    : 'feature.profile.sidebar.absent'
+                ) | translate
+              }}
             </span>
           </li>
         }

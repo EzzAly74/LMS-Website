@@ -337,14 +337,28 @@ $bp-mobile: 900px;
   }
 }
 
-// — Mobile static headline (Figma 1742:48092 — no typewriter nodes) —
+// — Mobile typewriter headline (Figma 1742:48092) — reuses the desktop
+// .hero__line/.hero__caret reveal mechanism at the mobile 32px type scale.
 .hero__headline-mobile {
   margin: 0;
-  font-size: 32px;
-  line-height: var(--font-height-2xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary-1000);
   inline-size: 100%;
+
+  .hero__line {
+    block-size: var(--font-height-2xl); // 38.8px
+    font-size: 32px;
+    letter-spacing: -0.64px; // scaled from desktop's -1.08px at 54px
+  }
+
+  .hero__line--2 {
+    margin-block-start: 2px;
+  }
+
+  .hero__caret {
+    top: 4.36px;
+    block-size: 26.24px;
+  }
 }
 
 .hero__headline-mobile-em {
@@ -721,9 +735,28 @@ $bp-mobile: 900px;
   }
 }
 
+// Pure DOM markers for relocating the player to <body> when expanded (see
+// syncVideoPortal()) — neither should affect layout or consume flex gap.
+.video-anchor {
+  display: none;
+}
+
+.player__portal {
+  display: contents;
+}
+
 // — 3a. Video player (spec §4a). Sized off the Figma 1120x630 player; the
 // overlay scales with the player width via container-query units so the
 // 390px mobile frame reproduces Figma's 0.32x-scaled controls exactly. —
+// Lightbox backdrop shown behind the expanded player (spec: click outside
+// or Escape closes the expanded view — see closeVideoExpanded()/onEscapeKey()).
+.player__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(8, 9, 13, 0.85);
+}
+
 .player {
   position: relative;
   inline-size: 100%;
@@ -733,6 +766,22 @@ $bp-mobile: 900px;
   border-radius: 24px;
   overflow: hidden;
   container-type: inline-size;
+
+  &.is-expanded {
+    position: fixed;
+    z-index: 201;
+    // Physical left/top on purpose: centering via translate(-50%, -50%) is a
+    // geometric operation, not a logical one. inset-inline-start would flip
+    // to "right" under RTL while translate's -50% stays a physical leftward
+    // shift, pushing the player off-screen instead of centering it.
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    inline-size: min(92vw, 1400px);
+    max-inline-size: none;
+    border-radius: 12px;
+    box-shadow: var(--elevation-shadow-lg);
+  }
 
   @media (max-width: $bp-mobile) {
     border-width: 0.32px;
@@ -851,6 +900,16 @@ $bp-mobile: 900px;
 .player__controls-left {
   display: flex;
   gap: 0.7143cqw; // 8px
+}
+
+.player__controls-right {
+  display: flex;
+  gap: 0.7143cqw; // 8px
+
+  .pi {
+    font-size: 2.1428cqw; // 24px @1120, matches the other 50%-of-48px glyphs
+    color: var(--color-essential-primary);
+  }
 }
 
 .player__btn {
@@ -1052,7 +1111,7 @@ $bp-mobile: 900px;
 .roles__switcher {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .roles__label {
@@ -2189,6 +2248,11 @@ $bp-mobile: 900px;
     box-shadow: $shadow-small;
   }
 
+  &:hover:not(.is-open) {
+    background: var(--color-essential-primary);
+    border-color: var(--color-primary-700);
+  }
+
   @media (max-width: $bp-mobile) {
     padding: 16px;
 
@@ -2573,6 +2637,17 @@ $cta-settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
     translate: 40px 0;
   }
 }
+// Idle loop the settled shapes drift into once their entrance completes —
+// keeps the CTA band alive instead of freezing in its final pose.
+@keyframes cta-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -10px;
+  }
+}
 
 // The outline pill fades + settles in; the solid shapes drift and are visible
 // at rest (they only ever sit off in the margins before the section reveals).
@@ -2582,33 +2657,49 @@ $cta-settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
 .cta.is-live {
   .cta__shape--diamond {
-    animation: cta-drift-in-out 2000ms $cta-drift-ease 77ms both;
+    animation:
+      cta-drift-in-out 2000ms $cta-drift-ease 77ms both,
+      cta-float 4200ms ease-in-out 2077ms infinite;
   }
   .cta__shape--circle-lg {
-    animation: cta-drift-in-out 2000ms $cta-drift-ease 252ms both;
+    animation:
+      cta-drift-in-out 2000ms $cta-drift-ease 252ms both,
+      cta-float 4600ms ease-in-out 2252ms infinite;
   }
   .cta__shape--circle-sm {
-    animation: cta-drift-in-out 2000ms $cta-drift-ease 529ms both;
+    animation:
+      cta-drift-in-out 2000ms $cta-drift-ease 529ms both,
+      cta-float 3800ms ease-in-out 2529ms infinite;
   }
   .cta__shape--ellipse {
-    animation: cta-drift-in-out 2000ms $cta-drift-ease 400ms both;
+    animation:
+      cta-drift-in-out 2000ms $cta-drift-ease 400ms both,
+      cta-float 4400ms ease-in-out 2400ms infinite;
   }
   .cta__shape--outline {
     animation: cta-settle-pill 1700ms $cta-settle-ease 400ms both;
   }
   .cta__shape--rect {
-    animation: cta-rect-drift 2813ms $cta-drift-ease both;
+    animation:
+      cta-rect-drift 2813ms $cta-drift-ease both,
+      cta-float 5000ms ease-in-out 2813ms infinite;
   }
 
   // Mobile accents drift with the same rhythm.
   .cta__shape--m-diamond {
-    animation: cta-drift-in-out 2000ms $cta-drift-ease 77ms both;
+    animation:
+      cta-drift-in-out 2000ms $cta-drift-ease 77ms both,
+      cta-float 4200ms ease-in-out 2077ms infinite;
   }
   .cta__shape--m-circle {
-    animation: cta-drift-in-out 2000ms $cta-drift-ease 252ms both;
+    animation:
+      cta-drift-in-out 2000ms $cta-drift-ease 252ms both,
+      cta-float 4600ms ease-in-out 2252ms infinite;
   }
   .cta__shape--m-rect {
-    animation: cta-rect-drift 2813ms $cta-drift-ease both;
+    animation:
+      cta-rect-drift 2813ms $cta-drift-ease both,
+      cta-float 5000ms ease-in-out 2813ms infinite;
   }
 }
 

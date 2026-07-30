@@ -1,0 +1,166 @@
+<div class="msg" (appClickOutside)="close()">
+  @if (open()) {
+  <div class="msg-panel" role="dialog" [class.msg-panel--detail]="detailOpen()">
+    <div class="msg-cols">
+      <!-- ══ LEFT: header + filters + conversation list ══ -->
+      <div class="msg-left">
+        <div class="msg-phdr">
+          <span class="msg-phdr__title">{{ 'feature.messages.title' | translate }}</span>
+          <button type="button" class="msg-iconbtn" (click)="close()" aria-label="Close">
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
+
+        <div class="msg-filters">
+          @for (t of tabs; track t) {
+          <button type="button" class="msg-pill" [class.is-active]="tab() === t" (click)="setTab(t)">
+            {{ 'feature.messages.tabs.' + t | translate }}
+          </button>
+          }
+        </div>
+
+        <div class="msg-list">
+          @if (loadingList()) {
+          <p class="msg-muted">{{ 'common.loading' | translate }}</p>
+          } @else if (conversations().length === 0) {
+          <div class="msg-empty msg-empty--sm">
+            <img class="empty-state__icon" src="assets/shared/empty-state.svg" alt="Empty State" aria-hidden="true" />
+            <p>{{ 'feature.messages.empty' | translate }}</p>
+          </div>
+          } @else {
+          @for (c of conversations(); track c.id) {
+          <button type="button" class="msg-row" [class.is-active]="c.id === activeId()" (click)="openConversation(c)">
+            <app-avatar class="msg-row__av" [name]="c.counterpart.name" [image]="c.counterpart.image" [size]="40"
+              tone="primary-500" />
+            <div class="msg-row__info">
+              <div class="msg-row__namerow">
+                <span class="msg-row__name">{{ c.counterpart.name }}</span>
+                @if (c.counterpart.role === 'admins') {
+                <span class="msg-role">{{ 'feature.messages.tabs.admins' | translate }}</span>
+                }
+              </div>
+              @if (c.last_message; as lm) {
+              <span class="msg-row__preview">{{ lm.body }}</span>
+              }
+            </div>
+            <div class="msg-row__meta">
+              <span class="msg-row__time">{{ c.last_message_at | date: 'MMM d' }}</span>
+              @if (c.unread_count > 0) {
+              <span class="msg-row__dot" [attr.aria-label]="c.unread_count"></span>
+              }
+            </div>
+          </button>
+          }
+          }
+        </div>
+
+        <!-- New Message CTA (Figma 994-53546 bottom action). -->
+        <div class="msg-newrow">
+          <button type="button" class="msg-newbtn" (click)="openCompose()">
+            {{ 'feature.messages.new_message' | translate }} <i class="pi pi-plus-circle"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ RIGHT: thread / compose / empty ══ -->
+      <div class="msg-right">
+        @if (composing()) {
+        <div class="msg-backrow">
+          <button type="button" class="msg-backbtn" (click)="back()">
+            <i class="pi pi-arrow-left"></i> {{ 'feature.messages.back' | translate }}
+          </button>
+        </div>
+        @if (selectedRecipient(); as r) {
+        <div class="msg-compose-to">
+          <app-avatar [name]="r.name" [image]="r.image" [size]="36" tone="primary-500" />
+          <div class="msg-rhead__text">
+            <span class="msg-rhead__name">{{ r.name }}</span>
+            @if (r.course_title) { <span class="msg-rhead__sub">{{ r.course_title }}</span> }
+          </div>
+        </div>
+        <div class="msg-thread"></div>
+        <form class="msg-composer" (submit)="$event.preventDefault(); startConversation()">
+          <input type="text" class="msg-composer__input" [placeholder]="'feature.messages.write' | translate"
+            [value]="draft()" (input)="draft.set($any($event.target).value)" />
+          <button type="submit" class="msg-composer__send" [disabled]="!draft().trim() || sending()"
+            aria-label="Send"><i class="pi pi-send"></i></button>
+        </form>
+        } @else {
+        <div class="msg-picklist">
+          @if (recipientGroups().length === 0) {
+          <div class="msg-empty"><i class="pi pi-users"></i>
+            <p>{{ 'feature.messages.no_recipients' | translate }}</p>
+          </div>
+          } @else {
+          @for (group of recipientGroups(); track group.role) {
+          <div class="msg-group">
+            <span class="msg-group__title">{{ group.labelKey | translate }}</span>
+            @for (r of group.items; track r.recipient_type + '-' + r.recipient_id) {
+            <button type="button" class="msg-row" (click)="pickRecipient(r)">
+              <app-avatar class="msg-row__av" [name]="r.name" [image]="r.image" [size]="40" tone="primary-500" />
+              <div class="msg-row__info">
+                <span class="msg-row__name">{{ r.name }}</span>
+              </div>
+              <i class="pi pi-chevron-right msg-row__chev"></i>
+            </button>
+            }
+          </div>
+          }
+          }
+        </div>
+        }
+        } @else if (thread()) {
+        @let t = thread()!;
+        <div class="msg-backrow msg-backrow--mobile">
+          <button type="button" class="msg-backbtn" (click)="back()">
+            <i class="pi pi-arrow-left"></i> {{ 'feature.messages.back' | translate }}
+          </button>
+        </div>
+        <div class="msg-rhdr">
+          <app-avatar [name]="t.conversation.counterpart.name" [image]="t.conversation.counterpart.image" [size]="36"
+            tone="primary-500" />
+          <div class="msg-rhead__text">
+            <span class="msg-rhead__name">{{ t.conversation.counterpart.name }}</span>
+            @if (t.conversation.subject || t.conversation.course) {
+            <span class="msg-rhead__sub">{{ t.conversation.subject ?? t.conversation.course?.title }}</span>
+            }
+          </div>
+        </div>
+
+        <div class="msg-thread">
+          @if (loadingThread()) {
+          <p class="msg-muted">{{ 'common.loading' | translate }}</p>
+          } @else {
+          @for (m of t.messages; track m.id) {
+          <div class="msg-bubble" [class.is-mine]="m.mine">
+            <p class="msg-bubble__body">{{ m.body }}</p>
+            <span class="msg-bubble__time">{{ m.created_at | date: 'shortTime' }}</span>
+          </div>
+          }
+          }
+        </div>
+
+        <form class="msg-composer" (submit)="$event.preventDefault(); send()">
+          <input type="text" class="msg-composer__input" [placeholder]="'feature.messages.write' | translate"
+            [value]="draft()" (input)="draft.set($any($event.target).value)" />
+          <button type="submit" class="msg-composer__send" [disabled]="!draft().trim() || sending()"
+            aria-label="Send"><i class="pi pi-send"></i></button>
+        </form>
+        } @else {
+        <div class="msg-empty msg-empty--pane">
+          <i class="pi pi-envelope"></i>
+          <p>{{ 'feature.messages.select_conversation' | translate }}</p>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
+
+  <button type="button" class="msg-fab" (click)="toggle()" [attr.aria-label]="'feature.messages.title' | translate">
+    <i class="pi" [class.pi-envelope]="!open()" [class.pi-times]="open()"></i>
+    @if (unread() > 0 && !open()) {
+    <span class="msg-fab__badge">{{ unread() }}</span>
+    }
+  </button>
+</div>

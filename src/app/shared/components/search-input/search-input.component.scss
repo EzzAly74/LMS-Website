@@ -35,5 +35,10 @@
     &::placeholder {
       color: var(--color-neutral-700);
     }
+
+    // Figma review (responsive Catalogue/Blogs): search text should be 12px.
+    @media (max-width: 900px) {
+      @include typography('caption', 'regular');
+    }
   }
 }

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import { ApiService } from '../../../core/services/api.service';
 import { removeNullFilterProperties } from '../../../shared/utils/remove-null-filter-properties';
-import { BlogDetail, BlogJobTitle, BlogListItem, BlogScope, BlogsQuery } from '../models/blog.models';
+import { BlogDetail, BlogJobTitle, BlogListItem, BlogLoveResult, BlogScope, BlogsQuery } from '../models/blog.models';
 
 /**
  * Public blog API. Reads the SEO-facing endpoints (`/api/v1/blogs`); the
@@ -28,6 +28,11 @@ export class BlogsService {
 
   getRelated(slug: string): Observable<ApiResponse<BlogListItem[]>> {
     return this.api.get<BlogListItem[]>(`blogs/${slug}/related`);
+  }
+
+  /** Toggle the signed-in learner's "love" on a blog (auth required). */
+  toggleLove(slug: string): Observable<ApiResponse<BlogLoveResult>> {
+    return this.api.post<BlogLoveResult>(`blogs/${slug}/like`, {});
   }
 
   /**

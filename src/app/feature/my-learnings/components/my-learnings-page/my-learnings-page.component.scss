@@ -94,6 +94,14 @@
     border-radius: var(--radius-control-sm);
     box-shadow: var(--elevation-shadow-md);
     color: var(--color-essential-tertiary);
+    transition:
+      background-color 0.2s ease-in-out,
+      color 0.2s ease-in-out;
     @include typography('button-small', 'medium');
+
+    &:hover {
+      background: var(--color-essential-tertiary);
+      color: var(--color-neutral-0);
+    }
   }
 }

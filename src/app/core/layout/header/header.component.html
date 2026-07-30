@@ -27,14 +27,37 @@
     </nav>
 
     <div class="app-nav__actions">
-      <button
-        type="button"
+      <div
         class="app-nav__lang"
-        (click)="toggleLanguage()"
-        [attr.aria-label]="'core.nav.language' | translate"
+        appClickOutside
+        (appClickOutside)="closeLangMenu()"
       >
-        <i class="pi pi-globe"></i>
-      </button>
+        <button
+          type="button"
+          class="app-nav__lang-trigger"
+          (click)="toggleLangMenu()"
+          [attr.aria-expanded]="isLangMenuOpen()"
+          [attr.aria-label]="'core.nav.language' | translate"
+        >
+          <i class="pi pi-globe"></i>
+        </button>
+
+        @if (isLangMenuOpen()) {
+          <div class="app-nav__lang-menu" role="menu">
+            @for (lang of languages; track lang) {
+              <button
+                type="button"
+                role="menuitem"
+                class="app-nav__lang-option"
+                [class.is-active]="language.current() === lang"
+                (click)="setLanguage(lang)"
+              >
+                {{ "core.language." + lang | translate }}
+              </button>
+            }
+          </div>
+        }
+      </div>
 
       @if (auth.isAuthenticated()) {
         <app-notification-bell />

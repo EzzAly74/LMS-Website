@@ -127,16 +127,4 @@
     white-space: nowrap;
   }
 
-  &__read {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-17xs);
-    flex-shrink: 0;
-    @include typography("caption", "regular");
-    color: var(--color-neutral-800);
-
-    i {
-      font-size: 14px;
-    }
-  }
 }

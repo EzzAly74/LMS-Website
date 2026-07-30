@@ -59,6 +59,16 @@ export interface BlogDetail extends BlogListItem {
   qualification_skill_ids: number[];
   author_bio: BlogAuthorBio | null;
   sections: BlogSection[];
+  /** Total "loves" on this blog. */
+  love_count: number;
+  /** Whether the signed-in reader has loved it (always false for guests). */
+  loved: boolean;
+}
+
+/** Result of the love toggle (POST blogs/{slug}/like). */
+export interface BlogLoveResult {
+  loved: boolean;
+  love_count: number;
 }
 
 export interface BlogsQuery {

@@ -1,4 +1,13 @@
 <article class="course-card">
+  <!-- Stretched link: makes the whole card clickable while the CTA button
+       below stays independently clickable (Figma review: "whole frame
+       should be clickable" — nested <a><button> would be invalid HTML). -->
+  <a
+    class="course-card__stretched-link"
+    [routerLink]="[detailRoute, course.id]"
+    [attr.aria-label]="course.title"
+  ></a>
+
   <a class="course-card__media" [class.course-card__media--placeholder]="!course.image" [routerLink]="[detailRoute, course.id]">
     @if (course.image) {
       <img class="course-card__image" [src]="course.image" [alt]="course.title" loading="lazy" />

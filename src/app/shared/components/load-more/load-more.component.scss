@@ -14,10 +14,19 @@
     border: var(--stroke-width-default) solid var(--color-essential-tertiary);
     border-radius: var(--radius-control-sm);
     color: var(--color-essential-tertiary);
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease-in-out,
+      color 0.2s ease-in-out;
     @include typography('button', 'medium');
 
     &:disabled {
       opacity: var(--opacity-disabled);
+    }
+
+    &:not(:disabled):hover {
+      background: var(--color-essential-tertiary);
+      color: var(--color-neutral-0);
     }
   }
 

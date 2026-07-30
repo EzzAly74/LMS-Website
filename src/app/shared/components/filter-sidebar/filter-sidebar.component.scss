@@ -126,7 +126,7 @@
   }
 
   &__option-count {
-    @include typography('minimum-size', 'regular');
+    @include typography('caption', 'regular');
     color: var(--color-primary-700);
     background: var(--color-neutral-300);
     border-radius: var(--radius-full);

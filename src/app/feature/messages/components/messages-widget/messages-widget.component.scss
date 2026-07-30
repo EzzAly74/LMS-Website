@@ -1,0 +1,508 @@
+@use "mixins" as *;
+
+.msg {
+  position: fixed;
+  inset-inline-end: 24px;
+  inset-block-end: 24px;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-13xs);
+}
+
+/* ── FAB ─────────────────────────────────────────────────── */
+.msg-fab {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-700);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(12, 36, 39, 0.28);
+  font-size: 20px;
+
+  &__badge {
+    position: absolute;
+    top: -2px;
+    inset-inline-end: -2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-pill);
+    background: var(--color-status-warning-500);
+    color: #fff;
+    @include typography("minimum-size", "bold");
+  }
+}
+
+/* ── Panel (two-pane, Figma 841-43119: 677×390) ──────────── */
+.msg-panel {
+  width: 677px;
+  max-width: calc(100vw - 48px);
+  height: 440px;
+  max-height: calc(100vh - 120px);
+  background: var(--color-neutral-0);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-md);
+  box-shadow:
+    0 15px 35px rgba(103, 110, 118, 0.18),
+    0 5px 15px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.msg-cols {
+  display: flex;
+  height: 100%;
+}
+
+/* ── Left column ─────────────────────────────────────────── */
+.msg-left {
+  display: flex;
+  flex-direction: column;
+  width: 339px;
+  flex-shrink: 0;
+  border-inline-end: var(--stroke-width-default) solid var(--color-neutral-400);
+}
+
+.msg-phdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 57px;
+  padding: 0 var(--spacing-11xs);
+  border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
+
+  &__title {
+    @include typography("subtitle", "bold");
+    color: var(--color-essential-secondary);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+  }
+}
+
+.msg-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--color-neutral-700);
+  cursor: pointer;
+  border-radius: var(--radius-control-sm);
+
+  &:hover {
+    background: var(--color-neutral-300);
+  }
+
+  &--accent {
+    color: var(--color-primary-700);
+  }
+}
+
+/* ── Filter pills ────────────────────────────────────────── */
+.msg-filters {
+  display: flex;
+  gap: var(--spacing-15xs);
+  padding: var(--spacing-13xs) var(--spacing-11xs);
+}
+
+.msg-pill {
+  height: 32px;
+  padding: 0 var(--spacing-13xs);
+  background: var(--color-essential-primary);
+  border: var(--stroke-width-default) solid var(--color-neutral-500);
+  border-radius: var(--radius-control-lg);
+  color: var(--color-neutral-700);
+  cursor: pointer;
+  @include typography("caption", "medium");
+
+  &.is-active {
+    background: var(--color-essential-tertiary);
+    border-color: var(--color-essential-tertiary);
+    color: var(--color-essential-primary);
+  }
+}
+
+/* ── Conversation / picker rows ──────────────────────────── */
+.msg-list,
+.msg-picklist {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.msg-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-14xs);
+  width: 100%;
+  padding: var(--spacing-13xs) var(--spacing-11xs);
+  border: none;
+  border-top: var(--stroke-width-default) solid var(--color-neutral-300);
+  background: transparent;
+  cursor: pointer;
+  text-align: start;
+
+  &:first-child {
+    border-top: none;
+  }
+
+  &:hover,
+  &.is-active {
+    background: var(--color-primary-100);
+  }
+
+  &__av {
+    flex-shrink: 0;
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__namerow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-15xs);
+  }
+
+  &__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    @include typography("body-small", "bold");
+    color: var(--color-essential-secondary);
+  }
+
+  &__preview {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    @include typography("caption", "regular");
+    color: var(--color-neutral-700);
+  }
+
+  &__meta {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--spacing-16xs);
+    align-self: flex-start;
+  }
+
+  &__time {
+    @include typography("minimum-size", "regular");
+    color: var(--color-neutral-700);
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-pill);
+    background: var(--color-status-success-500);
+  }
+
+  &__chev {
+    flex-shrink: 0;
+    color: var(--color-neutral-600);
+  }
+}
+
+/* Recipient picker section (Instructors / Super Admins). */
+.msg-group {
+  display: flex;
+  flex-direction: column;
+
+  &__title {
+    padding: var(--spacing-15xs) var(--spacing-11xs);
+    background: var(--color-neutral-300);
+    color: var(--color-neutral-800);
+    text-transform: uppercase;
+    @include typography("minimum-size", "bold");
+  }
+}
+
+.msg-role {
+  flex-shrink: 0;
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--color-neutral-300);
+  color: var(--color-neutral-800);
+  @include typography("minimum-size", "medium");
+}
+
+/* ── Right column (thread / compose / empty) ─────────────── */
+.msg-right {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.msg-rhdr {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-15xs);
+  padding: var(--spacing-13xs) var(--spacing-11xs);
+  border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
+
+  &__title {
+    @include typography("subtitle", "bold");
+    color: var(--color-essential-secondary);
+  }
+
+  &__back {
+    display: none; // mobile only
+  }
+}
+
+.msg-rhead__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.msg-rhead__name {
+  @include typography("body-small", "bold");
+  color: var(--color-essential-secondary);
+}
+
+.msg-rhead__sub {
+  @include typography("minimum-size", "regular");
+  color: var(--color-neutral-700);
+}
+
+.msg-compose-to {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-15xs);
+  padding: var(--spacing-13xs) var(--spacing-11xs);
+  border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
+}
+
+/* "New Message" CTA at the bottom of the conversation list (Figma 994-53546). */
+.msg-newrow {
+  padding: var(--spacing-13xs) var(--spacing-11xs);
+  border-top: var(--stroke-width-default) solid var(--color-neutral-400);
+}
+
+.msg-newbtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-15xs);
+  width: 100%;
+  height: 44px;
+  border: none;
+  border-radius: var(--radius-control-sm);
+  background: var(--color-essential-tertiary);
+  color: var(--color-essential-primary);
+  cursor: pointer;
+  transition: background-color 0.25s ease-in-out;
+  @include typography("button", "medium");
+
+  &:hover {
+    background: var(--color-primary-700);
+  }
+}
+
+/* "← Back to Messages" pill (Figma 994-53788). */
+.msg-backrow {
+  padding: var(--spacing-13xs) var(--spacing-11xs);
+  border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
+
+  &--mobile {
+    display: none; // desktop keeps the list beside the thread
+  }
+}
+
+.msg-backbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-16xs);
+  padding: var(--spacing-16xs) var(--spacing-13xs);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-control-sm);
+  background: var(--color-neutral-300);
+  color: var(--color-essential-secondary);
+  cursor: pointer;
+  @include typography("caption", "medium");
+}
+
+/* ── Thread ──────────────────────────────────────────────── */
+.msg-thread {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-14xs);
+  padding: var(--spacing-11xs);
+}
+
+.msg-bubble {
+  max-width: 80%;
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--spacing-15xs) var(--spacing-13xs);
+  border-radius: var(--radius-container-md);
+  background: var(--color-neutral-300);
+
+  &__body {
+    @include typography("body-small", "regular");
+    color: var(--color-essential-secondary);
+  }
+
+  &__time {
+    align-self: flex-end;
+    @include typography("minimum-size", "regular");
+    color: var(--color-neutral-700);
+  }
+
+  /* Outgoing: light-teal bubble, dark text (Figma 841-43294). */
+  &.is-mine {
+    align-self: flex-end;
+    background: #d6efed;
+
+    .msg-bubble__body {
+      color: var(--color-essential-secondary);
+    }
+  }
+}
+
+/* ── Composer ────────────────────────────────────────────── */
+.msg-composer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-15xs);
+  padding: var(--spacing-13xs) var(--spacing-11xs);
+  border-top: var(--stroke-width-default) solid var(--color-neutral-400);
+
+  &__input {
+    flex: 1;
+    min-width: 0;
+    height: 40px;
+    padding: 0 var(--spacing-13xs);
+    border: var(--stroke-width-default) solid var(--color-neutral-400);
+    border-radius: var(--radius-pill);
+    @include typography("body-small", "regular");
+    color: var(--color-essential-secondary);
+    background: #fff;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary-500);
+    }
+  }
+
+  &__send {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary-700);
+    color: #fff;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: var(--opacity-disabled);
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* ── Empty / muted states ────────────────────────────────── */
+.msg-muted {
+  padding: var(--spacing-11xs);
+  @include typography("body-small", "regular");
+  color: var(--color-neutral-700);
+}
+
+.msg-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-15xs);
+  color: var(--color-neutral-600);
+  text-align: center;
+
+  i {
+    font-size: 28px;
+  }
+
+  .empty-state__icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  p {
+    @include typography("caption", "regular");
+  }
+
+  &--pane,
+  &--sm {
+    flex: 1;
+    padding: var(--spacing-9xs);
+  }
+
+  &--pane i {
+    font-size: 32px;
+  }
+}
+
+/* ── Mobile: single pane at a time (Figma 994-53546 / 994-53788) ── */
+@media (max-width: 700px) {
+  .msg-panel {
+    width: calc(100vw - 24px);
+    height: calc(100dvh - 150px);
+  }
+
+  .msg-left {
+    width: 100%;
+    border-inline-end: none;
+  }
+
+  .msg-right {
+    display: none;
+  }
+
+  .msg-panel--detail {
+    .msg-left {
+      display: none;
+    }
+    .msg-right {
+      display: flex;
+    }
+    .msg-backrow--mobile {
+      display: block;
+    }
+  }
+}

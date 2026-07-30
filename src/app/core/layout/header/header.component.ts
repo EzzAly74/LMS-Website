@@ -45,19 +45,25 @@ export class HeaderComponent {
   protected readonly routes = LmsRoutes;
   protected readonly languages = [AppLanguage.En, AppLanguage.Ar];
   protected readonly isProfileMenuOpen = signal(false);
+  protected readonly isLangMenuOpen = signal(false);
   protected readonly isMobileMenuOpen = signal(false);
   /** Mobile menu: Languages accordion expanded (Figma chevron state). */
   protected readonly isLangExpanded = signal(false);
   /** Mobile menu: the full-screen notifications view is showing. */
   protected readonly isMobileNotifOpen = signal(false);
 
-  protected toggleLanguage(): void {
-    this.language.toggle();
-  }
-
   protected setLanguage(lang: AppLanguage): void {
     this.language.use(lang);
     this.isLangExpanded.set(false);
+    this.isLangMenuOpen.set(false);
+  }
+
+  protected toggleLangMenu(): void {
+    this.isLangMenuOpen.update((open) => !open);
+  }
+
+  protected closeLangMenu(): void {
+    this.isLangMenuOpen.set(false);
   }
 
   protected toggleLangExpanded(): void {

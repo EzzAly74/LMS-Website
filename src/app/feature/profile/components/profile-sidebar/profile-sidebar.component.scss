@@ -16,9 +16,15 @@
   border-radius: var(--radius-container-md);
   box-shadow: var(--elevation-shadow-sm);
 
+  // Active Session card (Figma 839:43221): white surface, header divider, and
+  // section-controlled padding — so it overrides the default card's uniform
+  // padding/gap.
   &--session {
-    background: var(--color-primary-100);
-    border-color: var(--color-primary-200);
+    gap: 0;
+    padding: 0 0 var(--spacing-11xs);
+    background: var(--color-essential-primary);
+    border-color: var(--color-neutral-400);
+    overflow: hidden;
   }
 
   &--empty {
@@ -58,48 +64,65 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-16xs);
-    padding: var(--spacing-14xs);
+    gap: var(--spacing-15xs);
+    height: 36px;
+    padding: var(--spacing-15xs) var(--spacing-13xs);
     border-radius: var(--radius-control-sm);
     background: var(--color-essential-tertiary);
     color: var(--color-essential-primary);
-    @include typography('button-small', 'medium');
+    box-shadow: var(--elevation-shadow-sm);
+    @include typography('body-small', 'medium');
+  }
+
+  &__cta-icon {
+    width: 14px;
+    height: 17px;
+    flex-shrink: 0;
   }
 }
 
+/* ── Active Session card sections (Figma 839:43221) ──────── */
 .session {
   display: flex;
   align-items: center;
-  gap: var(--spacing-14xs);
+  gap: var(--spacing-13xs);
+  padding: var(--spacing-13xs) var(--spacing-11xs);
 
+  // Header row with its own bottom divider.
+  &__hdr {
+    padding: var(--spacing-12xs) var(--spacing-11xs);
+    border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
+  }
+
+  // Month-over-day, no background box (Figma).
   &__date {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-control-md);
-    background: var(--color-essential-primary);
-  }
-
-  &__day {
-    @include typography('subtitle', 'bold');
-    color: var(--color-primary-700);
+    min-width: 30px;
   }
 
   &__mon {
-    @include typography('minimum-size', 'medium');
+    @include typography('minimum-size', 'bold');
     color: var(--color-neutral-700);
     text-transform: uppercase;
   }
 
+  &__day {
+    @include typography('h1-small', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
   &__info {
+    flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
   }
 
   &__name {
-    @include typography('body-small', 'bold');
+    @include typography('body-small', 'medium');
     color: var(--color-essential-secondary);
   }
 
@@ -108,9 +131,23 @@
     color: var(--color-neutral-800);
   }
 
-  &__live {
-    color: var(--color-status-success);
-    font-weight: var(--font-weight-bold);
+  // Live indicator — solid green dot (Figma status/success/500 = #0fb86a).
+  &__dot {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-pill);
+    background: var(--color-status-success);
+  }
+
+  // Button sits inset 24px from the card edges (Figma px-24).
+  &__action {
+    padding: 0 var(--spacing-7xs);
+
+    .side-card__cta,
+    .side-card__done {
+      width: 100%;
+    }
   }
 }
 
@@ -159,6 +196,11 @@
       background: var(--color-status-warning-08);
       color: var(--color-status-warning);
     }
+
+    &.is-upcoming {
+      background: var(--color-neutral-100);
+      color: var(--color-neutral-700);
+    }
   }
 }
 
@@ -174,5 +216,306 @@
 
   i {
     margin-top: 1px;
+  }
+}
+
+/* ── Mark-as-Present CTA states ──────────────────────────── */
+.side-card__cta {
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+.side-card__done {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-16xs);
+  width: 100%;
+  padding: var(--spacing-15xs) var(--spacing-13xs);
+  border-radius: var(--radius-control-sm);
+  background: var(--color-status-success-50);
+  color: var(--color-status-success);
+  @include typography('button-small', 'medium');
+}
+
+/* ── Passcode modal (mobile S-06 flow) ───────────────────── */
+// Top-most z-index (32-bit max): a modal must clear every page layer,
+// including the fixed floating header (same convention as
+// login-required-dialog / enrolment-dialog — z-index:1000 does NOT clear it).
+.passcode-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-9xs);
+  background: rgba(12, 36, 39, 0.45);
+}
+
+.passcode {
+  width: 380px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-13xs);
+  padding: var(--spacing-9xs);
+  background: var(--color-neutral-0);
+  border-radius: var(--radius-container-md);
+  box-shadow: 0 15px 35px rgba(12, 36, 39, 0.28);
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    @include typography('h1-small', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__close {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--color-neutral-700);
+    cursor: pointer;
+    border-radius: var(--radius-control-sm);
+
+    &:hover { background: var(--color-neutral-300); }
+  }
+
+  &__sub {
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-700);
+  }
+
+  &__label {
+    @include typography('body-small', 'bold');
+    color: var(--color-essential-secondary);
+    margin-bottom: var(--spacing-15xs);
+    display: block;
+  }
+
+  &__error {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-17xs);
+    @include typography('caption', 'regular');
+    color: var(--color-status-warning-500);
+  }
+
+  &__submit {
+    width: 100%;
+    height: 44px;
+    margin-top: var(--spacing-15xs);
+    border: none;
+    border-radius: var(--radius-control-sm);
+    background: var(--color-essential-tertiary);
+    color: var(--color-essential-primary);
+    cursor: pointer;
+    @include typography('button', 'medium');
+
+    &:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
+  }
+}
+
+/* ── OTP digit boxes (Mark-as-Present passcode) ──────────── */
+.otp {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-13xs);
+
+  &__box {
+    width: 48px;
+    height: 56px;
+    padding: 0;
+    border: var(--stroke-width-default) solid var(--color-neutral-400);
+    border-radius: var(--radius-control-sm);
+    background: var(--color-neutral-0);
+    text-align: center;
+    @include typography('h1-small', 'bold');
+    color: var(--color-essential-secondary);
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary-500);
+      box-shadow: 0 0 0 3px var(--color-primary-100);
+    }
+
+    &.is-error {
+      border-color: var(--color-status-warning-500);
+    }
+  }
+}
+
+/* ── "This week" time-grid calendar (Figma 841:42118) ────── */
+.side-card--cal {
+  gap: 0;
+  padding: 0;
+  background: var(--color-essential-primary);
+  border-color: var(--color-neutral-400);
+  overflow: hidden;
+}
+
+.cal {
+  // Header: "This week" + week range, with a bottom divider.
+  &__hdr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-15xs);
+    padding: var(--spacing-13xs) var(--spacing-11xs);
+    border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
+  }
+
+  &__title {
+    @include typography('subtitle-small', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__range {
+    @include typography('caption', 'regular');
+    color: var(--color-neutral-700);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-16xs);
+    padding: var(--spacing-14xs) var(--spacing-12xs) var(--spacing-12xs);
+    overflow-x: auto;
+  }
+
+  // Day-header row: 36px GMT gutter + one column per day (grid set inline).
+  &__days {
+    display: grid;
+    gap: 2px;
+    align-items: end;
+  }
+
+  &__gmt {
+    @include typography('minimum-size', 'regular');
+    color: var(--color-neutral-700);
+    text-align: right;
+    padding: 0 4px 4px 0;
+  }
+
+  &__day-hdr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding-bottom: 4px;
+  }
+
+  &__dow {
+    @include typography('minimum-size', 'regular');
+    color: var(--color-neutral-700);
+    text-transform: uppercase;
+  }
+
+  // Day number pill — today gets the dark #0c2427 fill (Figma).
+  &__daynum {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-pill);
+    @include typography('body-small', 'medium');
+    color: var(--color-essential-secondary);
+
+    &.is-today {
+      background: var(--color-essential-tertiary);
+      color: var(--color-essential-primary);
+    }
+  }
+
+  // Hour grid: time gutter + day columns (same inline columns as the header).
+  &__grid {
+    display: grid;
+    gap: 2px;
+  }
+
+  &__times {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__time {
+    height: 40px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 2px 4px 0 0;
+    @include typography('minimum-size', 'regular');
+    color: var(--color-neutral-700);
+  }
+
+  &__col {
+    position: relative;
+  }
+
+  // Faint hour separators (Figma grey-96-2 / neutral-300 = #f5f5f5).
+  &__slot {
+    height: 40px;
+    border-bottom: var(--stroke-width-default) solid var(--color-neutral-300);
+  }
+
+  // Absolutely positioned event, sized by its start/end time.
+  &__event {
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    display: flex;
+    flex-direction: column;
+    padding: 2px 5px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: var(--color-additionally-700);
+
+    &.is-active {
+      background: var(--color-status-success);
+    }
+  }
+
+  &__event-title,
+  &__event-time {
+    @include typography('minimum-size', 'medium');
+    color: var(--color-essential-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-14xs);
+    padding-top: var(--spacing-16xs);
+  }
+
+  &__legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-16xs);
+    @include typography('minimum-size', 'regular');
+    color: var(--color-neutral-700);
+  }
+
+  &__legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-pill);
+    background: var(--color-additionally-700);
+
+    &.is-active {
+      background: var(--color-status-success);
+    }
+    &.is-upcoming {
+      background: var(--color-additionally-700);
+    }
   }
 }

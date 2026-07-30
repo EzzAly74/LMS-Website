@@ -1,8 +1,18 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 
 export interface EmptyStateConfig {
-  /** PrimeIcon class, e.g. 'pi-search'. */
-  icon: string;
+  /**
+   * PrimeIcon class, e.g. 'pi-search'. No longer rendered — every empty
+   * state now uses the shared illustration — kept optional so existing
+   * call sites don't need to change.
+   */
+  icon?: string;
   /** Already-translated title. */
   title: string;
   /** Already-translated message. */
@@ -17,13 +27,22 @@ export interface EmptyStateConfig {
   standalone: true,
   template: `
     <div class="empty-state">
-      <i class="empty-state__icon pi {{ config.icon }}"></i>
+      <img
+        class="empty-state__icon"
+        src="assets/shared/empty-state.svg"
+        alt="Empty State"
+        aria-hidden="true"
+      />
       <h2 class="empty-state__title">{{ config.title }}</h2>
       @if (config.message) {
         <p class="empty-state__message">{{ config.message }}</p>
       }
       @if (config.actionLabel) {
-        <button type="button" class="empty-state__action" (click)="action.emit()">
+        <button
+          type="button"
+          class="empty-state__action"
+          (click)="action.emit()"
+        >
           {{ config.actionLabel }}
         </button>
       }

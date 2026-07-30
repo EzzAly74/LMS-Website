@@ -3,13 +3,17 @@
 .lesson-viewer {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3xs);
+  // No gap here — "lesson-details" (&__body below) owns its own 24px top pad,
+  // so it sits flush right after the video (Figma 900:45197).
 
+  // "video-player" (Figma 900:45193): 24px corners — no existing radius token
+  // lands on 24px, so it's set directly (same pattern used elsewhere in this
+  // codebase, e.g. landing-page.component.scss).
   &__media {
     position: relative;
     height: 500px;
-    border-radius: var(--radius-container-md);
-    background: var(--color-neutral-1000);
+    border-radius: 24px;
+    background: var(--color-primary-1000);
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -26,21 +30,30 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    background: var(--color-neutral-1000);
+    background: var(--color-primary-1000);
   }
 
+  // "play-button-overlay": translucent white circle + 1px white border
+  // (Figma), not a solid white disc.
   &__play {
     width: 80px;
     height: 80px;
     border-radius: var(--radius-full);
-    background: var(--color-neutral-0);
-    border: none;
+    background: rgba(255, 255, 255, 0.13);
+    border: var(--stroke-width-default) solid var(--color-essential-primary);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--font-size-xl);
-    color: var(--color-essential-tertiary);
     cursor: pointer;
+  }
+
+  &__play-icon {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background-color: var(--color-essential-primary);
+    -webkit-mask: url('/assets/icons/course-player/play-outline.svg') center / contain no-repeat;
+    mask: url('/assets/icons/course-player/play-outline.svg') center / contain no-repeat;
   }
 
   &__file-icon {
@@ -71,34 +84,47 @@
     cursor: pointer;
   }
 
+  // "lesson-details" (Figma 900:45197): 24px top / 8px bottom pad, 16px
+  // between the text block and the completion card.
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-11xs);
+    padding: var(--spacing-7xs) 0 var(--spacing-15xs);
+  }
+
+  // "lesson-text": 10px between title-row / description / badges-row.
   &__details {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-15xs);
+    gap: var(--spacing-14xs);
   }
 
   &__heading {
     display: flex;
     align-items: center;
-    gap: var(--spacing-13xs);
+    gap: var(--spacing-15xs);
   }
 
+  // Figma renders the title in the dark teal essential-tertiary, not the
+  // near-black essential-secondary — and at H1 (24px), not H2.
   &__title {
-    @include typography("h2", "bold");
-    color: var(--color-essential-secondary);
+    @include typography("h1", "bold");
+    color: var(--color-essential-tertiary);
   }
 
+  // Content-type pill: primary-200 bg / primary-800 text (Figma), pill radius.
   &__type-tag {
-    padding: var(--spacing-17xs) var(--spacing-15xs);
-    border-radius: var(--radius-control-xs);
-    background: var(--color-neutral-300);
-    color: var(--color-neutral-800);
+    padding: 2px var(--spacing-15xs);
+    border-radius: var(--radius-pill);
+    background: var(--color-primary-200);
+    color: var(--color-primary-800);
     @include typography("caption", "medium");
   }
 
   &__description,
   &__article-body {
-    @include typography("body-small", "regular");
+    @include typography("subtitle", "regular");
     color: var(--color-neutral-800);
   }
 
@@ -109,31 +135,64 @@
   &__meta {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-3xl);
+    gap: var(--spacing-14xs);
   }
 
-  &__meta-item {
+  // Pill badges (Figma): neutral-400 "duration" pill, additionally-200
+  // "require completion" pill with additionally-800 text.
+  &__badge {
     display: inline-flex;
     align-items: center;
-    gap: var(--spacing-16xs);
-    @include typography("body-small", "regular");
-    color: var(--color-neutral-700);
+    gap: var(--spacing-17xs);
+    padding: 3px var(--spacing-14xs);
+    border-radius: var(--radius-pill);
+    @include typography("caption", "medium");
 
-    i {
-      color: var(--color-additionally-700);
+    &--duration {
+      background: var(--color-neutral-400);
+      color: var(--color-neutral-800);
+    }
+
+    &--require {
+      background: var(--color-additionally-200);
+      color: var(--color-additionally-800);
     }
   }
 
+  &__badge-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    background-color: currentColor;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+
+    &--clock {
+      -webkit-mask-image: url('/assets/icons/course-player/clock.svg');
+      mask-image: url('/assets/icons/course-player/clock.svg');
+    }
+    &--info {
+      -webkit-mask-image: url('/assets/icons/course-player/info.svg');
+      mask-image: url('/assets/icons/course-player/info.svg');
+    }
+  }
+
+  // "completion-check" card (Figma): neutral-300 fill, 12px radius, row layout.
   &__completion-card {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: var(--spacing-13xs);
-    padding: var(--spacing-14xs);
-    background: var(--color-essential-primary);
+    padding: var(--spacing-11xs) var(--spacing-9xs);
+    background: var(--color-neutral-300);
     border: var(--stroke-width-default) solid var(--color-neutral-400);
-    border-radius: var(--radius-container-md);
+    border-radius: var(--radius-container-sm);
   }
 
   &__completion-question {
@@ -146,24 +205,25 @@
     gap: var(--spacing-15xs);
   }
 
-  &__yes-btn,
-  &__complete-btn {
+  &__btn {
+    height: 36px;
     padding: var(--spacing-15xs) var(--spacing-13xs);
     border-radius: var(--radius-control-sm);
-    background: var(--color-essential-tertiary);
-    color: var(--color-essential-primary);
-    border: none;
     cursor: pointer;
-    @include typography("button", "medium");
-  }
+    @include typography("body-small", "medium");
 
-  &__no-btn {
-    padding: var(--spacing-15xs) var(--spacing-13xs);
-    border-radius: var(--radius-control-sm);
-    background: var(--color-essential-primary);
-    color: var(--color-essential-secondary);
-    border: var(--stroke-width-default) solid var(--color-neutral-500);
-    cursor: pointer;
-    @include typography("button", "medium");
+    &--primary {
+      min-width: 216px;
+      background: var(--color-essential-tertiary);
+      color: var(--color-essential-primary);
+      border: none;
+      box-shadow: var(--elevation-shadow-sm);
+    }
+
+    &--ghost {
+      background: var(--color-essential-primary);
+      color: var(--color-neutral-800);
+      border: var(--stroke-width-default) solid var(--color-neutral-400);
+    }
   }
 }

@@ -30,8 +30,7 @@
   }
 
   &__search {
-    inline-size: 280px;
-    max-inline-size: 100%;
+    flex: 1 1 320px;
   }
 }
 
@@ -40,6 +39,18 @@
   grid-template-columns: 248px 1fr;
   align-items: start;
   gap: var(--spacing-11xs);
+
+  // No results: drop the filter column entirely and center the empty state
+  // across the whole page width (Figma review: order59).
+  &--empty {
+    grid-template-columns: 1fr;
+
+    .grid-container {
+      align-items: center;
+      justify-content: center;
+      min-block-size: 50vh;
+    }
+  }
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
@@ -67,7 +78,7 @@
   // minmax(0, 1fr) keeps every column exactly equal — a plain 1fr lets a card
   // with wider intrinsic content stretch its track and shrink its siblings.
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--spacing-13xs);
+  gap: var(--spacing-11xs);
 
   @media (max-width: 1200px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));

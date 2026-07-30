@@ -10,8 +10,8 @@
   text-align: center;
 
   &__icon {
-    font-size: var(--font-size-2xl);
-    color: var(--color-neutral-600);
+    inline-size: 116px;
+    block-size: 116px;
   }
 
   &__title {

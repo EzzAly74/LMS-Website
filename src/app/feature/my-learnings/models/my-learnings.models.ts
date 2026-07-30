@@ -38,3 +38,30 @@ export interface ActiveCourse {
   completed: boolean;
   certificate_id: number | null;
 }
+
+/** One item inside a course-outline module group (GET my/courses/{id}/outline). */
+export interface OutlineItem {
+  kind: 'lecture' | 'quiz' | 'assignment';
+  id: number;
+  title: string;
+  content_type: string | null;
+  completed: boolean;
+  active?: boolean;
+}
+
+/** A titled group of outline items ("Week 1", "Assessments", …). */
+export interface OutlineGroup {
+  label: string;
+  items: OutlineItem[];
+}
+
+/** Course player / detail outline — module groups + progress + cert status. */
+export interface CourseOutline {
+  course_id: number;
+  course_title: string;
+  certificate_status: CertificateStatus;
+  modules_completed: number;
+  modules_total: number;
+  /** Ordered, titled groups (backend returns an array of {label, items}). */
+  weeks: OutlineGroup[];
+}

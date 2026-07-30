@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -92,6 +93,9 @@ const STEP_THRESHOLDS_MS = [0, 5130, 11150, 17210] as const;
 const TYPE_LINE_MS = 700;
 const TYPE_GAP_MS = 100;
 
+/** Matches $bp-mobile in the stylesheet — picks which hero headline to measure. */
+const HERO_MOBILE_BREAKPOINT = 900;
+
 /** Delay before the role switcher's one-time auto-intro swap (spec §4c). */
 const ROLE_INTRO_DELAY_MS = 600;
 
@@ -125,6 +129,8 @@ export class LandingPageComponent implements AfterViewInit, OnDestroy {
   @ViewChild('hero') private heroRef?: ElementRef<HTMLElement>;
   @ViewChild('heroLine1') private heroLine1Ref?: ElementRef<HTMLElement>;
   @ViewChild('heroLine2') private heroLine2Ref?: ElementRef<HTMLElement>;
+  @ViewChild('heroLine1Mobile') private heroLine1MobileRef?: ElementRef<HTMLElement>;
+  @ViewChild('heroLine2Mobile') private heroLine2MobileRef?: ElementRef<HTMLElement>;
   @ViewChild('quote') private quoteRef?: ElementRef<HTMLElement>;
   @ViewChild('rolePanel') private rolePanelRef?: ElementRef<HTMLElement>;
   @ViewChild('rolePanelMobile') private rolePanelMobileRef?: ElementRef<HTMLElement>;
@@ -134,6 +140,11 @@ export class LandingPageComponent implements AfterViewInit, OnDestroy {
   @ViewChild('testimonials') private testimonialsRef?: ElementRef<HTMLElement>;
   @ViewChild('cta') private ctaRef?: ElementRef<HTMLElement>;
   @ViewChild('videoEl') private videoRef?: ElementRef<HTMLVideoElement>;
+  @ViewChild('videoWrap') private videoWrapRef?: ElementRef<HTMLElement>;
+  @ViewChild('videoAnchor') private videoAnchorRef?: ElementRef<HTMLElement>;
+  @ViewChild('playerPortal') private playerPortalRef?: ElementRef<HTMLElement>;
+
+  private readonly document = inject(DOCUMENT);
 
   private readonly language = inject(LanguageService);
 
@@ -177,6 +188,8 @@ export class LandingPageComponent implements AfterViewInit, OnDestroy {
   protected readonly duration = signal(0);
   protected readonly isHoveringPlayer = signal(false);
   protected readonly touchOverlayOpen = signal(false);
+  /** Expanded (lightbox) view: closes on backdrop click or Escape. */
+  protected readonly isVideoExpanded = signal(false);
 
   /** Overlay: hidden at rest; shows on hover/tap; stays while paused mid-view. */
   protected readonly overlayVisible = computed(
@@ -594,6 +607,7 @@ export class LandingPageComponent implements AfterViewInit, OnDestroy {
   private observer?: IntersectionObserver;
   private heroObserver?: IntersectionObserver;
   private roleObserver?: IntersectionObserver;
+  private videoAutoplayObserver?: IntersectionObserver;
   private readonly timers: ReturnType<typeof setTimeout>[] = [];
   private overlayIdleTimer?: ReturnType<typeof setTimeout>;
 
@@ -665,16 +679,44 @@ export class LandingPageComponent implements AfterViewInit, OnDestroy {
     for (const ref of [this.rolePanelRef, this.rolePanelMobileRef]) {
       if (ref) this.roleObserver.observe(ref.nativeElement);
     }
+
+    // Video demo: play automatically (muted, per browser autoplay policy)
+    // the first time it scrolls into view.
+    if (this.videoWrapRef) {
+      this.videoAutoplayObserver = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            this.videoAutoplayObserver?.disconnect();
+            const video = this.videoRef?.nativeElement;
+            if (video) {
+              video.muted = true;
+              void video.play();
+            }
+          }
+        },
+        { threshold: 0.35 },
+      );
+      this.videoAutoplayObserver.observe(this.videoWrapRef.nativeElement);
+    }
   }
 
   ngOnDestroy(): void {
     this.observer?.disconnect();
     this.heroObserver?.disconnect();
     this.roleObserver?.disconnect();
+    this.videoAutoplayObserver?.disconnect();
     for (const t of this.timers) clearTimeout(t);
     clearTimeout(this.roleSwapTimer);
     clearTimeout(this.overlayIdleTimer);
     clearInterval(this.quoteTimer);
+
+    // If the video was expanded (portal moved to <body>) when navigating
+    // away, Angular destroys this component's view but never touches that
+    // relocated node — remove it explicitly, and unlock body scroll.
+    if (this.isVideoExpanded()) {
+      this.playerPortalRef?.nativeElement.remove();
+      this.document.body.style.overflow = '';
+    }
   }
 
   // ── Quote carousel ─────────────────────────────────────────────────
@@ -706,9 +748,17 @@ export class LandingPageComponent implements AfterViewInit, OnDestroy {
     }
     // Expose measured line widths so the caret can ride the wipe edge in
     // either language (Arabic line widths differ from the 465/401px English).
+    // The mobile headline reuses the same .hero__line/.hero__caret reveal at
+    // a smaller type scale — measure whichever layout is actually visible
+    // (the other is `display: none` and reports 0 width).
     const host = this.heroRef?.nativeElement;
-    const w1 = this.heroLine1Ref?.nativeElement.offsetWidth ?? 465;
-    const w2 = this.heroLine2Ref?.nativeElement.offsetWidth ?? 401;
+    const isMobileLayout =
+      typeof window !== 'undefined' &&
+      window.matchMedia(`(max-width: ${HERO_MOBILE_BREAKPOINT}px)`).matches;
+    const line1El = isMobileLayout ? this.heroLine1MobileRef : this.heroLine1Ref;
+    const line2El = isMobileLayout ? this.heroLine2MobileRef : this.heroLine2Ref;
+    const w1 = line1El?.nativeElement.offsetWidth || 465;
+    const w2 = line2El?.nativeElement.offsetWidth || 401;
     host?.style.setProperty('--type-w1', `${w1}px`);
     host?.style.setProperty('--type-w2', `${w2}px`);
 
@@ -764,6 +814,43 @@ export class LandingPageComponent implements AfterViewInit, OnDestroy {
   protected onLoadedMetadata(): void {
     const video = this.videoRef?.nativeElement;
     if (video) this.duration.set(video.duration);
+  }
+
+  protected toggleVideoExpanded(): void {
+    this.isVideoExpanded.update((open) => !open);
+    this.syncVideoPortal();
+  }
+
+  protected closeVideoExpanded(): void {
+    this.isVideoExpanded.set(false);
+    this.syncVideoPortal();
+  }
+
+  /**
+   * Relocates the player+backdrop to the end of <body> while expanded, and
+   * back to its normal in-flow anchor when collapsed. `.differ` (its normal
+   * ancestor) has its own z-index, which traps a plain `position: fixed`
+   * descendant beneath later page sections once scrolled — moving the actual
+   * node (not recreating it) keeps the <video> playing throughout. Also
+   * locks body scroll while expanded, matching a real fullscreen overlay.
+   */
+  private syncVideoPortal(): void {
+    const portal = this.playerPortalRef?.nativeElement;
+    const anchor = this.videoAnchorRef?.nativeElement;
+    if (!portal || !anchor) return;
+
+    if (this.isVideoExpanded()) {
+      this.document.body.appendChild(portal);
+      this.document.body.style.overflow = 'hidden';
+    } else {
+      anchor.after(portal);
+      this.document.body.style.overflow = '';
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  protected onEscapeKey(): void {
+    if (this.isVideoExpanded()) this.closeVideoExpanded();
   }
 
   protected onPlayerEnter(): void {

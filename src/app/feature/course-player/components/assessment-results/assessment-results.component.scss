@@ -3,47 +3,35 @@
 .assessment-results {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3xl);
+  align-items: center;
+  // 40px between the type tag / score ring / question list (Figma 1207:19646
+  // "Frame", gap-40) — the shared `.course-player__content` wrapper already
+  // supplies the outer padding, so this container only owns internal rhythm.
+  gap: var(--spacing-m);
+  width: 100%;
 
-  &__header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-15xs);
-  }
+  // Orange "Quiz" / purple "Assignment" tag — same treatment as the quiz
+  // runner's header tag (Figma 1207:19927/19928).
+  &__type-tag {
+    align-self: flex-start;
+    padding: 2px var(--spacing-15xs);
+    border-radius: var(--radius-pill);
+    background: var(--color-status-hold-50);
+    color: #a85e05;
+    @include typography('caption', 'medium');
 
-  &__eyebrow {
-    @include typography('caption', 'bold');
-    color: var(--color-primary-700);
-  }
-
-  &__title {
-    @include typography('h1', 'bold');
-    color: var(--color-essential-secondary);
-  }
-
-  &__section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    h2 {
-      @include typography('h1-small', 'bold');
-      color: var(--color-essential-secondary);
-    }
-
-    span {
-      @include typography('body-small', 'regular');
-      color: var(--color-neutral-700);
+    &--assignment {
+      background: rgba(191, 170, 224, 0.3);
+      color: #6c49a3;
     }
   }
 }
 
 .score-summary {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: var(--spacing-3xl);
-  justify-content: center;
-  padding: var(--spacing-4xl) 0;
+  gap: var(--spacing-11xs);
 
   &__ring {
     --score-percent: 0%;
@@ -63,62 +51,81 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      @include typography('h1', 'bold');
+      @include typography('large-heading', 'bold');
       color: var(--color-essential-secondary);
     }
   }
 
-  &__label {
-    @include typography('body-small', 'regular');
-    color: var(--color-neutral-700);
-  }
-
+  // "out of X" — regular weight, same dark colour as the score (Figma
+  // 1207:19651). There is no separate "Final Score" label in this design.
   &__total {
-    @include typography('h2', 'bold');
+    @include typography('h2', 'regular');
     color: var(--color-essential-secondary);
-    margin-top: var(--spacing-16xs);
   }
 }
 
 .question-review-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-13xs);
+  gap: var(--spacing-11xs);
+  width: 100%;
 }
 
+// Card shell is identical across states in Figma — only the icon/text/points
+// colours change per state, not the card's own background or border.
 .question-card {
   display: flex;
   align-items: flex-start;
-  gap: var(--spacing-3xs);
-  padding: var(--spacing-14xs);
-  background: var(--color-essential-primary);
+  gap: var(--spacing-11xs);
+  padding: var(--spacing-11xs);
+  background: var(--color-neutral-0);
   border: var(--stroke-width-default) solid var(--color-neutral-400);
-  border-radius: var(--radius-container-md);
+  border-radius: var(--radius-container-sm);
+  box-shadow: var(--elevation-shadow-sm);
 
   &__icon {
     flex-shrink: 0;
+    width: 60px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-16xs);
+  }
+
+  &__number {
     @include typography('caption', 'regular');
     color: var(--color-neutral-700);
-
-    i {
-      font-size: var(--font-size-xl);
-    }
   }
 
-  &--correct &__icon i {
+  &__state-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: currentColor;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+  }
+
+  &--correct &__state-icon {
     color: var(--color-status-success);
+    -webkit-mask-image: url('/assets/icons/course-player/check-circle-outline.svg');
+    mask-image: url('/assets/icons/course-player/check-circle-outline.svg');
   }
 
-  &--incorrect &__icon i {
+  &--incorrect &__state-icon {
     color: var(--color-status-warning);
+    -webkit-mask-image: url('/assets/icons/course-player/x-circle-outline.svg');
+    mask-image: url('/assets/icons/course-player/x-circle-outline.svg');
   }
 
-  &--pending &__icon i {
+  &--pending &__state-icon {
     color: var(--color-neutral-500);
+    -webkit-mask-image: url('/assets/icons/course-player/dashed-ring.svg');
+    mask-image: url('/assets/icons/course-player/dashed-ring.svg');
   }
 
   &__body {
@@ -130,17 +137,25 @@
   }
 
   &__text {
-    @include typography('body-small', 'bold');
+    @include typography('body', 'medium');
     color: var(--color-essential-secondary);
   }
 
   &__answer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-16xs);
     @include typography('body-small', 'regular');
-    color: var(--color-neutral-800);
+    color: var(--color-neutral-700);
 
-    span {
-      color: var(--color-neutral-700);
-      margin-inline-end: var(--spacing-16xs);
+    strong {
+      @include typography('body-small', 'bold');
+      color: var(--color-essential-secondary);
+
+      // The learner's own wrong pick — red, per Figma's incorrect card.
+      &.is-wrong {
+        color: var(--color-status-warning);
+      }
     }
   }
 
@@ -161,6 +176,10 @@
     @include typography('body-small', 'bold');
     color: var(--color-essential-secondary);
     margin-bottom: var(--spacing-15xs);
+
+    &--correct {
+      color: var(--color-status-success);
+    }
   }
 
   &__reorder ol {
@@ -173,24 +192,47 @@
     color: var(--color-neutral-800);
   }
 
+  // Right-hand points column — 100px, right-aligned (Figma 1207:19662).
   &__points {
     flex-shrink: 0;
+    width: 100px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: var(--spacing-16xs);
+    align-items: flex-end;
+    gap: 2px;
   }
 
   &__points-value {
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-16xs);
-    @include typography('body-small', 'medium');
-    color: var(--color-essential-secondary);
+    @include typography('body', 'bold');
+  }
+
+  &--correct &__points-value {
+    color: var(--color-status-success);
+  }
+
+  &--incorrect &__points-value {
+    color: var(--color-status-warning);
+  }
+
+  &--pending &__points-value {
+    color: var(--color-neutral-700);
+  }
+
+  &__points-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    background-color: currentColor;
+    -webkit-mask: url('/assets/icons/course-player/medal.svg') center / contain no-repeat;
+    mask: url('/assets/icons/course-player/medal.svg') center / contain no-repeat;
   }
 
   &__points-label {
     @include typography('caption', 'regular');
-    color: var(--color-neutral-700);
+    color: var(--color-neutral-600);
   }
 }

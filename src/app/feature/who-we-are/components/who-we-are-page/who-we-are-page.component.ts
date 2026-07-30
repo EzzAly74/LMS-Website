@@ -127,9 +127,10 @@ export class WhoWeArePageComponent implements AfterViewInit, OnDestroy {
   ];
 
   private observer?: IntersectionObserver;
+  private journeyObserver?: IntersectionObserver;
 
   ngAfterViewInit(): void {
-    // Play each section's Figma timeline once, the first time it appears.
+    // Play the CTA's Figma timeline once, the first time it appears.
     this.observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -141,11 +142,24 @@ export class WhoWeArePageComponent implements AfterViewInit, OnDestroy {
       },
       { threshold: 0.2 },
     );
-    if (this.journeyRef) this.observer.observe(this.journeyRef.nativeElement);
     if (this.ctaRef) this.observer.observe(this.ctaRef.nativeElement);
+
+    // Journey timeline: replay the reveal every time it scrolls into view,
+    // in either direction (Figma review: "the animation on scroll up or
+    // down") — unlike the CTA above, this one never unobserves.
+    this.journeyObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          entry.target.classList.toggle('is-live', entry.isIntersecting);
+        }
+      },
+      { threshold: 0.2 },
+    );
+    if (this.journeyRef) this.journeyObserver.observe(this.journeyRef.nativeElement);
   }
 
   ngOnDestroy(): void {
     this.observer?.disconnect();
+    this.journeyObserver?.disconnect();
   }
 }

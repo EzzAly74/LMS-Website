@@ -1,19 +1,41 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AuthService } from '../../../../core/auth/auth.service';
 import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { CardSkeletonComponent } from '../../../../shared/components/card-skeleton/card-skeleton.component';
-import { EmptyStateComponent, EmptyStateConfig } from '../../../../shared/components/empty-state/empty-state.component';
+import {
+  EmptyStateComponent,
+  EmptyStateConfig,
+} from '../../../../shared/components/empty-state/empty-state.component';
 import { FilterSidebarComponent } from '../../../../shared/components/filter-sidebar/filter-sidebar.component';
-import { FilterSection, FilterSelection, FilterSidebarConfig } from '../../../../shared/components/filter-sidebar/filter-sidebar.model';
+import {
+  FilterSection,
+  FilterSelection,
+  FilterSidebarConfig,
+} from '../../../../shared/components/filter-sidebar/filter-sidebar.model';
 import { LoadMoreComponent } from '../../../../shared/components/load-more/load-more.component';
 import { SearchInputComponent } from '../../../../shared/components/search-input/search-input.component';
-import { ToggleOption, ToggleTabsComponent } from '../../../../shared/components/toggle-tabs/toggle-tabs.component';
+import {
+  ToggleOption,
+  ToggleTabsComponent,
+} from '../../../../shared/components/toggle-tabs/toggle-tabs.component';
 import { BlogCardComponent } from '../blog-card/blog-card.component';
 import { BlogHeroComponent } from '../blog-hero/blog-hero.component';
-import { BlogJobTitle, BlogLevel, BlogListItem, BlogScope } from '../../models/blog.models';
+import {
+  BlogJobTitle,
+  BlogLevel,
+  BlogListItem,
+  BlogScope,
+} from '../../models/blog.models';
 import { BlogsService } from '../../services/blogs.service';
 
 const PER_PAGE = 9;
@@ -50,23 +72,48 @@ export class BlogListingPageComponent implements OnInit {
   protected readonly loadingMore = signal(false);
   protected readonly totalRecords = signal(0);
   protected readonly selectedScope = signal<BlogScope>('all');
-  protected readonly filters = signal<FilterSelection>({ job_role: [], level: [] });
+  protected readonly filters = signal<FilterSelection>({
+    job_role: [],
+    level: [],
+  });
 
   protected searchTerm = '';
   private page = 1;
 
   protected readonly isAuthenticated = this.auth.isAuthenticated;
-  protected readonly heroBlog = computed<BlogListItem | null>(() => this.blogs()[0] ?? null);
-  protected readonly gridBlogs = computed<BlogListItem[]>(() => this.blogs().slice(1));
-  protected readonly hasMore = computed(() => this.blogs().length < this.totalRecords());
+  protected readonly heroBlog = computed<BlogListItem | null>(
+    () => this.blogs()[0] ?? null,
+  );
+  /**
+   * The hero card's "Latest in your role" flag only makes sense when the
+   * blog list is actually qualification-tailored. Guests, and signed-in
+   * learners who toggled to "Explore All", get the generic "Latest Blog"
+   * label instead (Figma review: order167).
+   */
+  protected readonly heroFlagKey = computed(() =>
+    this.effectiveScope() === 'tailored'
+      ? 'feature.blogs.latest_in_role'
+      : 'feature.blogs.latest_blog',
+  );
+  protected readonly gridBlogs = computed<BlogListItem[]>(() =>
+    this.blogs().slice(1),
+  );
+  protected readonly hasMore = computed(
+    () => this.blogs().length < this.totalRecords(),
+  );
   protected readonly skeletons = Array.from({ length: 6 });
 
   protected readonly scopeOptions = computed<ToggleOption[]>(() => [
-    { value: 'tailored', label: this.translate.instant('feature.blogs.scope.tailored') },
+    {
+      value: 'tailored',
+      label: this.translate.instant('feature.blogs.scope.tailored'),
+    },
     { value: 'all', label: this.translate.instant('feature.blogs.scope.all') },
   ]);
 
-  protected readonly filterConfig = computed<FilterSidebarConfig>(() => this.buildFilterConfig(this.jobTitles()));
+  protected readonly filterConfig = computed<FilterSidebarConfig>(() =>
+    this.buildFilterConfig(this.jobTitles()),
+  );
 
   constructor() {
     reloadOnLanguageChange(() => {
@@ -127,7 +174,8 @@ export class BlogListingPageComponent implements OnInit {
   private loadJobTitles(): void {
     this.blogsApi.getJobTitles().subscribe({
       next: (res) => {
-        if (res.status === 'success' && res.result) this.jobTitles.set(res.result);
+        if (res.status === 'success' && res.result)
+          this.jobTitles.set(res.result);
       },
     });
   }
@@ -167,14 +215,23 @@ export class BlogListingPageComponent implements OnInit {
 
   private buildFilterConfig(jobTitles: BlogJobTitle[]): FilterSidebarConfig {
     const sections: FilterSection[] = [
-      {
-        key: 'job_role',
-        icon: 'pi-briefcase',
-        label: this.translate.instant('feature.blogs.filters.job_role'),
-        type: 'chip',
-        expanded: true,
-        options: jobTitles.map((jt) => ({ value: String(jt.id), label: jt.name })),
-      },
+      // No job titles to filter by → hide the section entirely rather than
+      // showing an empty "Job Role" group (Figma review: order60).
+      ...(jobTitles.length
+        ? [
+            {
+              key: 'job_role',
+              icon: 'pi-briefcase',
+              label: this.translate.instant('feature.blogs.filters.job_role'),
+              type: 'chip' as const,
+              expanded: true,
+              options: jobTitles.map((jt) => ({
+                value: String(jt.id),
+                label: jt.name,
+              })),
+            },
+          ]
+        : []),
       {
         key: 'level',
         icon: 'pi-chart-bar',

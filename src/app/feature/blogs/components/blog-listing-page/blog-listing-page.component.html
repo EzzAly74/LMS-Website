@@ -19,19 +19,21 @@
   </header>
 
   @if (!loading() && heroBlog(); as hero) {
-    <app-blog-hero [blog]="hero" />
+    <app-blog-hero [blog]="hero" [flagKey]="heroFlagKey()" />
   }
 
-  <div class="catalogue-layout">
-    <aside class="filter-container">
-      <app-filter-sidebar
-        [config]="filterConfig()"
-        [selected]="filters()"
-        [resultsCount]="totalRecords()"
-        (selectedChange)="onFilterChange($event)"
-        (clearAll)="onClearAllFilters()"
-      />
-    </aside>
+  <div class="catalogue-layout" [class.catalogue-layout--empty]="!loading() && blogs().length === 0">
+    @if (loading() || blogs().length > 0) {
+      <aside class="filter-container">
+        <app-filter-sidebar
+          [config]="filterConfig()"
+          [selected]="filters()"
+          [resultsCount]="totalRecords()"
+          (selectedChange)="onFilterChange($event)"
+          (clearAll)="onClearAllFilters()"
+        />
+      </aside>
+    }
 
     <section class="grid-container">
       @if (loading()) {

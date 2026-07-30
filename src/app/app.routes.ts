@@ -60,19 +60,22 @@ export const routes: Routes = [
           ),
       },
       {
-        path: LmsRoutes.MyLearnings,
-        canActivate: [authGuard],
-        loadChildren: () =>
-          import('./feature/my-learnings/my-learnings.routes').then(
-            (m) => m.MY_LEARNINGS_ROUTES,
-          ),
-      },
-      {
+        // Declared BEFORE the `my-learnings` list route so this more-specific
+        // player path matches first (otherwise the list route prefix-matches
+        // and delegates `:id/learn` to its child, shadowing the real player).
         path: `${LmsRoutes.MyLearnings}/:courseId/learn`,
         canActivate: [authGuard],
         loadChildren: () =>
           import('./feature/course-player/course-player.routes').then(
             (m) => m.COURSE_PLAYER_ROUTES,
+          ),
+      },
+      {
+        path: LmsRoutes.MyLearnings,
+        canActivate: [authGuard],
+        loadChildren: () =>
+          import('./feature/my-learnings/my-learnings.routes').then(
+            (m) => m.MY_LEARNINGS_ROUTES,
           ),
       },
       {

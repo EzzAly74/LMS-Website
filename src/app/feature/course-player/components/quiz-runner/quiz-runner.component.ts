@@ -30,8 +30,15 @@ const YES_NO_FALLBACK_OPTIONS = ['True', 'False'];
 export class QuizRunnerComponent implements OnChanges {
   @Input({ required: true }) question!: AssessmentQuestion;
   @Input() feedback: AnswerFeedback | null = null;
+  /** Persists across questions (unlike `feedback`) — Figma shows "Score
+   *  XX/YY" on every question, not only right after answering. */
+  @Input() runningScore: number | null = null;
+  @Input() quizMaxScore: number | null = null;
   @Input() isLastQuestion = false;
   @Input() assessmentTypeLabel = '';
+  /** Figma colours the type tag orange for Quiz, purple for Assignment
+   *  (confirmed on the results screen, 1207:19636). */
+  @Input() assessmentKind: 'quiz' | 'assignment' | null = null;
   @Output() submit = new EventEmitter<SubmittedAnswer>();
   @Output() next = new EventEmitter<void>();
   @Output() finish = new EventEmitter<void>();
@@ -76,16 +83,24 @@ export class QuizRunnerComponent implements OnChanges {
     }
   }
 
-  protected optionState(option: string): 'correct' | 'incorrect' | 'neutral' {
+  /**
+   * Figma differentiates the "correct answer" treatment by whether the
+   * learner actually picked it (913:46659 vs 913:46867): a correct pick keeps
+   * the teal selected box and just turns its border green; the reveal on a
+   * wrong guess leaves the box neutral and only recolors the text — both get
+   * the check icon, but only the wrong pick itself gets the red box.
+   */
+  protected optionState(option: string): 'correct-selected' | 'correct-reveal' | 'incorrect' | 'neutral' {
     if (!this.feedback) {
       return 'neutral';
     }
     const correct = this.feedback.correct_answer;
     const isCorrectOption = typeof correct === 'string' && correct.toLowerCase() === option.toLowerCase();
+    const isSelected = this.selectedValue()?.toLowerCase() === option.toLowerCase();
     if (isCorrectOption) {
-      return 'correct';
+      return isSelected ? 'correct-selected' : 'correct-reveal';
     }
-    if (this.selectedValue()?.toLowerCase() === option.toLowerCase() && !this.feedback.is_correct) {
+    if (isSelected && !this.feedback.is_correct) {
       return 'incorrect';
     }
     return 'neutral';
@@ -95,6 +110,13 @@ export class QuizRunnerComponent implements OnChanges {
     if (!this.answered) {
       this.selectedValue.set(value);
     }
+  }
+
+  /** Per-row correctness once answered (Figma 913:49572 — green tint + check
+   *  on rows the learner placed correctly, everything else stays neutral). */
+  protected isReorderItemCorrect(item: string, index: number): boolean {
+    const correct = this.feedback?.correct_answer;
+    return Array.isArray(correct) && correct[index] === item;
   }
 
   protected moveUp(index: number): void {

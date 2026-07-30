@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, computed, effect, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -8,41 +8,36 @@ import { NotificationService } from '../../../../core/services/notification.serv
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { EmptyStateComponent, EmptyStateConfig } from '../../../../shared/components/empty-state/empty-state.component';
 import { ShimmerComponent } from '../../../../shared/components/shimmer/shimmer.component';
-import { CompletedCourse, LearningCourse, LearningStatus } from '../../models/profile.models';
+import { CourseDetailComponent } from '../../../my-learnings/components/course-detail/course-detail.component';
+import { CertificateStatus, CompletedCourse, LearningCourse, LearningStatus } from '../../models/profile.models';
 import { ProfileService } from '../../services/profile.service';
-
-interface RatingFace {
-  value: number;
-  emoji: string;
-  labelKey: string;
-}
-
-// Emoji + labels match Figma node 861:44286 exactly (Very Unsatisfied … Very Satisfied).
-const RATING_FACES: RatingFace[] = [
-  { value: 1, emoji: '😔', labelKey: 'feature.profile.learnings.rating.very_unsatisfied' },
-  { value: 2, emoji: '🙁', labelKey: 'feature.profile.learnings.rating.unsatisfied' },
-  { value: 3, emoji: '😐', labelKey: 'feature.profile.learnings.rating.neutral' },
-  { value: 4, emoji: '🙂', labelKey: 'feature.profile.learnings.rating.satisfied' },
-  { value: 5, emoji: '🤩', labelKey: 'feature.profile.learnings.rating.very_satisfied' },
-];
 
 const STATUS_TABS: LearningStatus[] = ['upcoming', 'current', 'completed'];
 
 /**
  * My Learnings tab — Upcoming / Current / Completed sub-tabs over the learner's
  * active enrolments, partitioned by cohort start date and completion. The
- * Current view exposes progress + the course-rating widget and feeds the
- * active course to the right rail. Figma 851-43960 / 951-48857 / 851-45445.
+ * Current list is cards (certificate badge + View Details); opening a card
+ * swaps in the in-profile Course Detail (rating/modules/attendance live there,
+ * NOT in the list). Figma 1047-63328 / 851-44908 / 951-48857 / 851-45445.
  */
 @Component({
   selector: 'app-my-learnings-tab',
   standalone: true,
-  imports: [DatePipe, RouterLink, TranslatePipe, BadgeComponent, ShimmerComponent, EmptyStateComponent],
+  imports: [
+    DatePipe,
+    RouterLink,
+    TranslatePipe,
+    BadgeComponent,
+    ShimmerComponent,
+    EmptyStateComponent,
+    CourseDetailComponent,
+  ],
   templateUrl: './my-learnings-tab.component.html',
   styleUrl: './my-learnings-tab.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyLearningsTabComponent implements OnChanges {
+export class MyLearningsTabComponent {
   @Input({ required: true }) set courses(value: LearningCourse[]) {
     this._courses.set(value ?? []);
   }
@@ -55,9 +50,12 @@ export class MyLearningsTabComponent implements OnChanges {
   }
   @Output() activeCourseChange = new EventEmitter<LearningCourse | null>();
 
-  private readonly service = inject(ProfileService);
-  private readonly notify = inject(NotificationService);
   private readonly translate = inject(TranslateService);
+  private readonly profile = inject(ProfileService);
+  private readonly notify = inject(NotificationService);
+
+  /** Certificate id currently downloading (disables its button). */
+  protected readonly downloadingId = signal<number | null>(null);
 
   private readonly _courses = signal<LearningCourse[]>([]);
   private readonly _completed = signal<CompletedCourse[]>([]);
@@ -65,14 +63,11 @@ export class MyLearningsTabComponent implements OnChanges {
   protected readonly status = signal<LearningStatus>('current');
 
   protected readonly tabs = STATUS_TABS;
-  protected readonly faces = RATING_FACES;
   protected readonly skeletons = Array.from({ length: 3 });
-  protected readonly playerBase = `/${LmsRoutes.MyLearnings}`;
   protected readonly catalogueBase = `/${LmsRoutes.Catalogue}`;
 
-  protected readonly draftRating = signal<number | null>(null);
-  protected readonly draftComment = signal('');
-  protected readonly submitting = signal(false);
+  /** In-profile master-detail: the Current course opened via "View Details". */
+  protected readonly selectedCourse = signal<LearningCourse | null>(null);
 
   private readonly today = new Date();
 
@@ -100,22 +95,84 @@ export class MyLearningsTabComponent implements OnChanges {
   );
 
   constructor() {
-    // The right rail (attendance / active session) mirrors whichever course
-    // heads the Current list.
+    // The right rail (attendance / active session) mirrors the opened course,
+    // else whichever course heads the Current list.
     effect(() => {
+      const selected = this.selectedCourse();
+      if (selected) {
+        this.activeCourseChange.emit(selected);
+        return;
+      }
       const first = this.status() === 'current' ? this.current()[0] ?? null : null;
       this.activeCourseChange.emit(first);
     });
   }
 
-  ngOnChanges(): void {
-    // reset rating draft when inputs change
-    this.draftRating.set(null);
-    this.draftComment.set('');
+  protected setStatus(status: LearningStatus): void {
+    this.selectedCourse.set(null);
+    this.status.set(status);
   }
 
-  protected setStatus(status: LearningStatus): void {
-    this.status.set(status);
+  /** Open the in-profile Course Detail for a Current card (Figma 851-44908). */
+  protected openDetail(course: LearningCourse): void {
+    this.selectedCourse.set(course);
+  }
+
+  protected closeDetail(): void {
+    this.selectedCourse.set(null);
+  }
+
+  /** Download an earned certificate via the authenticated blob endpoint
+   * (a raw <a href> can't attach the bearer token / API base URL). */
+  protected downloadCertificate(course: CompletedCourse): void {
+    if (course.certificate_id === null || this.downloadingId() !== null) {
+      return;
+    }
+    this.downloadingId.set(course.certificate_id);
+    this.profile.downloadCertificate(course.certificate_id).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `certificate-${course.certificate_id}.jpg`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        this.downloadingId.set(null);
+      },
+      error: () => {
+        this.downloadingId.set(null);
+        this.notify.error(this.translate.instant('feature.my_learnings.download_failed'));
+      },
+    });
+  }
+
+  /** i18n key for the "Certificate: …" badge on a Current card (Figma frame 6). */
+  protected certLabelKey(status: CertificateStatus): string | null {
+    switch (status) {
+      case 'earned':
+        return 'feature.profile.learnings.certificate.earned';
+      case 'on_track':
+        return 'feature.profile.learnings.certificate.on_track';
+      case 'at_risk':
+        return 'feature.profile.learnings.certificate.at_risk';
+      case 'blocked':
+        return 'feature.profile.learnings.certificate.blocked';
+      default:
+        return null;
+    }
+  }
+
+  /** Map the projection status onto the shared badge's tone/status. */
+  protected certBadgeStatus(status: CertificateStatus): 'earned' | 'on_track' | 'at_risk' {
+    if (status === 'earned') {
+      return 'earned';
+    }
+    if (status === 'on_track') {
+      return 'on_track';
+    }
+    return 'at_risk';
   }
 
   protected startsInDays(course: LearningCourse): number | null {
@@ -133,27 +190,6 @@ export class MyLearningsTabComponent implements OnChanges {
       title: this.translate.instant(`feature.profile.learnings.empty.${this.status()}`),
       message: this.translate.instant('feature.profile.learnings.empty.message'),
     };
-  }
-
-  protected pickRating(value: number): void {
-    this.draftRating.set(value);
-  }
-
-  protected submitRating(course: LearningCourse): void {
-    const rating = this.draftRating();
-    if (rating === null || this.submitting()) {
-      return;
-    }
-    this.submitting.set(true);
-    this.service.submitRating(course.id, rating, this.draftComment().trim() || null).subscribe({
-      next: () => {
-        this.submitting.set(false);
-        this.notify.success(this.translate.instant('feature.profile.learnings.rating.thanks'));
-        this.draftRating.set(null);
-        this.draftComment.set('');
-      },
-      error: () => this.submitting.set(false),
-    });
   }
 
   private isUpcoming(course: LearningCourse): boolean {

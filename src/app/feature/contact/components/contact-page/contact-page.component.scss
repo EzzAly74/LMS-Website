@@ -140,7 +140,7 @@
     color: var(--color-essential-secondary);
   }
 
-  &__req { color: var(--color-status-red); }
+  &__req { color: var(--color-status-warning); }
 
   &__input {
     block-size: 44px;
@@ -154,12 +154,12 @@
     transition: border-color 0.15s ease;
     &:focus { border-color: var(--color-primary-500); }
     &::placeholder { color: var(--color-neutral-600); }
-    &--error { border-color: var(--color-status-red); }
+    &--error { border-color: var(--color-status-warning); }
   }
 
   &__error {
     @include typography('caption', 'regular');
-    color: var(--color-status-red);
+    color: var(--color-status-warning);
   }
 }
 
@@ -184,7 +184,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    &:hover { border-color: var(--color-status-red); color: var(--color-status-red); }
+    &:hover { border-color: var(--color-status-warning); color: var(--color-status-warning); }
   }
 }
 

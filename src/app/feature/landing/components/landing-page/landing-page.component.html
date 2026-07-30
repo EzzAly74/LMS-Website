@@ -36,13 +36,32 @@
             </span>
           </h1>
 
-          <!-- Mobile static headline (Figma 1742:48092 — no typewriter nodes) -->
-          <h1 class="hero__headline-mobile u-hide-desktop">
-            {{ "feature.landing.hero.title_m_l1" | translate }}<br />
-            {{ "feature.landing.hero.title_m_l2_plain" | translate
-            }}<span class="hero__headline-mobile-em">{{
-              "feature.landing.hero.title_m_l2_em" | translate
-            }}</span>
+          <!-- Mobile typewriter headline: same reveal as desktop, mirrored
+               onto the mobile copy split (plain line 1 + line 2 with an
+               emphasised trailing fragment) — Figma 1742:48092. -->
+          <h1
+            class="hero__headline-mobile u-hide-desktop"
+            attr.aria-label="{{
+              'feature.landing.hero.title_m_l1' | translate
+            }} {{ 'feature.landing.hero.title_m_l2_plain' | translate }} {{
+              'feature.landing.hero.title_m_l2_em' | translate
+            }}"
+          >
+            <span class="hero__line hero__line--1" aria-hidden="true">
+              <span class="hero__line-text" #heroLine1Mobile>{{
+                "feature.landing.hero.title_m_l1" | translate
+              }}</span>
+              <span class="hero__caret hero__caret--1"></span>
+            </span>
+            <span class="hero__line hero__line--2" aria-hidden="true">
+              <span class="hero__line-text" #heroLine2Mobile
+                >{{ "feature.landing.hero.title_m_l2_plain" | translate
+                }}<span class="hero__headline-mobile-em">{{
+                  "feature.landing.hero.title_m_l2_em" | translate
+                }}</span></span
+              >
+              <span class="hero__caret hero__caret--2"></span>
+            </span>
           </h1>
 
           <p class="hero__subtitle">
@@ -146,19 +165,34 @@
     </div>
 
     <!-- 3a. Video player (spec §4a) -->
-    <div class="differ__video-wrap">
-      <div
-        class="player"
-        [class.is-overlay-visible]="overlayVisible()"
-        (mouseenter)="onPlayerEnter()"
-        (mouseleave)="onPlayerLeave()"
-      >
+    <div class="differ__video-wrap" #videoWrap>
+      <!-- Anchor marking the player's normal in-flow position — it's moved
+           back here (from <body>) when the expanded view closes. A parent
+           section's stacking context (differ has z-index:1) would otherwise
+           trap position:fixed beneath later page content while scrolled, so
+           the whole overlay is relocated to <body> instead of relying on
+           z-index alone (same problem BodyPortalDirective solves elsewhere,
+           but this node must persist rather than being created/destroyed,
+           to keep the <video> element — and its playback — alive). -->
+      <div #videoAnchor class="video-anchor"></div>
+      <div #playerPortal class="player__portal">
+        @if (isVideoExpanded()) {
+          <div class="player__backdrop" (click)="closeVideoExpanded()"></div>
+        }
+        <div
+          class="player"
+          [class.is-overlay-visible]="overlayVisible()"
+          [class.is-expanded]="isVideoExpanded()"
+          (mouseenter)="onPlayerEnter()"
+          (mouseleave)="onPlayerLeave()"
+        >
         <video
           #videoEl
           class="player__video"
           [src]="videoSrc"
           preload="metadata"
           playsinline
+          muted
           (click)="onVideoSurfaceClick()"
           (play)="onVideoPlay()"
           (pause)="onVideoPause()"
@@ -229,8 +263,29 @@
                 <img src="assets/landing/icon-skip-forward-15.svg" alt="" />
               </button>
             </div>
+            <div class="player__controls-right">
+              <button
+                type="button"
+                class="player__btn"
+                (click)="toggleVideoExpanded()"
+                [attr.aria-label]="
+                  (isVideoExpanded()
+                    ? 'feature.landing.video.collapse'
+                    : 'feature.landing.video.expand'
+                  ) | translate
+                "
+              >
+                <i
+                  class="pi"
+                  [class.pi-window-maximize]="!isVideoExpanded()"
+                  [class.pi-window-minimize]="isVideoExpanded()"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </div>
           </div>
         </div>
+      </div>
       </div>
 
       <!-- 3b. Step tab strip synced to playback (spec §4b) -->

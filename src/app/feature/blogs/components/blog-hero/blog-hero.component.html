@@ -3,7 +3,7 @@
     @if (blog.image) {
       <img class="blog-hero__image" [src]="blog.image" [alt]="blog.title" />
     }
-    <span class="blog-hero__flag">{{ 'feature.blogs.latest_in_role' | translate }}</span>
+    <span class="blog-hero__flag">{{ flagKey | translate }}</span>
   </div>
 
   <div class="blog-hero__content">

@@ -60,6 +60,11 @@ export class CoursePlayerPageComponent implements OnInit {
   protected readonly currentFeedback = signal<AnswerFeedback | null>(null);
   protected readonly currentResults = signal<AssessmentResults | null>(null);
 
+  /** Running "Score  XX/YY" (Figma 913:47077) — persists across questions,
+   *  unlike `currentFeedback` which resets whenever the learner moves on. */
+  protected readonly runningScore = signal<number | null>(null);
+  protected readonly quizMaxScore = signal<number | null>(null);
+
   protected readonly currentQuestion = computed(() => {
     const take = this.currentTake();
     return take ? (take.questions[this.currentQuestionIndex()] ?? null) : null;
@@ -68,6 +73,13 @@ export class CoursePlayerPageComponent implements OnInit {
   protected readonly isLastQuestion = computed(() => {
     const take = this.currentTake();
     return !!take && this.currentQuestionIndex() === take.questions.length - 1;
+  });
+
+  /** Drives the orange-Quiz / purple-Assignment tag colour (Figma
+   *  distinguishes them — 1207:19636 uses purple for "Assignment"). */
+  protected readonly assessmentKind = computed<'quiz' | 'assignment' | null>(() => {
+    const item = this.activeItem();
+    return item && item.kind !== 'lecture' ? item.kind : null;
   });
 
   protected readonly assessmentTypeLabel = computed(() => {
@@ -140,6 +152,43 @@ export class CoursePlayerPageComponent implements OnInit {
     this.expandedWeeks.set(next);
   }
 
+  /* ── Sidebar state (Figma 900:45220) ───────────────────────────────────── */
+
+  /** A week is "complete" when every module in it is done → green check. */
+  protected isWeekComplete(week: { items: PlaylistItem[] }): boolean {
+    return week.items.length > 0 && week.items.every((i) => i.completed);
+  }
+
+  /** The week that holds the currently open item → teal label (Figma). */
+  protected isWeekActive(week: { items: PlaylistItem[] }): boolean {
+    return week.items.some((i) => this.isItemActive(i));
+  }
+
+  protected isItemActive(item: PlaylistItem): boolean {
+    const active = this.activeItem();
+    return !!active && active.kind === item.kind && active.id === item.id;
+  }
+
+  /** Leading icon per module type — maps to the exported Figma icon assets. */
+  protected itemIcon(item: PlaylistItem): 'play' | 'file' | 'external' | 'quiz' {
+    if (item.kind !== 'lecture') {
+      return 'quiz';
+    }
+    if (item.content_type === 'video') {
+      return 'play';
+    }
+    if (item.content_type === 'link') {
+      return 'external';
+    }
+    return 'file';
+  }
+
+  /** Quiz/assignment items use an orange (status-hold) accent instead of the
+   *  teal used for lecture modules (Figma 1206:18606 — active Quiz row). */
+  protected isQuizKind(item: PlaylistItem): boolean {
+    return item.kind !== 'lecture';
+  }
+
   protected selectItem(item: PlaylistItem): void {
     this.activeItem.set(item);
     if (item.kind === 'lecture') {
@@ -175,6 +224,7 @@ export class CoursePlayerPageComponent implements OnInit {
         }
         const feedback = res.result;
         this.currentFeedback.set(feedback);
+        this.runningScore.set(feedback.running_total_score);
 
         const updatedQuestions = [...take.questions];
         updatedQuestions[this.currentQuestionIndex()] = {
@@ -236,13 +286,21 @@ export class CoursePlayerPageComponent implements OnInit {
           return;
         }
         this.outline.set(res.result);
-        this.expandedWeeks.set(new Set(res.result.weeks.map((w) => w.label)));
 
-        if (!silent) {
-          const active = resumeItem ?? this.findResumeItem(res.result);
-          if (active) {
-            this.selectItem(active);
-          }
+        const active = resumeItem ?? this.findResumeItem(res.result);
+        // Figma opens only the active week; the rest stay collapsed.
+        const activeWeek = active
+          ? res.result.weeks.find((w) =>
+              w.items.some((i) => i.kind === active.kind && i.id === active.id),
+            )
+          : null;
+        const openLabels = activeWeek
+          ? [activeWeek.label]
+          : res.result.weeks.slice(0, 1).map((w) => w.label);
+        this.expandedWeeks.set(new Set(openLabels));
+
+        if (!silent && active) {
+          this.selectItem(active);
         }
       },
       error: () => this.loading.set(false),
@@ -272,6 +330,11 @@ export class CoursePlayerPageComponent implements OnInit {
           return;
         }
         this.currentTake.set(res.result);
+        this.quizMaxScore.set(res.result.quiz.total_score);
+        // The take endpoint doesn't return an accumulated score for a
+        // resumed submission — 0 is the correct value for a fresh attempt,
+        // and updates immediately once the learner answers anything.
+        this.runningScore.set(0);
         const resumeId = res.result.resume_question_id;
         const resumeIndex = resumeId ? res.result.questions.findIndex((q) => q.id === resumeId) : -1;
         this.currentQuestionIndex.set(resumeIndex >= 0 ? resumeIndex : 0);

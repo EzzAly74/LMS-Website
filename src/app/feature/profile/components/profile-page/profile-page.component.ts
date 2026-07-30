@@ -15,6 +15,7 @@ import {
   QualificationProgress,
 } from '../../models/profile.models';
 import { ProfileService } from '../../services/profile.service';
+import { MessagesWidgetComponent } from '../../../messages/components/messages-widget/messages-widget.component';
 import { MyLearningsTabComponent } from '../my-learnings-tab/my-learnings-tab.component';
 import { ProfileSidebarComponent } from '../profile-sidebar/profile-sidebar.component';
 import { QualificationsTabComponent } from '../qualifications-tab/qualifications-tab.component';
@@ -46,6 +47,7 @@ const STAT_COUNTERS: StatCounter[] = [
     QualificationsTabComponent,
     MyLearningsTabComponent,
     ProfileSidebarComponent,
+    MessagesWidgetComponent,
   ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.scss',

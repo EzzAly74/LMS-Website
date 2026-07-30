@@ -12,6 +12,13 @@
   }
 </div>
 
+@if (selectedCourse(); as sc) {
+  <!-- ── In-profile Course Detail (master-detail, Figma 851-44908/951-48857) ── -->
+  <div class="ml-detail">
+    <app-course-detail [course]="sc" [courseId]="sc.id" (back)="closeDetail()" />
+  </div>
+} @else {
+
 @if (loading) {
   <div class="ml-list">
     @for (s of skeletons; track $index) {
@@ -47,21 +54,26 @@
             </p>
             <div class="ml-row__foot">
               @if (course.certificate_earned) {
+                <!-- Earned → download certificate (Figma frame 9, row 1–2). -->
                 <app-badge tone="certificate" status="earned" icon="pi-verified" [label]="'feature.my_learnings.certificate.earned' | translate" />
-                <a
+                <button
+                  type="button"
                   class="ml-row__cta"
-                  [href]="'/api/v1/learner/profile/certificates/' + course.certificate_id + '/download'"
-                  target="_blank"
-                  rel="noopener"
+                  [disabled]="downloadingId() === course.certificate_id"
+                  (click)="downloadCertificate(course)"
                 >
                   <i class="pi pi-download"></i>
                   {{ 'feature.profile.qualifications.download_certificate' | translate }}
-                </a>
-              } @else {
+                </button>
+              } @else if (course.certificate_offered) {
+                <!-- Offered but not earned → red "Not certified" + re-enrol (Figma frame 9, row 3). -->
                 <app-badge tone="certificate" status="at_risk" icon="pi-info-circle" [label]="'feature.profile.learnings.not_certified' | translate" />
                 <a class="ml-row__link" [routerLink]="[catalogueBase, course.course_id]">
                   {{ 'feature.profile.learnings.enrol_again' | translate }} <i class="pi pi-arrow-right"></i>
                 </a>
+              } @else {
+                <!-- Course offers no certificate → neutral "Completed" (no shaming). -->
+                <span class="ml-row__done"><i class="pi pi-check-circle"></i> {{ 'feature.profile.learnings.tabs.completed' | translate }}</span>
               }
             </div>
           </div>
@@ -74,7 +86,13 @@
 } @else {
   <div class="ml-list">
     @for (course of visible(); track course.id) {
-      <article class="ml-row">
+      <!-- Current tab: the whole row opens the detail view, not just the
+           "View Details" link (Figma review: "whole frame should be clickable"). -->
+      <article
+        class="ml-row"
+        [class.ml-row--clickable]="status() === 'current'"
+        (click)="status() === 'current' && openDetail(course)"
+      >
         <div
           class="ml-row__thumb"
           [style.background-image]="course.image ? 'url(' + course.image + ')' : null"
@@ -101,15 +119,15 @@
             }
           </p>
 
-          @if (status() === 'current') {
-            <div class="ml-row__progress">
-              <span class="ml-row__track"><span class="ml-row__fill" [style.width.%]="course.progress.percent"></span></span>
-              <span class="ml-row__pct">{{ course.progress.percent }}%</span>
-            </div>
-          }
-
           <div class="ml-row__foot">
-            @if (course.rate) {
+            @if (status() === 'current' && certLabelKey(course.certificate_status); as certKey) {
+              <app-badge
+                tone="certificate"
+                [status]="certBadgeStatus(course.certificate_status)"
+                [icon]="course.certificate_status === 'earned' ? 'pi-verified' : 'pi-info-circle'"
+                [label]="certKey | translate"
+              />
+            } @else if (status() === 'current' && course.rate) {
               <app-badge tone="certificate" status="on_track" icon="pi-star-fill" [label]="course.rate_label ?? (course.rate + '/5')" />
             }
 
@@ -118,59 +136,15 @@
                 {{ 'feature.profile.learnings.view_details' | translate }} <i class="pi pi-arrow-right"></i>
               </a>
             } @else {
-              <a class="ml-row__cta" [routerLink]="[playerBase, course.id, 'learn']">
-                {{ 'feature.my_learnings.actions.continue' | translate }} <i class="pi pi-arrow-right"></i>
-              </a>
+              <!-- Opens the Course Detail in-place within the profile (Figma 851-44908). -->
+              <button type="button" class="ml-row__link" (click)="openDetail(course)">
+                {{ 'feature.profile.learnings.view_details' | translate }} <i class="pi pi-arrow-right"></i>
+              </button>
             }
           </div>
         </div>
       </article>
     }
-
-    @if (status() === 'current' && current().length) {
-      @let target = current()[0];
-      <div class="rating-card">
-        <div class="rating-card__head">
-          <p class="rating-card__q">{{ 'feature.profile.learnings.rating.question' | translate }}</p>
-          <p class="rating-card__sub">{{ 'feature.profile.learnings.rating.subtitle' | translate }}</p>
-        </div>
-
-        <div class="rating-card__faces">
-          @for (face of faces; track face.value) {
-            <button
-              type="button"
-              class="rating-face"
-              [class.is-picked]="draftRating() === face.value"
-              (click)="pickRating(face.value)"
-              [attr.aria-label]="face.labelKey | translate"
-            >
-              <span class="rating-face__emoji">{{ face.emoji }}</span>
-              <span class="rating-face__label">{{ face.labelKey | translate }}</span>
-            </button>
-          }
-        </div>
-
-        <div class="rating-card__comment">
-          <label class="rating-card__comment-label">
-            {{ 'feature.profile.learnings.rating.comment_label' | translate }}
-          </label>
-          <textarea
-            class="rating-card__comment-input"
-            [placeholder]="'feature.profile.learnings.rating.comment_ph' | translate"
-            [value]="draftComment()"
-            (input)="draftComment.set($any($event.target).value)"
-          ></textarea>
-        </div>
-
-        <button
-          type="button"
-          class="rating-card__submit"
-          [disabled]="draftRating() === null || submitting()"
-          (click)="submitRating(target)"
-        >
-          {{ 'feature.profile.learnings.rating.submit' | translate }}
-        </button>
-      </div>
-    }
   </div>
+}
 }

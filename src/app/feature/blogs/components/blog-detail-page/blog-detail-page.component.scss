@@ -97,15 +97,52 @@
     color: var(--color-neutral-800);
   }
 
-  &__share {
+  /* Loved-this · min read · date cluster (Figma 1589-46108 meta row). */
+  &__stats {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-14xs);
+  }
+
+  &__stat {
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-16xs);
+    @include typography("caption", "regular");
+    color: var(--color-neutral-800);
+
+    i {
+      font-size: 14px;
+    }
+
+    &--loved i {
+      color: var(--color-status-warning-500, #f14437);
+    }
   }
 
-  &__share-btn {
-    inline-size: 36px;
-    block-size: 36px;
+  /* Floating love + copy action rail, just outside the reading column. */
+  &__actions {
+    position: absolute;
+    inset-inline-end: calc(-1 * (44px + var(--spacing-13xs)));
+    inset-block-start: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-15xs);
+
+    // No room outside the column on smaller screens → sit inline, top-end.
+    @media (max-width: 980px) {
+      position: static;
+      flex-direction: row;
+      justify-content: flex-end;
+      margin-block-end: var(--spacing-15xs);
+    }
+  }
+
+  &__act {
+    position: relative;
+    inline-size: 44px;
+    block-size: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -114,17 +151,61 @@
     background: var(--color-essential-primary);
     color: var(--color-neutral-800);
     cursor: pointer;
-    text-decoration: none;
     transition:
       background 0.15s ease,
-      color 0.15s ease;
+      color 0.15s ease,
+      border-color 0.15s ease;
 
     i {
-      font-size: 15px;
+      font-size: 17px;
     }
+
     &:hover {
-      background: var(--color-primary-200);
+      background: var(--color-primary-100, var(--color-primary-200));
       color: var(--color-primary-800);
+    }
+
+    &.is-loved {
+      border-color: var(--color-status-warning-500, #f14437);
+      color: var(--color-status-warning-500, #f14437);
+      background: var(--color-essential-primary);
+    }
+
+    &.is-active {
+      border-color: var(--color-primary-700);
+      color: var(--color-primary-700);
+    }
+
+    /* Tooltip (Love / Copy link / Link copied) — Figma 46217/46326/46544. */
+    &::after {
+      content: attr(data-tip);
+      position: absolute;
+      inset-inline-end: calc(100% + var(--spacing-15xs));
+      inset-block-start: 50%;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      padding: var(--spacing-17xs) var(--spacing-15xs);
+      border-radius: var(--radius-control-xs);
+      background: var(--color-essential-tertiary);
+      color: var(--color-essential-primary);
+      @include typography("caption", "medium");
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+
+    &:hover::after,
+    &.is-active::after {
+      opacity: 1;
+    }
+
+    // Tooltip flips below on the inline (mobile) layout to avoid clipping.
+    @media (max-width: 980px) {
+      &::after {
+        inset-inline-end: 50%;
+        inset-block-start: calc(100% + var(--spacing-16xs));
+        transform: translateX(50%);
+      }
     }
   }
 
@@ -142,6 +223,7 @@
   }
 
   &__body {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--spacing-11xs);

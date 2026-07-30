@@ -11,6 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { AuthService } from '../../../../core/auth/auth.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
@@ -40,11 +41,15 @@ export class BlogDetailPageComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly notify = inject(NotificationService);
   private readonly translate = inject(TranslateService);
+  private readonly auth = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly blog = signal<BlogDetail | null>(null);
   protected readonly related = signal<BlogListItem[]>([]);
   protected readonly loading = signal(true);
+  /** Momentary "Link Copied" state for the copy action tooltip. */
+  protected readonly copied = signal(false);
+  private readonly loving = signal(false);
 
   private slug = '';
 
@@ -91,27 +96,52 @@ export class BlogDetailPageComponent implements OnInit {
     });
   }
 
+  /** Copy the current page URL and flash the "Link Copied" state (Figma 1589-46544). */
   protected copyLink(): void {
-    const url = window.location.href;
-    navigator.clipboard?.writeText(url).then(
-      () =>
-        this.notify.success(
-          this.translate.instant('feature.blogs.link_copied'),
-        ),
+    navigator.clipboard?.writeText(window.location.href).then(
+      () => {
+        this.copied.set(true);
+        this.notify.success(this.translate.instant('feature.blogs.link_copied'));
+        setTimeout(() => this.copied.set(false), 2000);
+      },
       () => undefined,
     );
   }
 
-  protected shareUrl(network: 'x' | 'linkedin' | 'facebook'): string {
-    const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent(this.blog()?.title ?? '');
-    switch (network) {
-      case 'x':
-        return `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
-      case 'linkedin':
-        return `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-      case 'facebook':
-        return `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+  /**
+   * Toggle the "love" reaction (Figma 1589-46108). Optimistic; reverts on
+   * error. Requires sign-in — a guest is prompted instead of firing a 401.
+   */
+  protected toggleLove(): void {
+    const post = this.blog();
+    if (!post || this.loving()) {
+      return;
     }
+    if (!this.auth.isAuthenticated()) {
+      this.notify.info(this.translate.instant('feature.blogs.login_to_love'));
+      return;
+    }
+
+    const prevLoved = post.loved;
+    const prevCount = post.love_count;
+    this.loving.set(true);
+    this.blog.set({ ...post, loved: !prevLoved, love_count: prevCount + (prevLoved ? -1 : 1) });
+
+    this.blogsApi.toggleLove(post.slug).subscribe({
+      next: (res) => {
+        this.loving.set(false);
+        const cur = this.blog();
+        if (cur && res.status === 'success' && res.result) {
+          this.blog.set({ ...cur, loved: res.result.loved, love_count: res.result.love_count });
+        }
+      },
+      error: () => {
+        this.loving.set(false);
+        const cur = this.blog();
+        if (cur) {
+          this.blog.set({ ...cur, loved: prevLoved, love_count: prevCount });
+        }
+      },
+    });
   }
 }

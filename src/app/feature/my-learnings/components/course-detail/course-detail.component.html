@@ -1,0 +1,194 @@
+@if (inline()) {
+  <button type="button" class="cd-back" (click)="onBack()">
+    <i class="pi pi-arrow-left"></i> {{ 'core.nav.my_learnings' | translate }}
+  </button>
+} @else {
+  <a class="cd-back" [routerLink]="backLink">
+    <i class="pi pi-arrow-left"></i> {{ 'core.nav.my_learnings' | translate }}
+  </a>
+}
+
+@if (loading() && !courseData()) {
+  <div class="cd-header">
+    <app-shimmer width="240px" height="24px" />
+    <app-shimmer width="60%" height="14px" />
+  </div>
+} @else {
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <section class="cd-header">
+    <div class="cd-header__row">
+      <h1 class="cd-header__title">{{ courseData()?.title ?? outline()?.course_title }}</h1>
+      @if (hasModules()) {
+        <button type="button" class="cd-header__cta" (click)="continueLearning()">
+          {{ 'feature.my_learnings.actions.continue' | translate }} <i class="pi pi-arrow-right"></i>
+        </button>
+      }
+    </div>
+
+    @if (courseData(); as c) {
+      <div class="cd-header__meta">
+        <span><i class="pi pi-desktop"></i> {{ 'feature.catalogue.delivery.' + c.course_type | translate }}</span>
+        @if (c.progress.total_sessions) {
+          <span><i class="pi pi-calendar"></i> {{ 'feature.my_learnings.card.sessions' | translate: { count: c.progress.total_sessions } }}</span>
+        }
+        @if (instructorNames()) {
+          <span><i class="pi pi-user"></i> {{ instructorNames() }}</span>
+        }
+      </div>
+
+      <div class="cd-header__badges">
+        <app-badge tone="certificate" status="earned" icon="pi-check-circle" [label]="'feature.profile.learnings.enrolled' | translate" />
+        @if (myRating(); as r) {
+          <span class="cd-header__myrating">
+            {{ 'feature.profile.learnings.my_rating' | translate }}
+            <i class="pi pi-star-fill"></i> {{ r }}
+            @if (c.rate_label) { ({{ c.rate_label }}) }
+          </span>
+        }
+      </div>
+    }
+  </section>
+
+  <div class="cd-layout" [class.cd-layout--full]="inline()">
+    <div class="cd-layout__main">
+      <!-- ── Module outline ───────────────────────────────────── -->
+      @if (hasModules() && outline(); as o) {
+        <section id="cd-modules" class="cd-modules">
+          @for (group of o.weeks; track group.label) {
+            <div class="cd-module">
+              <div class="cd-module__head">
+                <span class="cd-module__name">{{ group.label.trim() || ('feature.my_learnings.module' | translate) }}</span>
+                <span class="cd-module__count">
+                  {{ completedIn(group.items) }}/{{ group.items.length }} {{ 'feature.my_learnings.complete' | translate }}
+                </span>
+              </div>
+              <ul class="cd-items">
+                @for (item of group.items; track item.kind + '-' + item.id) {
+                  <li class="cd-item" [class.is-done]="item.completed">
+                    <i class="pi" [class.pi-check-circle]="item.completed" [class.pi-circle]="!item.completed"></i>
+                    <span class="cd-item__title">{{ item.title }}</span>
+                    <span class="cd-item__type" [attr.data-kind]="item.kind">
+                      {{ contentTypeKey(item) | translate }}
+                    </span>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+        </section>
+      }
+
+      <!-- ── Rating widget (hidden once rated) ────────────────── -->
+      @if (myRating() === null) {
+        <section class="rating-card">
+          <div class="rating-card__head">
+            <p class="rating-card__q">{{ 'feature.profile.learnings.rating.question' | translate }}</p>
+            <p class="rating-card__sub">{{ 'feature.profile.learnings.rating.subtitle' | translate }}</p>
+          </div>
+          <div class="rating-card__faces">
+            @for (face of faces; track face.value) {
+              <button
+                type="button"
+                class="rating-face"
+                [class.is-picked]="draftRating() === face.value"
+                (click)="pickRating(face.value)"
+                [attr.aria-label]="face.labelKey | translate"
+              >
+                <span class="rating-face__emoji">{{ face.emoji }}</span>
+                <span class="rating-face__label">{{ face.labelKey | translate }}</span>
+              </button>
+            }
+          </div>
+          <div class="rating-card__comment">
+            <label class="rating-card__comment-label">
+              {{
+                (commentRequired()
+                  ? 'feature.profile.learnings.rating.comment_label_required'
+                  : 'feature.profile.learnings.rating.comment_label'
+                ) | translate
+              }}
+            </label>
+            <textarea
+              class="rating-card__comment-input"
+              [placeholder]="'feature.profile.learnings.rating.comment_ph' | translate"
+              [value]="draftComment()"
+              (input)="draftComment.set($any($event.target).value)"
+            ></textarea>
+            @if (commentRequired() && !draftComment().trim()) {
+              <span class="rating-card__comment-hint">
+                {{ 'feature.profile.learnings.rating.comment_required' | translate }}
+              </span>
+            }
+          </div>
+          <button
+            type="button"
+            class="rating-card__submit"
+            [disabled]="draftRating() === null || submitting() || (commentRequired() && !draftComment().trim())"
+            (click)="submitRating()"
+          >
+            {{ 'feature.profile.learnings.rating.submit' | translate }}
+          </button>
+        </section>
+      }
+    </div>
+
+    <!-- ── Right rail: attendance + certificate status ──────────── -->
+    <!-- Inline (in-profile) mode relies on the shared profile sidebar for this. -->
+    @if (!inline()) {
+    <aside class="cd-side">
+      <div class="side-card">
+        <div class="side-card__head">
+          <p class="side-card__title">{{ 'feature.profile.sidebar.my_attendance' | translate }}</p>
+        </div>
+        <div class="cd-att-summary">
+          <span class="cd-att-summary__total">{{ 'feature.my_learnings.card.total' | translate }}</span>
+          <span class="cd-att-chip is-present">{{ attended() }} {{ 'feature.profile.sidebar.present' | translate }}</span>
+          <span class="cd-att-chip is-absent">{{ absent() }} {{ 'feature.profile.sidebar.absent' | translate }}</span>
+        </div>
+        @if (sessions().length === 0) {
+          <p class="side-card__muted">{{ 'feature.profile.sidebar.no_sessions' | translate }}</p>
+        } @else {
+          <ul class="att-list">
+            @for (s of sessions(); track s.id) {
+              <li class="att-list__item">
+                <span class="att-list__label">
+                  {{ s.title }}
+                  @if (s.session_date) { <span class="att-list__date">{{ s.session_date | date: 'mediumDate' }}</span> }
+                </span>
+                <span
+                  class="att-list__status"
+                  [class.is-present]="s.attended"
+                  [class.is-absent]="!s.attended && !sessionIsUpcoming(s)"
+                  [class.is-upcoming]="!s.attended && sessionIsUpcoming(s)"
+                >
+                  {{
+                    (s.attended
+                      ? 'feature.profile.sidebar.present'
+                      : sessionIsUpcoming(s)
+                        ? 'feature.profile.sidebar.session_upcoming'
+                        : 'feature.profile.sidebar.absent'
+                    ) | translate
+                  }}
+                </span>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+      @if (outline()?.certificate_status?.status; as cs) {
+        @if (cs === 'at_risk' || cs === 'blocked') {
+          <div class="cd-cert cd-cert--risk">
+            <p class="cd-cert__title"><i class="pi pi-exclamation-triangle"></i> {{ 'feature.profile.learnings.certificate.at_risk' | translate }}</p>
+            <p class="cd-cert__msg">{{ outline()?.certificate_status?.message ?? ('feature.profile.sidebar.at_risk' | translate) }}</p>
+          </div>
+        } @else if (cs === 'on_track' || cs === 'earned') {
+          <div class="cd-cert cd-cert--ok">
+            <p class="cd-cert__title"><i class="pi pi-verified"></i> {{ (cs === 'earned' ? 'feature.profile.learnings.certificate.earned' : 'feature.profile.learnings.certificate.on_track') | translate }}</p>
+          </div>
+        }
+      }
+    </aside>
+    }
+  </div>
+}

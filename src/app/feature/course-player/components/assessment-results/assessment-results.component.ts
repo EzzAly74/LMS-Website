@@ -18,23 +18,19 @@ import { AssessmentResults } from '../../models/course-player.models';
 })
 export class AssessmentResultsComponent {
   @Input({ required: true }) results!: AssessmentResults;
-  @Input() courseTitle = '';
-
-  protected stateIcon(state: 'correct' | 'incorrect' | 'pending'): string {
-    switch (state) {
-      case 'correct':
-        return 'pi-check-circle';
-      case 'incorrect':
-        return 'pi-times-circle';
-      default:
-        return 'pi-circle';
-    }
-  }
+  @Input() assessmentTypeLabel = '';
+  /** Figma colours the type tag orange for Quiz, purple for Assignment. */
+  @Input() assessmentKind: 'quiz' | 'assignment' | null = null;
 
   protected answerLabel(answer: { value?: string; order?: string[] } | null): string | null {
     if (!answer) {
       return null;
     }
     return answer.value ?? null;
+  }
+
+  /** Zero-padded question number — Figma shows "Q01"/"Q02", not "Q1". */
+  protected questionNumber(position: number): string {
+    return `Q${String(position).padStart(2, '0')}`;
   }
 }

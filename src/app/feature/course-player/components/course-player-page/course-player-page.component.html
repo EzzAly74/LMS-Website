@@ -1,127 +1,129 @@
 @if (loading()) {
-  <app-course-player-skeleton />
+<app-course-player-skeleton />
 } @else if (outline()) {
-  @let o = outline()!;
-  @if (o.weeks.length) {
-  <div class="course-player">
-    <aside class="course-player__sidebar">
-      <div class="course-player__sidebar-header">
-        <a class="course-player__back" [routerLink]="myLearningsRoute">
-          <i class="pi pi-arrow-left"></i>
-          {{ 'feature.course_player.back' | translate }}
-        </a>
-        <h1 class="course-player__course-title">{{ o.course_title }}</h1>
-        <div class="course-player__progress-row">
-          <div class="course-player__progress-bar">
-            <div class="course-player__progress-fill" [style.width.%]="o.modules_total ? (o.modules_completed / o.modules_total) * 100 : 0"></div>
-          </div>
-          <span>{{ 'feature.course_player.modules_completed' | translate: { completed: o.modules_completed, total: o.modules_total } }}</span>
-        </div>
-      </div>
-
-      <nav class="course-player__outline">
-        <p class="course-player__outline-heading">{{ 'feature.course_player.curriculum' | translate }}</p>
-        @for (week of o.weeks; track week.label) {
-          <div class="course-player__week">
-            <button type="button" class="course-player__week-header" (click)="toggleWeek(week.label)">
-              <span>{{ week.label }}</span>
-              <i class="pi" [class.pi-chevron-down]="!isWeekExpanded(week.label)" [class.pi-chevron-up]="isWeekExpanded(week.label)"></i>
-            </button>
-
-            @if (isWeekExpanded(week.label)) {
-              <ul class="course-player__item-list">
-                @for (item of week.items; track item.kind + '-' + item.id) {
-                  <li>
-                    <button
-                      type="button"
-                      class="course-player__item"
-                      [class.is-active]="activeItem()?.kind === item.kind && activeItem()?.id === item.id"
-                      (click)="selectItem(item)"
-                    >
-                      <i
-                        class="pi course-player__item-icon"
-                        [class.pi-play-circle]="item.content_type === 'video'"
-                        [class.pi-file]="item.content_type === 'document' || item.content_type === 'article'"
-                        [class.pi-external-link]="item.content_type === 'link'"
-                        [class.pi-question-circle]="item.kind === 'quiz'"
-                        [class.pi-verified]="item.kind === 'assignment'"
-                      ></i>
-                      <span>{{ item.title }}</span>
-                      @if (item.completed) {
-                        <i class="pi pi-check-circle course-player__item-status"></i>
-                      } @else {
-                        <span class="course-player__item-dot"></span>
-                      }
-                    </button>
-                  </li>
-                }
-              </ul>
-            }
-          </div>
-        }
-      </nav>
-    </aside>
-
-    <section class="course-player__main">
-      <div class="course-player__content-header">
-        <span class="course-player__breadcrumb">{{ 'feature.course_player.curriculum' | translate }}</span>
-        @if (o.certificate_status.status; as status) {
-          <app-badge tone="certificate" [status]="status" icon="pi-check-circle" [label]="'feature.my_learnings.certificate.' + status | translate" />
-        }
-      </div>
-
-      <div class="course-player__content">
-        @switch (viewMode()) {
-          @case ('lecture') {
-            @if (currentLecture(); as lecture) {
-              <app-lesson-viewer
-                [lecture]="lecture"
-                (confirmCompletion)="onConfirmCompletion($event)"
-                (markComplete)="onMarkComplete()"
-              />
-            }
-          }
-          @case ('quiz') {
-            @if (currentQuestion(); as question) {
-              <app-quiz-runner
-                [question]="question"
-                [feedback]="currentFeedback()"
-                [isLastQuestion]="isLastQuestion()"
-                [assessmentTypeLabel]="assessmentTypeLabel()"
-                (submit)="onSubmitAnswer($event)"
-                (next)="onNextQuestion()"
-                (finish)="onFinishAssessment()"
-              />
-            }
-          }
-          @case ('results') {
-            @if (currentResults(); as results) {
-              <app-assessment-results [results]="results" [courseTitle]="o.course_title" />
-            }
-          }
-        }
-      </div>
-
-      <div class="course-player__bottom-nav">
-        <button type="button" class="course-player__nav-btn" [disabled]="!hasPrevious()" (click)="goPrevious()">
-          {{ 'feature.course_player.nav.previous' | translate }}
-        </button>
-        <span class="course-player__nav-position">{{ activeIndex() + 1 }} / {{ flatItems().length }}</span>
-        <button type="button" class="course-player__nav-btn" [disabled]="!hasNext()" (click)="goNext()">
-          {{ 'feature.course_player.nav.next' | translate }}
-        </button>
-      </div>
-    </section>
-  </div>
-  } @else {
-    <div class="course-player__empty">
-      <i class="pi pi-inbox course-player__empty-icon"></i>
-      <p class="course-player__empty-title">{{ 'feature.course_player.empty.title' | translate }}</p>
-      <p class="course-player__empty-message">{{ 'feature.course_player.empty.message' | translate }}</p>
-      <a class="course-player__back course-player__empty-back" [routerLink]="myLearningsRoute">
+@let o = outline()!;
+@if (o.weeks.length) {
+<div class="course-player">
+  <aside class="course-player__sidebar">
+    <div class="course-player__sidebar-header">
+      <a class="course-player__back" [routerLink]="myLearningsRoute">
         <i class="pi pi-arrow-left"></i>
         {{ 'feature.course_player.back' | translate }}
       </a>
+      <h1 class="course-player__course-title">{{ o.course_title }}</h1>
+      <div class="course-player__progress-row">
+        <div class="course-player__progress-bar">
+          <div class="course-player__progress-fill"
+            [style.width.%]="o.modules_total ? (o.modules_completed / o.modules_total) * 100 : 0"></div>
+        </div>
+        <span>{{ 'feature.course_player.modules_completed' | translate: { completed: o.modules_completed, total:
+          o.modules_total } }}</span>
+      </div>
     </div>
-  }
+
+    <!-- Figma's course-outline has no "Curriculum" heading — the week list
+           starts right below the progress bar (900:45220). -->
+    <nav class="course-player__outline">
+      @for (week of o.weeks; track week.label) {
+      <div class="course-player__week">
+        <button type="button" class="course-player__week-header" [class.is-active]="isWeekActive(week)"
+          (click)="toggleWeek(week.label)">
+          <span class="course-player__week-label">
+            @if (isWeekComplete(week)) {
+            <span class="cp-ico cp-ico--check course-player__week-check"></span>
+            }
+            {{ week.label }}
+          </span>
+          <span class="cp-ico course-player__week-chevron" [class.cp-ico--chevron-up]="isWeekExpanded(week.label)"
+            [class.cp-ico--chevron-down]="!isWeekExpanded(week.label)"></span>
+        </button>
+
+        @if (isWeekExpanded(week.label)) {
+        <ul class="course-player__item-list">
+          @for (item of week.items; track item.kind + '-' + item.id) {
+          <li>
+            <button type="button" class="course-player__item" [class.is-active]="isItemActive(item)"
+              [class.is-completed]="item.completed" [class.is-quiz]="isQuizKind(item)" (click)="selectItem(item)">
+              <span class="cp-ico course-player__item-icon" [class.cp-ico--play]="itemIcon(item) === 'play'"
+                [class.cp-ico--file]="itemIcon(item) === 'file'"
+                [class.cp-ico--external]="itemIcon(item) === 'external'"
+                [class.cp-ico--quiz]="itemIcon(item) === 'quiz'"></span>
+              <span class="course-player__item-title">{{ item.title }}</span>
+              @if (item.completed) {
+              <span class="cp-ico cp-ico--check course-player__item-check"></span>
+              } @else if (isItemActive(item)) {
+              <span class="course-player__item-dot"></span>
+              } @else {
+              <span class="cp-ico cp-ico--dashed course-player__item-todo"></span>
+              }
+            </button>
+          </li>
+          }
+        </ul>
+        }
+      </div>
+      }
+    </nav>
+  </aside>
+
+  <section class="course-player__main">
+    <div class="course-player__content-header">
+      <span class="course-player__breadcrumb">{{ 'feature.course_player.track_certificate' | translate }}</span>
+      @if (o.certificate_status.status; as status) {
+      <app-badge tone="certificate" [status]="status" icon="pi-check-circle"
+        [label]="'feature.my_learnings.certificate.' + status | translate" />
+      }
+    </div>
+
+    <div class="course-player__content">
+      @switch (viewMode()) {
+      @case ('lecture') {
+      @if (currentLecture(); as lecture) {
+      <app-lesson-viewer [lecture]="lecture" (confirmCompletion)="onConfirmCompletion($event)"
+        (markComplete)="onMarkComplete()" />
+      }
+      }
+      @case ('quiz') {
+      @if (currentQuestion(); as question) {
+      <app-quiz-runner [question]="question" [feedback]="currentFeedback()" [runningScore]="runningScore()"
+        [quizMaxScore]="quizMaxScore()" [isLastQuestion]="isLastQuestion()"
+        [assessmentTypeLabel]="assessmentTypeLabel()" [assessmentKind]="assessmentKind()"
+        (submit)="onSubmitAnswer($event)" (next)="onNextQuestion()" (finish)="onFinishAssessment()" />
+      }
+      }
+      @case ('results') {
+      @if (currentResults(); as results) {
+      <app-assessment-results [results]="results" [assessmentTypeLabel]="assessmentTypeLabel()"
+        [assessmentKind]="assessmentKind()" />
+      }
+      }
+      }
+    </div>
+
+    <div class="course-player__bottom-nav">
+      <button type="button" class="course-player__nav-btn" [disabled]="!hasPrevious()" (click)="goPrevious()">
+        <span class="cp-ico cp-ico--arrow-left"></span>
+        {{ 'feature.course_player.nav.previous' | translate }}
+      </button>
+      <span class="course-player__nav-position">
+        {{ 'feature.course_player.nav.position' | translate: { index: activeIndex() + 1, total: flatItems().length } }}
+      </span>
+      <button type="button" class="course-player__nav-btn" [disabled]="!hasNext()" (click)="goNext()">
+        {{ 'feature.course_player.nav.next' | translate }}
+        <span class="cp-ico cp-ico--arrow-right"></span>
+      </button>
+    </div>
+  </section>
+</div>
+} @else {
+<div class="course-player__empty">
+  <img class="empty-state__icon" src="assets/shared/empty-state.svg" alt="Empty State" aria-hidden="true" />
+  <p class="course-player__empty-title">{{ 'feature.course_player.empty.title' | translate }}</p>
+  <p class="course-player__empty-message">{{ 'feature.course_player.empty.message' | translate }}</p>
+  <a class="course-player__back course-player__empty-back" [routerLink]="myLearningsRoute">
+    <i class="pi pi-arrow-left"></i>
+    {{ 'feature.course_player.back' | translate }}
+  </a>
+</div>
+}
 }

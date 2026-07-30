@@ -1,22 +1,21 @@
 <div class="quiz-runner">
   <div class="quiz-runner__header">
-    <div class="quiz-runner__progress-row">
-      <span class="quiz-runner__type-tag">{{ assessmentTypeLabel }}</span>
-      @if (feedback) {
-        <span class="quiz-runner__score-chip">
-          {{ 'feature.course_player.quiz.score' | translate }}: {{ feedback.running_total_score }}/{{ feedback.quiz_max_score }}
-          @if (isLastQuestion && feedback.finalized) {
-            <span class="quiz-runner__passed">{{ 'feature.course_player.quiz.passed' | translate }}</span>
-          }
+    <div class="quiz-runner__tag-row">
+      <span class="quiz-runner__type-tag" [class.quiz-runner__type-tag--assignment]="assessmentKind === 'assignment'">
+        {{ assessmentTypeLabel }}
+      </span>
+      <div class="quiz-runner__progress-row">
+        <div class="quiz-runner__progress-bar">
+          <div class="quiz-runner__progress-fill" [style.width.%]="(question.position / (feedback?.questions_count ?? question.position)) * 100"></div>
+        </div>
+        <span class="quiz-runner__progress-label">
+          {{ 'feature.course_player.quiz.question_of' | translate: { current: question.position, total: feedback?.questions_count ?? question.position } }}
         </span>
-      }
+      </div>
     </div>
-    <div class="quiz-runner__progress-bar">
-      <div class="quiz-runner__progress-fill" [style.width.%]="(question.position / (feedback?.questions_count ?? question.position)) * 100"></div>
-    </div>
-  </div>
 
-  <p class="quiz-runner__question-text">{{ question.question }}</p>
+    <p class="quiz-runner__question-text">{{ question.question }}</p>
+  </div>
 
   @switch (question.type) {
     @case ('open') {
@@ -37,17 +36,22 @@
     @case ('reorder') {
       <ol class="quiz-runner__reorder-list">
         @for (item of reorderItems(); track item; let i = $index) {
-          <li class="quiz-runner__reorder-item">
-            <span>{{ item }}</span>
-            @if (!answered) {
+          <li class="quiz-runner__reorder-item" [class.is-correct-position]="isReorderItemCorrect(item, i)">
+            <div class="quiz-runner__reorder-item-main">
+              <span>{{ item }}</span>
+              <!-- Kept visible (disabled) once answered, matching Figma
+                   913:49572 — the buttons stay in place, not removed. -->
               <span class="quiz-runner__reorder-controls">
-                <button type="button" [disabled]="i === 0" (click)="moveUp(i)" aria-label="Move up">
+                <button type="button" [disabled]="answered || i === 0" (click)="moveUp(i)" aria-label="Move up">
                   <i class="pi pi-arrow-up"></i>
                 </button>
-                <button type="button" [disabled]="i === reorderItems().length - 1" (click)="moveDown(i)" aria-label="Move down">
+                <button type="button" [disabled]="answered || i === reorderItems().length - 1" (click)="moveDown(i)" aria-label="Move down">
                   <i class="pi pi-arrow-down"></i>
                 </button>
               </span>
+            </div>
+            @if (isReorderItemCorrect(item, i)) {
+              <span class="quiz-runner__option-check"></span>
             }
           </li>
         }
@@ -70,20 +74,33 @@
           <button
             type="button"
             class="quiz-runner__option"
-            [class.is-selected]="selectedValue() === option"
-            [class.is-correct]="optionState(option) === 'correct'"
+            [class.is-selected]="selectedValue() === option && !answered"
+            [class.is-correct-selected]="optionState(option) === 'correct-selected'"
+            [class.is-correct-reveal]="optionState(option) === 'correct-reveal'"
             [class.is-incorrect]="optionState(option) === 'incorrect'"
             [disabled]="answered"
             (click)="selectOption(option)"
           >
             <span>{{ option }}</span>
-            @if (optionState(option) !== 'neutral') {
-              <i class="pi" [class.pi-check-circle]="optionState(option) === 'correct'" [class.pi-times-circle]="optionState(option) === 'incorrect'"></i>
+            @if (optionState(option) === 'correct-selected' || optionState(option) === 'correct-reveal') {
+              <span class="quiz-runner__option-check"></span>
             }
           </button>
         }
       </div>
     }
+  }
+
+  <!-- "Score  XX/YY" pill (Figma 913:47077) — shown on every question, not
+       just once answered (running_total_score persists via the parent). -->
+  @if (quizMaxScore !== null) {
+    <div class="quiz-runner__score">
+      <span class="quiz-runner__score-label">{{ 'feature.course_player.quiz.score' | translate }}</span>
+      <span class="quiz-runner__score-pill" [class.is-passed]="feedback?.finalized">{{ runningScore ?? 0 }}/{{ quizMaxScore }}</span>
+      @if (feedback?.finalized) {
+        <span class="quiz-runner__score-passed">{{ 'feature.course_player.quiz.passed' | translate }}</span>
+      }
+    </div>
   }
 
   <div class="quiz-runner__actions">

@@ -78,6 +78,21 @@ export interface LearningProgress {
 
 export type DeliveryType = 'online' | 'offline' | 'hybrid' | 'external_link';
 
+/** Certificate progress projection for an active course (backend
+ * CertificateProjectionService). `null` status ⇒ course offers no certificate. */
+export type CertificateStatus = 'earned' | 'on_track' | 'at_risk' | 'blocked' | null;
+
+export interface CertificateProjection {
+  status: CertificateStatus;
+  blocked_reason: 'attendance' | 'score' | 'both' | null;
+  message: string | null;
+  certificate_mode: 'attendance' | 'score' | 'both' | null;
+  attendance_percent: number | null;
+  score_percent: number | null;
+  attendance_threshold: number | null;
+  score_threshold: number | null;
+}
+
 /** One active-course row (mobile MyLearningActiveCourseResource). */
 export interface LearningCourse {
   id: number;
@@ -89,6 +104,9 @@ export interface LearningCourse {
   instructors: { id: number; name: string; image: string | null }[];
   cohort: { id: number; name: string; start_date: string; end_date: string } | null;
   progress: LearningProgress;
+  /** Certificate badge ("Certificate: On track / At Risk") — Figma frame 6. */
+  certificate_status: CertificateStatus;
+  certificate_projection: CertificateProjection | null;
   rate: number | null;
   rate_label: string | null;
   session_number: number | null;
@@ -118,6 +136,28 @@ export interface CompletedCourse {
   score_percent: number | null;
   certificate_id: number | null;
   certificate_earned: boolean;
+  /** Whether the course offers a certificate at all. Lets the UI show a
+   * neutral "Completed" (never offered) vs a red "Not certified" (offered
+   * but not earned). Backend ProfileDashboardService::completedCourses. */
+  certificate_offered: boolean;
+}
+
+/** One session in the "This week" calendar card. */
+export interface WeekSession {
+  id: number;
+  course_id: number;
+  course_title: string;
+  title: string;
+  session_date: string;
+  time_from: string | null;
+  time_to: string | null;
+  status: 'active' | 'upcoming' | 'past';
+}
+
+/** The learner's current-week schedule across all enrolments. */
+export interface WeekSchedule {
+  range: { start: string; end: string };
+  sessions: WeekSession[];
 }
 
 /** An earned certificate (mobile CertificateResource). */
