@@ -109,11 +109,14 @@
   background: var(--color-essential-tertiary);
   color: var(--color-essential-primary);
   box-shadow: var(--elevation-shadow-sm);
+  transition: background-color 0.25s ease-in-out;
   @include typography('button-large', 'medium');
 
   &:disabled {
     opacity: var(--opacity-disabled);
   }
+  &:hover:not(:disabled) { background: var(--color-primary-700); }
+
 }
 
 .login__helper {

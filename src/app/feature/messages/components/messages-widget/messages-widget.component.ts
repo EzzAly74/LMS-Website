@@ -1,11 +1,22 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  OnInit,
+  computed,
+  effect,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
-import { interval } from 'rxjs';
 
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
+import { MessagesRealtimeService } from '../../../../core/services/messages-realtime.service';
 import { Conversation, ConversationThread, MessageRecipient, MessageTab, RecipientGroup } from '../../models/messages.models';
 import { MessagesService } from '../../services/messages.service';
 
@@ -15,7 +26,7 @@ const TABS: MessageTab[] = ['all', 'instructors', 'admins'];
  * Floating Messages widget (Figma frames 841-42746 / 841-43294): an envelope
  * FAB with an unread badge that opens a popover with the conversation list
  * (All / Instructors / Admins) and a thread view + composer. Unread count is
- * polled so the badge stays fresh.
+ * realtime (see MessagesRealtimeService), not polled.
  */
 @Component({
   selector: 'app-messages-widget',
@@ -28,6 +39,7 @@ const TABS: MessageTab[] = ['all', 'instructors', 'admins'];
 export class MessagesWidgetComponent implements OnInit {
   private readonly service = inject(MessagesService);
   private readonly destroyRef = inject(DestroyRef);
+  protected readonly realtime = inject(MessagesRealtimeService);
 
   protected readonly tabs = TABS;
   protected readonly open = signal(false);
@@ -36,7 +48,6 @@ export class MessagesWidgetComponent implements OnInit {
   protected readonly loadingList = signal(false);
   protected readonly thread = signal<ConversationThread | null>(null);
   protected readonly loadingThread = signal(false);
-  protected readonly unread = signal(0);
   protected readonly draft = signal('');
   protected readonly sending = signal(false);
 
@@ -63,12 +74,41 @@ export class MessagesWidgetComponent implements OnInit {
   /** True when the right pane is showing a thread or the compose flow. */
   protected readonly detailOpen = computed(() => this.thread() !== null || this.composing());
 
+  private readonly threadScroll = viewChild<ElementRef<HTMLDivElement>>('threadScroll');
+
+  constructor() {
+    // Chat should always open on the latest messages — re-run whenever the
+    // thread is (re)loaded, a reply is sent, or a realtime push updates it.
+    effect(() => {
+      const count = this.thread()?.messages.length ?? 0;
+      if (count === 0) return;
+      setTimeout(() => this.scrollThreadToBottom());
+    });
+  }
+
+  private scrollThreadToBottom(): void {
+    const el = this.threadScroll()?.nativeElement;
+    if (el) el.scrollTop = el.scrollHeight;
+  }
+
   ngOnInit(): void {
-    this.refreshUnread();
-    // Poll the unread badge every 30s while the app is open.
-    interval(30_000)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.refreshUnread());
+    // Realtime push (see MessagesRealtimeService) replaces the old 30s poll —
+    // refresh the open list for every incoming message, and live-append it
+    // if its thread is the one currently open.
+    this.realtime.messageReceived$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((payload) => {
+      if (this.open()) this.loadConversations();
+      if (this.thread()?.conversation.id === payload.conversation_id) {
+        // The thread is already open — fetching it marks the conversation
+        // read server-side, so the badge the realtime push just bumped
+        // needs correcting back down immediately, not on next reopen.
+        this.service.getThread(payload.conversation_id).subscribe({
+          next: (res) => {
+            if (res.status === 'success' && res.result) this.thread.set(res.result);
+            this.realtime.refreshUnread();
+          },
+        });
+      }
+    });
   }
 
   protected toggle(): void {
@@ -98,7 +138,7 @@ export class MessagesWidgetComponent implements OnInit {
       next: (res) => {
         this.thread.set(res.status === 'success' && res.result ? res.result : null);
         this.loadingThread.set(false);
-        this.refreshUnread();
+        this.realtime.refreshUnread();
       },
       error: () => this.loadingThread.set(false),
     });
@@ -181,12 +221,6 @@ export class MessagesWidgetComponent implements OnInit {
         this.loadingList.set(false);
       },
       error: () => this.loadingList.set(false),
-    });
-  }
-
-  private refreshUnread(): void {
-    this.service.getUnreadCount().subscribe({
-      next: (res) => this.unread.set(res.status === 'success' && res.result ? res.result.count : 0),
     });
   }
 }

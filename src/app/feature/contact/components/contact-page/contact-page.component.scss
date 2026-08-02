@@ -124,8 +124,8 @@
     justify-content: center;
     gap: var(--spacing-16xs);
     @include typography('button', 'medium');
-    transition: opacity 0.15s ease;
-    &:hover:not(:disabled) { opacity: 0.92; }
+    transition: background-color .25s ease-in-out;
+    &:hover:not(:disabled) { background: var(--color-primary-700); }
     &:disabled { opacity: 0.5; cursor: not-allowed; }
   }
 }

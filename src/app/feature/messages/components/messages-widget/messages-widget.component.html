@@ -127,7 +127,7 @@
           </div>
         </div>
 
-        <div class="msg-thread">
+        <div class="msg-thread" #threadScroll>
           @if (loadingThread()) {
           <p class="msg-muted">{{ 'common.loading' | translate }}</p>
           } @else {
@@ -159,8 +159,8 @@
 
   <button type="button" class="msg-fab" (click)="toggle()" [attr.aria-label]="'feature.messages.title' | translate">
     <i class="pi" [class.pi-envelope]="!open()" [class.pi-times]="open()"></i>
-    @if (unread() > 0 && !open()) {
-    <span class="msg-fab__badge">{{ unread() }}</span>
+    @if (realtime.unreadCount() > 0 && !open()) {
+    <span class="msg-fab__badge">{{ realtime.unreadCount() > 99 ? '99+' : realtime.unreadCount() }}</span>
     }
   </button>
 </div>

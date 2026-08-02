@@ -71,7 +71,11 @@
     background: var(--color-essential-tertiary);
     color: var(--color-essential-primary);
     box-shadow: var(--elevation-shadow-sm);
+    transition: background-color .25s ease-in-out;
     @include typography('body-small', 'medium');
+
+    &:hover:not(:disabled) { background: var(--color-primary-700); }
+
   }
 
   &__cta-icon {
@@ -304,7 +308,10 @@
     align-items: center;
     gap: var(--spacing-17xs);
     @include typography('caption', 'regular');
-    color: var(--color-status-warning-500);
+    margin-block: 16px;
+    font-size: 10px;
+    color: #dc3545;
+    gap: 8px;
   }
 
   &__submit {
@@ -316,9 +323,13 @@
     background: var(--color-essential-tertiary);
     color: var(--color-essential-primary);
     cursor: pointer;
+    transition: background-color .25s ease-in-out;
     @include typography('button', 'medium');
 
     &:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
+
+
+    &:hover:not(:disabled) { background: var(--color-primary-700); }
   }
 }
 
