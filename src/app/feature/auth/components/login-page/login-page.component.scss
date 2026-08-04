@@ -1,8 +1,8 @@
-@use 'mixins' as *;
+@use "mixins" as *;
 
 .login {
   display: grid;
-  grid-template-columns: 1fr 576px;
+  grid-template-columns: 60% 40%;
   min-height: 100vh;
   background: var(--color-essential-primary);
 }
@@ -13,8 +13,8 @@
 .login__form-col {
   display: flex;
   align-items: center;
-  // Figma: form offset 96px from the edge (64 + 32), 64px on the inner side.
-  padding-inline: calc(var(--spacing-12xl) + var(--spacing-3xs)) var(--spacing-12xl);
+  justify-content: center;
+  padding-inline: var(--spacing-12xl);
   padding-block: var(--spacing-3xs);
 }
 
@@ -32,21 +32,29 @@
 }
 
 .login__title {
-  @include typography('large-heading', 'medium');
+  @include typography("large-heading", "medium");
   color: var(--color-essential-secondary);
 }
 
 .login__subtitle {
-  @include typography('subtitle-small', 'regular');
+  @include typography("subtitle-small", "regular");
   color: var(--color-neutral-700);
 }
 
 .login__server-error {
-  @include typography('body-small', 'medium');
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-14xs);
+  @include typography("body-small", "medium");
   color: var(--color-status-warning);
   background: var(--color-status-warning-08);
+  border: var(--stroke-width-default) solid var(--color-status-warning);
   padding: var(--spacing-15xs) var(--spacing-13xs);
   border-radius: var(--radius-control-sm);
+}
+
+.login__server-error-icon {
+  flex-shrink: 0;
 }
 
 .login__input {
@@ -73,11 +81,23 @@
     outline: none;
     background: transparent;
     color: var(--color-essential-secondary);
-    @include typography('body', 'regular');
+    @include typography("body", "regular");
 
     &::placeholder {
       color: var(--color-neutral-700);
     }
+  }
+}
+
+.our-field__error {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-14xs);
+  color: var(--color-status-warning);
+  @include typography("body-small", "regular");
+
+  svg {
+    flex-shrink: 0;
   }
 }
 
@@ -102,6 +122,10 @@
 }
 
 .login__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-14xs);
   width: 100%;
   padding: var(--spacing-13xs) var(--spacing-11xs);
   border: none;
@@ -110,17 +134,35 @@
   color: var(--color-essential-primary);
   box-shadow: var(--elevation-shadow-sm);
   transition: background-color 0.25s ease-in-out;
-  @include typography('button-large', 'medium');
+  @include typography("button-large", "medium");
 
   &:disabled {
     opacity: var(--opacity-disabled);
+    cursor: not-allowed;
   }
-  &:hover:not(:disabled) { background: var(--color-primary-700); }
+  &:hover:not(:disabled) {
+    background: var(--color-primary-700);
+  }
+}
 
+.login__submit-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--color-essential-primary);
+  border-radius: 50%;
+  animation: login-spin 0.7s linear infinite;
+}
+
+@keyframes login-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .login__helper {
-  @include typography('body-small', 'regular');
+  @include typography("body-small", "regular");
   color: var(--color-neutral-700);
   text-align: center;
 }
@@ -152,13 +194,15 @@
 }
 
 .login__brand-title {
-  @include typography('h1', 'medium');
+  display: flex;
+  flex-direction: column;
+  @include typography("h1", "medium");
   color: var(--color-grey-0);
   margin-bottom: var(--spacing-12xs);
 }
 
 .login__brand-subtitle {
-  @include typography('subtitle-small', 'regular');
+  @include typography("subtitle-small", "regular");
   color: var(--color-neutral-400);
 }
 
@@ -209,29 +253,64 @@
   top: 580px;
   width: 52px;
   height: 52px;
-  background-image: radial-gradient(var(--color-primary-700) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(
+    var(--color-primary-700) 1.5px,
+    transparent 1.5px
+  );
   background-size: var(--spacing-11xs) var(--spacing-11xs);
 }
 
 // ---------------------------------------------------------------------------
-// Responsive — collapse to a single column; brand panel hidden on narrow widths
-// (mobile login frame 1000-49652 to be reconciled in a follow-up pass).
+// Responsive — collapse to a single stacked column; brand panel (aside) moves
+// below the main form section.
 // ---------------------------------------------------------------------------
 @media (max-width: 900px) {
   .login {
     grid-template-columns: 1fr;
-  }
-
-  .login__brand {
-    display: none;
+    grid-template-rows: auto auto;
   }
 
   .login__form-col {
+    order: 1;
     justify-content: center;
     padding-inline: var(--spacing-3xs);
+    padding-block: var(--spacing-12xl) var(--spacing-3xs);
+    min-height: 100vh;
   }
 
   .login__form {
     width: 100%;
+    max-width: 440px;
+  }
+
+  .login__brand {
+    order: 2;
+    min-height: 200px;
+    padding: var(--spacing-12xl) var(--spacing-9xl);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login__brand-content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .login__dots,
+  .login__ring--2,
+  .login__ring--3,
+  .login__ring--4 {
+    display: none;
+  }
+
+  .login__ring--1 {
+    width: 280px;
+    height: 280px;
+    top: -60px;
+    // Physical `left` + `translateX` on purpose: this is a horizontal-centering
+    // trick, not a start/end offset, so it must not flip with `dir="rtl"`.
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
 }

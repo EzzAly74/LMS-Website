@@ -7,7 +7,14 @@
       </header>
 
       @if (serverError()) {
-        <p class="login__server-error" role="alert">{{ serverError() }}</p>
+        <div class="login__server-error" role="alert">
+          <svg class="login__server-error-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" />
+            <path d="M10 9v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            <circle cx="10" cy="6.5" r="0.75" fill="currentColor" />
+          </svg>
+          <span>{{ serverError() }}</span>
+        </div>
       }
 
       <div class="our-field">
@@ -22,7 +29,14 @@
           />
         </div>
         @if (form.controls.email.touched && form.controls.email.hasError('required')) {
-          <small class="our-field__error">{{ 'common.required' | translate }}</small>
+          <small class="our-field__error">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" />
+              <path d="M10 9v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              <circle cx="10" cy="6.5" r="0.75" fill="currentColor" />
+            </svg>
+            {{ 'common.required' | translate }}
+          </small>
         }
       </div>
 
@@ -48,12 +62,22 @@
           </button>
         </div>
         @if (form.controls.password.touched && form.controls.password.hasError('required')) {
-          <small class="our-field__error">{{ 'common.required' | translate }}</small>
+          <small class="our-field__error">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" />
+              <path d="M10 9v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              <circle cx="10" cy="6.5" r="0.75" fill="currentColor" />
+            </svg>
+            {{ 'common.required' | translate }}
+          </small>
         }
       </div>
 
       <div class="login__actions">
         <button type="submit" class="login__submit" [disabled]="loading()">
+          @if (loading()) {
+            <span class="login__submit-spinner" aria-hidden="true"></span>
+          }
           {{ 'feature.auth.login.submit' | translate }}
         </button>
         <p class="login__helper">{{ 'feature.auth.login.helper' | translate }}</p>
@@ -71,7 +95,10 @@
     </div>
     <div class="login__brand-content">
       <img class="login__brand-logo" src="assets/brand/nas-logo-on-dark.svg" alt="NAS" width="123" height="40" />
-      <h2 class="login__brand-title">{{ 'feature.auth.login.brand_title' | translate }}</h2>
+      <h2 class="login__brand-title">
+        <span>{{ 'feature.auth.login.brand_line1' | translate }}</span>
+        <span>{{ 'feature.auth.login.brand_line2' | translate }}</span>
+      </h2>
       <p class="login__brand-subtitle">{{ 'feature.auth.login.brand_subtitle' | translate }}</p>
     </div>
   </aside>
