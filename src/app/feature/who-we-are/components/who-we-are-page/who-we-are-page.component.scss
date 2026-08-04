@@ -1,4 +1,4 @@
-@use 'mixins' as *;
+@use "mixins" as *;
 
 // =============================================================================
 // Who We Are — pixel-perfect from Figma 1665:88349 (web) + 1665:88730 (mobile).
@@ -55,20 +55,20 @@
   }
 
   &__overline {
-    @include typography('caption', 'bold');
+    @include typography("caption", "bold");
     color: var(--color-primary-600);
     text-transform: uppercase;
     margin: 0;
   }
 
   &__title {
-    @include typography('large-heading', 'bold');
+    @include typography("large-heading", "bold");
     color: var(--color-neutral-1000);
     margin: 0;
   }
 
   &__body {
-    @include typography('body', 'regular');
+    @include typography("body", "regular");
     color: var(--color-neutral-700);
     margin: 0;
   }
@@ -126,14 +126,14 @@
 
     // Mobile type scale (Figma 1665:88735-88737)
     &__overline {
-      @include typography('body-small', 'bold');
+      @include typography("body-small", "bold");
       text-transform: none;
     }
     &__title {
-      @include typography('h2', 'bold');
+      @include typography("h2", "bold");
     }
     &__body {
-      @include typography('body-small', 'regular');
+      @include typography("body-small", "regular");
     }
     &__body-more {
       display: none; // mobile copy keeps only the first sentence
@@ -189,13 +189,13 @@
   }
 
   &__kicker {
-    @include typography('body', 'bold');
+    @include typography("body", "bold");
     color: var(--color-additionally-400);
     margin: 0;
   }
 
   &__title {
-    @include typography('large-heading', 'bold');
+    @include typography("large-heading", "bold");
     color: var(--color-neutral-0);
     margin: 0;
   }
@@ -221,10 +221,10 @@
       gap: 8px;
     }
     &__kicker {
-      @include typography('body', 'bold');
+      @include typography("body", "bold");
     }
     &__title {
-      @include typography('h2', 'bold');
+      @include typography("h2", "bold");
     }
   }
 }
@@ -260,7 +260,7 @@
   }
 
   &__label {
-    @include typography('caption', 'bold');
+    @include typography("caption", "bold");
     color: var(--color-additionally-400);
     margin: 0;
   }
@@ -270,14 +270,14 @@
   }
 
   &__title {
-    @include typography('h1', 'bold');
+    @include typography("h1", "bold");
     color: var(--color-neutral-0);
     margin: 0;
     max-inline-size: 311px;
   }
 
   &__desc {
-    @include typography('body-small', 'regular');
+    @include typography("body-small", "regular");
     color: var(--color-neutral-500);
     margin: 0;
     max-inline-size: 311px;
@@ -349,7 +349,7 @@
     }
 
     &__title {
-      @include typography('subtitle', 'bold');
+      @include typography("subtitle", "bold");
       max-inline-size: none;
     }
     &__desc {
@@ -371,21 +371,47 @@ $reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
 $pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
 
 @keyframes who-fade-rise-15 {
-  from { opacity: 0; translate: 0 15px; }
-  to { opacity: 1; translate: 0 0; }
+  from {
+    opacity: 0;
+    translate: 0 15px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
 }
 @keyframes who-fade-rise-16 {
-  from { opacity: 0; translate: 0 16px; }
-  to { opacity: 1; translate: 0 0; }
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
 }
 @keyframes who-dot-pop {
-  from { opacity: 0; scale: 0; }
-  to { opacity: 1; scale: 1; }
+  from {
+    opacity: 0;
+    scale: 0;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
 }
 @keyframes who-rail-grow {
-  from { opacity: 0; scale: 1 0; }
-  5% { opacity: 1; }
-  to { opacity: 1; scale: 1 1; }
+  from {
+    opacity: 0;
+    scale: 1 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    scale: 1 1;
+  }
 }
 
 .who-journey:not(.is-live) {
@@ -422,12 +448,25 @@ $pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
   .tl-node__content {
     animation: who-fade-rise-16 450ms $reveal-ease both;
   }
-  .tl-node:nth-child(1) .tl-node__content { animation-delay: 550ms; }
-  .tl-node:nth-child(2) .tl-node__content { animation-delay: 950ms; }
-  .tl-node:nth-child(3) .tl-node__content { animation-delay: 1500ms; }
-  .tl-node:nth-child(4) .tl-node__content { animation-delay: 2050ms; }
-  .tl-node:nth-child(5) .tl-node__content { animation-delay: 2600ms; }
-  .tl-node:nth-child(6) .tl-node__content { animation-delay: 3200ms; animation-duration: 500ms; }
+  .tl-node:nth-child(1) .tl-node__content {
+    animation-delay: 550ms;
+  }
+  .tl-node:nth-child(2) .tl-node__content {
+    animation-delay: 950ms;
+  }
+  .tl-node:nth-child(3) .tl-node__content {
+    animation-delay: 1500ms;
+  }
+  .tl-node:nth-child(4) .tl-node__content {
+    animation-delay: 2050ms;
+  }
+  .tl-node:nth-child(5) .tl-node__content {
+    animation-delay: 2600ms;
+  }
+  .tl-node:nth-child(6) .tl-node__content {
+    animation-delay: 3200ms;
+    animation-duration: 500ms;
+  }
 }
 
 /* ── What that actually gets you (Figma Advantages_Section) ─────── */
@@ -439,7 +478,7 @@ $pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
   padding: 80px;
 
   &__title {
-    @include typography('large-heading', 'bold');
+    @include typography("large-heading", "bold");
     color: var(--color-neutral-1000);
     margin: 0;
     text-align: center;
@@ -464,7 +503,7 @@ $pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
     padding: 40px 20px;
 
     &__title {
-      @include typography('h2', 'bold');
+      @include typography("h2", "bold");
     }
 
     &__grid {
@@ -507,13 +546,13 @@ $pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
   }
 
   &__title {
-    @include typography('h2', 'bold');
+    @include typography("h2", "bold");
     color: var(--color-primary-1000);
     margin: 0;
   }
 
   &__desc {
-    @include typography('body-small', 'regular');
+    @include typography("body-small", "regular");
     color: var(--color-neutral-700);
     margin: 0;
   }
@@ -533,7 +572,7 @@ $pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
     }
 
     &__title {
-      @include typography('subtitle', 'bold');
+      @include typography("subtitle", "bold");
     }
   }
 }
@@ -620,8 +659,8 @@ $pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
   &__shape--rect {
     inline-size: 203px;
     block-size: 203px;
-    left: 1177px;
-    top: 80px;
+    left: 80%;
+    top: 50px;
     background: var(--color-primary-700);
     opacity: 0.15;
     border-radius: 40.639px;
@@ -640,19 +679,19 @@ $pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
   // Figma spacing: text-stack gap 8 (kicker→title), title→subtitle 12,
   // content-group gap 40 (text→button).
   &__kicker {
-    @include typography('h2', 'bold');
+    @include typography("h2", "bold");
     color: var(--color-additionally-400);
     margin: 0 0 8px;
   }
 
   &__title {
-    @include typography('large-heading', 'bold');
+    @include typography("large-heading", "bold");
     color: var(--color-essential-primary);
     margin: 0;
   }
 
   &__subtitle {
-    @include typography('body', 'medium');
+    @include typography("body", "medium");
     color: var(--color-neutral-400);
     margin: 12px 0 0;
   }
@@ -675,7 +714,7 @@ $pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
     text-decoration: none;
     color: var(--color-essential-primary);
     transition: transform 150ms ease-out;
-    @include typography('body-small', 'medium');
+    @include typography("body-small", "medium");
 
     &:active {
       transform: scale(0.97);
@@ -712,13 +751,13 @@ $pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
     }
 
     &__kicker {
-      @include typography('body-small', 'bold');
+      @include typography("body-small", "bold");
     }
     &__title {
-      @include typography('subtitle', 'bold');
+      @include typography("subtitle", "bold");
     }
     &__subtitle {
-      @include typography('body-small', 'regular');
+      @include typography("body-small", "regular");
     }
     &__subtitle-desktop {
       display: none;
@@ -744,33 +783,127 @@ $pop-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
   }
 }
 
-/* ── CTA accent animation (exact Figma offsets, played once) ────── */
-$drift-ease: ease-in-out;
+/* ── CTA accent animation ──────────────────────────────────────── */
+// Kept in lockstep with the landing-page CTA band (same keyframe shape, easing
+// and reasoning — see the comment there). In short:
+//  1. Symmetric keyframes resting at translate: 0 0, so neither the start nor
+//     the wrap displaces the shape.
+//  2. ease-in-out → zero velocity at both ends, so the wrap is smooth in speed
+//     as well as position.
+//  3. One infinite animation per shape — no entrance-to-idle handoff, which is
+//     what used to read as "fast at first, then suddenly very slow".
+// Not gated on `.is-live`, so the drift can never appear stopped if the
+// scroll-reveal observer hasn't fired.
 $settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
-@keyframes who-drift-in-out {
-  from { translate: 30px 30px; }
-  50% { translate: 0 0; }
-  to { translate: 30px 30px; }
+// A circular orbit (r = 12px, sampled every 45°) driven at `linear` speed
+// rather than an up/down oscillation — an oscillation has to stop and reverse
+// at each extreme (and with ease-in-out it crawls near both ends, so most of
+// the cycle looks motionless). An orbit never reverses and never decelerates,
+// yet still returns exactly to its origin, so the loop stays seamless.
+@keyframes who-orbit {
+  0% {
+    translate: 0 0;
+  }
+  12.5% {
+    translate: 8.49px -3.51px;
+  }
+  25% {
+    translate: 12px -12px;
+  }
+  37.5% {
+    translate: 8.49px -20.49px;
+  }
+  50% {
+    translate: 0 -24px;
+  }
+  62.5% {
+    translate: -8.49px -20.49px;
+  }
+  75% {
+    translate: -12px -12px;
+  }
+  87.5% {
+    translate: -8.49px -3.51px;
+  }
+  100% {
+    translate: 0 0;
+  }
 }
-@keyframes who-settle-pill {
-  from { opacity: 0; rotate: 8deg; translate: -60px 0; scale: 0.8; }
-  to { opacity: 0.3; rotate: 0deg; translate: 0 0; scale: 1; }
+@keyframes who-orbit-rev {
+  0% {
+    translate: 0 0;
+  }
+  12.5% {
+    translate: -8.49px -3.51px;
+  }
+  25% {
+    translate: -12px -12px;
+  }
+  37.5% {
+    translate: -8.49px -20.49px;
+  }
+  50% {
+    translate: 0 -24px;
+  }
+  62.5% {
+    translate: 8.49px -20.49px;
+  }
+  75% {
+    translate: 12px -12px;
+  }
+  87.5% {
+    translate: 8.49px -3.51px;
+  }
+  100% {
+    translate: 0 0;
+  }
 }
-@keyframes who-settle-ellipse {
-  from { opacity: 0; rotate: 8deg; translate: -60px 0; scale: 0.8; }
-  to { opacity: 0.2; rotate: 0deg; translate: 0 0; scale: 1; }
+
+.who-cta__shape {
+  // Own compositor layer → GPU-driven drift at a constant tempo.
+  will-change: transform;
 }
-@keyframes who-rect-drift {
-  from { translate: 50px 30px; }
-  50% { translate: 20px 0; }
-  to { translate: 40px 0; }
+
+// `linear` is deliberate — any ease would reintroduce slow patches at the ends
+// of the cycle, which is what made the motion look stalled. Negative delays
+// start each shape already mid-orbit; mismatched durations keep them from ever
+// re-synchronising.
+.who-cta__shape--diamond {
+  animation: who-orbit 4400ms linear -900ms infinite;
 }
-// Idle loop the settled shapes drift into once their entrance completes —
-// matches the landing page CTA band, which floats indefinitely at rest.
-@keyframes who-float {
-  0%, 100% { translate: 0 0; }
-  50% { translate: 0 -10px; }
+.who-cta__shape--circle-lg {
+  animation: who-orbit-rev 4800ms linear -2100ms infinite;
+}
+.who-cta__shape--circle-sm {
+  animation: who-orbit 5200ms linear -3400ms infinite;
+}
+.who-cta__shape--pill {
+  animation: who-orbit-rev 5000ms linear -4200ms infinite;
+}
+.who-cta__shape--ellipse {
+  animation: who-orbit 5400ms linear -5100ms infinite;
+}
+.who-cta__shape--rect {
+  animation: who-orbit-rev 4600ms linear -2700ms infinite;
+}
+
+// The pill and ellipse still settle in once on scroll-reveal, but as a
+// TRANSITION on opacity/rotate/scale — separate properties from the animated
+// `translate`, so the one-shot reveal and the endless drift never fight over
+// the same value (as an animation it would have replaced the drift outright).
+// `opacity` here is each shape's settled resting value.
+.who-cta__shape--pill,
+.who-cta__shape--ellipse {
+  rotate: 8deg;
+  scale: 0.8;
+  transition:
+    opacity 1700ms $settle-ease 400ms,
+    rotate 1700ms $settle-ease 400ms,
+    scale 1700ms $settle-ease 400ms;
+}
+.who-cta__shape--ellipse {
+  opacity: 0.2;
 }
 
 .who-cta:not(.is-live) {
@@ -781,38 +914,15 @@ $settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .who-cta.is-live {
-  .who-cta__shape--diamond {
-    animation:
-      who-drift-in-out 2000ms $drift-ease 77ms both,
-      who-float 4200ms ease-in-out 2077ms infinite;
-  }
-  .who-cta__shape--circle-lg {
-    animation:
-      who-drift-in-out 2000ms $drift-ease 252ms both,
-      who-float 4600ms ease-in-out 2252ms infinite;
-  }
-  .who-cta__shape--circle-sm {
-    animation:
-      who-drift-in-out 2000ms $drift-ease 529ms both,
-      who-float 3800ms ease-in-out 2529ms infinite;
-  }
-  .who-cta__shape--pill {
-    animation: who-settle-pill 1700ms $settle-ease 400ms both;
-  }
+  .who-cta__shape--pill,
   .who-cta__shape--ellipse {
-    animation:
-      who-settle-ellipse 1900ms $settle-ease both,
-      who-float 4400ms ease-in-out 1900ms infinite;
-  }
-  .who-cta__shape--rect {
-    animation:
-      who-rect-drift 2813ms $drift-ease both,
-      who-float 5000ms ease-in-out 2813ms infinite;
+    rotate: 0deg;
+    scale: 1;
   }
 }
 
 /* RTL: the CTA arrow points forward in reading direction. */
-:host-context([dir='rtl']) .who-cta__button img {
+:host-context([dir="rtl"]) .who-cta__button img {
   transform: scaleX(-1);
 }
 
@@ -838,5 +948,18 @@ $settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   .who-journey.is-live *,
   .who-cta.is-live * {
     animation: none !important;
+  }
+
+  // The accent drift is no longer scoped to `.is-live`, so it needs killing
+  // unconditionally; the shapes then rest at their settled Figma pose.
+  .who-cta__shape {
+    animation: none !important;
+    translate: 0 0 !important;
+    transition: none !important;
+  }
+  .who-cta__shape--pill,
+  .who-cta__shape--ellipse {
+    rotate: 0deg !important;
+    scale: 1 !important;
   }
 }

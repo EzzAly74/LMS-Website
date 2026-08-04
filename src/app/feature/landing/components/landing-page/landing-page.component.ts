@@ -326,6 +326,10 @@ export class LandingPageComponent implements AfterViewInit, OnDestroy {
    */
   protected readonly connectors = signal<Connector[]>([]);
   protected readonly connectorsMobile = signal<Connector[]>([]);
+  /** Desktop SVG viewBox — the diagram's height now grows to fit taller
+   *  wrapped course titles instead of staying pinned at the Figma 609x280, so
+   *  this has to track the live box instead of being a template constant. */
+  protected readonly desktopConnectorBox = signal({ w: 609, h: 280 });
   /** Mobile SVG viewBox (the stack size varies with fluid width). */
   protected readonly mobileConnectorBox = signal({ w: 358, h: 320 });
 
@@ -520,7 +524,12 @@ export class LandingPageComponent implements AfterViewInit, OnDestroy {
    * incoming nodes have mounted), so lines always join node edge to node edge.
    */
   private measureConnectors(): void {
-    this.connectors.set(this.measureDiagram(this.roleDiagramRef?.nativeElement));
+    const diagram = this.roleDiagramRef?.nativeElement;
+    if (diagram) {
+      const r = diagram.getBoundingClientRect();
+      if (r.width > 0) this.desktopConnectorBox.set({ w: r.width, h: r.height });
+    }
+    this.connectors.set(this.measureDiagram(diagram));
 
     const stack = this.roleStackMobileRef?.nativeElement;
     if (stack) {

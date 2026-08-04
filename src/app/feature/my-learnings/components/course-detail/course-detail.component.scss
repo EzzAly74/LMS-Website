@@ -467,3 +467,14 @@
     border-color: var(--color-primary-700);
   }
 }
+
+// Directional icons point the wrong way once reading order flips: "back"
+// (arrow-left) should point toward the reading-start side (right in RTL),
+// and "continue" (arrow-right) should point toward reading-end (left in RTL).
+:host-context([dir="rtl"]) {
+  .cd-back i,
+  .cd-header__cta i {
+    display: inline-block;
+    transform: scaleX(-1);
+  }
+}

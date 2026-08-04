@@ -1,4 +1,4 @@
-@use 'mixins' as *;
+@use "mixins" as *;
 
 .my-learnings {
   display: flex;
@@ -16,7 +16,7 @@
   }
 
   &__title {
-    @include typography('h1', 'bold');
+    @include typography("h1", "bold");
     color: var(--color-essential-secondary);
   }
 
@@ -25,7 +25,7 @@
   }
 
   &__section-title {
-    @include typography('h1-small', 'bold');
+    @include typography("h1-small", "bold");
     color: var(--color-essential-secondary);
     margin-bottom: var(--spacing-13xs);
   }
@@ -52,7 +52,11 @@
     width: 58px;
     height: 58px;
     border-radius: var(--radius-control-md);
-    background-image: linear-gradient(135deg, var(--color-primary-700) 0%, var(--color-primary-500) 100%);
+    background-image: linear-gradient(
+      135deg,
+      var(--color-primary-700) 0%,
+      var(--color-primary-500) 100%
+    );
     background-size: cover;
     background-position: center;
   }
@@ -66,12 +70,12 @@
   }
 
   &__title {
-    @include typography('h2', 'bold');
+    @include typography("h2", "bold");
     color: var(--color-essential-secondary);
   }
 
   &__meta {
-    @include typography('body-small', 'regular');
+    @include typography("body-small", "regular");
     color: var(--color-neutral-800);
   }
 
@@ -98,11 +102,17 @@
       background-color 0.2s ease-in-out,
       color 0.2s ease-in-out;
     background: #fff;
-    @include typography('button-small', 'medium');
+    @include typography("button-small", "medium");
 
     &:hover {
       background: var(--color-essential-tertiary);
       color: var(--color-neutral-0);
     }
+  }
+}
+:host-context([dir="rtl"]) {
+  .pi.pi-arrow-right {
+    display: inline-block;
+    transform: scaleX(-1);
   }
 }

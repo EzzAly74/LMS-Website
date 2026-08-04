@@ -330,11 +330,12 @@
       </div>
 
       <div class="roles__diagram" #roleDiagram>
-        <!-- Connectors drawn to live-measured node edges (viewBox = 609x280,
-             the diagram's own pixel box) so each dashed line bridges exactly. -->
+        <!-- Connectors drawn to live-measured node edges. The viewBox tracks
+             the diagram's actual box (desktopConnectorBox) rather than a
+             constant, since the box now grows to fit taller wrapped titles. -->
         <svg
           class="roles__connectors"
-          viewBox="0 0 609 280"
+          [attr.viewBox]="'0 0 ' + desktopConnectorBox().w + ' ' + desktopConnectorBox().h"
           preserveAspectRatio="none"
           fill="none"
           aria-hidden="true"
@@ -379,34 +380,39 @@
               <span class="roles__pill-text">{{ qualKey | translate }}</span>
             </div>
           }
-          @for (
-            course of activeRole().courses;
-            track course.titleKey;
-            let i = $index
-          ) {
-            <div
-              class="roles__course"
-              [class.roles__course--top]="i === 0"
-              [class.roles__course--bottom]="i === 1"
-            >
-              <span class="roles__course-badge">{{
-                "feature.landing.roles.course_badge" | translate
-              }}</span>
-              <p class="roles__course-title">
-                {{ course.titleKey | translate }}
-              </p>
-              <p class="roles__course-date">{{ course.dateKey | translate }}</p>
-              <span class="roles__course-enrol">
-                <span>{{ "feature.landing.roles.enrol" | translate }}</span>
-                <img
-                  src="assets/landing/icon-arrow-right-16.svg"
-                  alt=""
-                  width="16"
-                  height="16"
-                />
-              </span>
-            </div>
-          }
+          <!-- Normal-flow column (not absolutely positioned) so the diagram
+               naturally grows to fit a wrapped title instead of the two cards
+               overlapping — see .roles__courses / .roles__course in scss. -->
+          <div class="roles__courses">
+            @for (
+              course of activeRole().courses;
+              track course.titleKey;
+              let i = $index
+            ) {
+              <div
+                class="roles__course"
+                [class.roles__course--top]="i === 0"
+                [class.roles__course--bottom]="i === 1"
+              >
+                <span class="roles__course-badge">{{
+                  "feature.landing.roles.course_badge" | translate
+                }}</span>
+                <p class="roles__course-title">
+                  {{ course.titleKey | translate }}
+                </p>
+                <p class="roles__course-date">{{ course.dateKey | translate }}</p>
+                <span class="roles__course-enrol">
+                  <span>{{ "feature.landing.roles.enrol" | translate }}</span>
+                  <img
+                    src="assets/landing/icon-arrow-right-16.svg"
+                    alt=""
+                    width="16"
+                    height="16"
+                  />
+                </span>
+              </div>
+            }
+          </div>
         }
       </div>
     </div>

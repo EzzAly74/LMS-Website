@@ -5,6 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { LearningCourse, ProfileTab, SessionAttendance, WeekSession } from '../../models/profile.models';
 import { ProfileService } from '../../services/profile.service';
+import { LanguageService } from '../../../../core/services/language.service';
 
 /**
  * Profile right rail. Shows the learner's next/live "Active Session" (derived
@@ -34,6 +35,10 @@ export class ProfileSidebarComponent {
 
   private readonly service = inject(ProfileService);
   private readonly translate = inject(TranslateService);
+  /** DatePipe doesn't pick up runtime language switches on its own — every
+   *  `| date` in the template passes this explicitly as the locale so weekday
+   *  and month names actually localize (see registerLocaleData in app.config). */
+  protected readonly locale = inject(LanguageService).current;
 
   private readonly _courses = signal<LearningCourse[]>([]);
   private readonly _activeCourse = signal<LearningCourse | null>(null);

@@ -182,6 +182,11 @@
     background: transparent;
     padding: 0;
     cursor: pointer;
+    // `justify-content: space-between` on `&__foot` only spreads it away from
+    // the badge when a badge is actually rendered — with no badge (no
+    // certificate/rating), it's the sole flex item and falls back to the
+    // start. Pin it to the end unconditionally instead.
+    margin-inline-start: auto;
   }
 
   /* Neutral "Completed" chip for courses that offer no certificate. */
@@ -327,5 +332,14 @@
   &.is-picked {
     background: var(--color-primary-100); // #f2fbfa
     border-color: var(--color-primary-700); // #26787b
+  }
+}
+
+// "View details" / "Enrol again" point toward reading-end, which flips sides
+// in RTL — mirror the arrow so it still points left-to-right correctly.
+:host-context([dir="rtl"]) {
+  .ml-row__link i {
+    display: inline-block;
+    transform: scaleX(-1);
   }
 }

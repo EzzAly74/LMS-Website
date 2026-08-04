@@ -1,4 +1,6 @@
+import { registerLocaleData } from '@angular/common';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import localeAr from '@angular/common/locales/ar';
 import {
   APP_INITIALIZER,
   ApplicationConfig,
@@ -23,6 +25,11 @@ import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { localeInterceptor } from './core/interceptors/locale.interceptor';
 import { PageTitleStrategy } from './core/services/page-title.strategy';
 import { AppLanguage, DEFAULT_LANGUAGE } from './core/enums/language.enum';
+
+// DatePipe throws if a locale hasn't been registered — 'en' ships with the
+// framework, but 'ar' (passed explicitly wherever the UI shows dates) needs
+// this so weekday/month names actually render in Arabic instead of erroring.
+registerLocaleData(localeAr, AppLanguage.Ar);
 
 export const appConfig: ApplicationConfig = {
   providers: [

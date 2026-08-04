@@ -59,6 +59,11 @@
     @include typography("large-heading", "bold");
     color: var(--color-essential-secondary);
     margin: 0;
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+      line-height: 24px;
+    }
   }
 
   &__lead {
@@ -242,6 +247,7 @@
   }
 
   &__prose {
+    padding-inline-start: 16px;
     @include typography("body", "regular");
     color: var(--color-neutral-900);
 
@@ -351,5 +357,12 @@
     @media (max-width: 620px) {
       grid-template-columns: minmax(0, 1fr);
     }
+  }
+}
+
+:host ::ng-deep {
+  .list-disc {
+    flex-direction: column;
+    padding-inline-start: 24px !important;
   }
 }

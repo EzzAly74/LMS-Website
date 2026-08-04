@@ -8,8 +8,8 @@
       <div class="session">
         @if (session.session_date) {
           <div class="session__date">
-            <span class="session__mon">{{ session.session_date | date: 'MMM' }}</span>
-            <span class="session__day">{{ session.session_date | date: 'd' }}</span>
+            <span class="session__mon">{{ session.session_date | date: 'MMM' : undefined : locale() }}</span>
+            <span class="session__day">{{ session.session_date | date: 'd' : undefined : locale() }}</span>
           </div>
         }
         <div class="session__info">
@@ -103,7 +103,7 @@
     <div class="cal__hdr">
       <p class="cal__title">{{ 'feature.profile.sidebar.this_week' | translate }}</p>
       @if (weekRange(); as r) {
-        <span class="cal__range">{{ r.start | date: 'MMM d' }} – {{ r.end | date: 'd, y' }}</span>
+        <span class="cal__range">{{ r.start | date: 'MMM d' : undefined : locale() }} – {{ r.end | date: 'd, y' : undefined : locale() }}</span>
       }
     </div>
 
@@ -113,8 +113,8 @@
         <span class="cal__gmt">{{ gmtLabel }}</span>
         @for (day of calDays(); track day.date) {
           <div class="cal__day-hdr">
-            <span class="cal__dow">{{ day.date | date: 'EEE' }}</span>
-            <span class="cal__daynum" [class.is-today]="day.isToday">{{ day.date | date: 'd' }}</span>
+            <span class="cal__dow">{{ day.date | date: 'EEE' : undefined : locale() }}</span>
+            <span class="cal__daynum" [class.is-today]="day.isToday">{{ day.date | date: 'd' : undefined : locale() }}</span>
           </div>
         }
       </div>
@@ -180,7 +180,7 @@
             <span class="att-list__label">
               {{ s.title }}
               @if (s.session_date) {
-                <span class="att-list__date">{{ s.session_date | date: 'mediumDate' }}</span>
+                <span class="att-list__date">{{ s.session_date | date: 'mediumDate' : undefined : locale() }}</span>
               }
             </span>
             <span

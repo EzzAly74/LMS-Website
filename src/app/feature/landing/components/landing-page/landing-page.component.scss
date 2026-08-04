@@ -1,4 +1,4 @@
-@use 'mixins' as *;
+@use "mixins" as *;
 
 // =============================================================================
 // Landing page — pixel-perfect from Figma desktop 1742:48667 (1440x5847) and
@@ -21,8 +21,8 @@ $shadow-large:
   0 8px 20px 0 rgba(12, 36, 39, 0.24),
   0 2px 6px 0 rgba(12, 36, 39, 0.12);
 
-$serif: 'Source Serif Pro', Georgia, serif;
-$numeric: 'Inter', sans-serif;
+$serif: "Source Serif Pro", Georgia, serif;
+$numeric: "Inter", sans-serif;
 
 // Strong ease-out used across the page (Figma base transition).
 $ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -56,7 +56,9 @@ $bp-mobile: 900px;
 
   // The Figma hero starts at page y0 with the floating header above it —
   // pull the page up under the fixed header (main layout clears it).
-  margin-block-start: calc(-1 * (var(--spacing-7xs) + var(--size-64) + var(--spacing-7xs)));
+  margin-block-start: calc(
+    -1 * (var(--spacing-7xs) + var(--size-64) + var(--spacing-7xs))
+  );
 
   @media (max-width: $bp-mobile) {
     margin-block-start: 0; // mobile header is a flush 60px bar
@@ -76,7 +78,7 @@ $bp-mobile: 900px;
   z-index: 0;
   pointer-events: none;
 
-  :host-context([dir='rtl']) & {
+  :host-context([dir="rtl"]) & {
     transform: scaleX(-1);
   }
 }
@@ -115,7 +117,7 @@ $bp-mobile: 900px;
   transform: rotate(180deg);
   pointer-events: none;
 
-  :host-context([dir='rtl']) & {
+  :host-context([dir="rtl"]) & {
     transform: rotate(180deg) scaleX(-1);
   }
 }
@@ -200,17 +202,17 @@ $bp-mobile: 900px;
 }
 
 // Phase machine: idle → typing-1 → typing-2 → done (one-shot).
-.hero[data-phase='idle'] {
+.hero[data-phase="idle"] {
   .hero__line-text {
     clip-path: inset(0 100% 0 0);
 
-    :host-context([dir='rtl']) & {
+    :host-context([dir="rtl"]) & {
       clip-path: inset(0 0 0 100%);
     }
   }
 }
 
-.hero[data-phase='typing-1'] {
+.hero[data-phase="typing-1"] {
   .hero__line--1 .hero__line-text {
     animation: hero-wipe 700ms linear forwards;
   }
@@ -226,7 +228,7 @@ $bp-mobile: 900px;
       hero-blink 1060ms steps(1, end) infinite;
   }
 
-  :host-context([dir='rtl']) & {
+  :host-context([dir="rtl"]) & {
     .hero__line--1 .hero__line-text {
       animation-name: hero-wipe-rtl;
     }
@@ -241,7 +243,7 @@ $bp-mobile: 900px;
   }
 }
 
-.hero[data-phase='typing-2'] {
+.hero[data-phase="typing-2"] {
   .hero__line--2 .hero__line-text {
     animation: hero-wipe 700ms linear forwards;
   }
@@ -253,7 +255,7 @@ $bp-mobile: 900px;
       hero-blink 1060ms steps(1, end) infinite;
   }
 
-  :host-context([dir='rtl']) & {
+  :host-context([dir="rtl"]) & {
     .hero__line--2 .hero__line-text {
       animation-name: hero-wipe-rtl;
     }
@@ -385,7 +387,7 @@ $bp-mobile: 900px;
   opacity: 0;
 }
 
-.hero[data-phase='done'] {
+.hero[data-phase="done"] {
   .hero__subtitle {
     animation: fade-up 250ms $ease-out forwards;
   }
@@ -477,7 +479,7 @@ $bp-mobile: 900px;
   z-index: 0;
   transform-origin: 100% 50%; // stay glued to the anchored edge while scaling
 
-  :host-context([dir='rtl']) & {
+  :host-context([dir="rtl"]) & {
     transform-origin: 0% 50%;
   }
 
@@ -806,7 +808,11 @@ $bp-mobile: 900px;
   align-items: center;
   gap: 1.4286cqw; // 16px @1120
   padding: 1.4286cqw 3.5714cqw; // 16 / 40px @1120
-  background: linear-gradient(to bottom, rgba(8, 9, 13, 0) 0%, rgba(8, 9, 13, 0.9) 80.37%);
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 9, 13, 0) 0%,
+    rgba(8, 9, 13, 0.9) 80.37%
+  );
   backdrop-filter: blur(1px);
   opacity: 0;
   pointer-events: none;
@@ -885,7 +891,7 @@ $bp-mobile: 900px;
   transform-origin: left center;
   transform: scaleX(0);
 
-  :host-context([dir='rtl']) & {
+  :host-context([dir="rtl"]) & {
     transform-origin: right center;
   }
 }
@@ -997,7 +1003,7 @@ $bp-mobile: 900px;
   transition: transform 200ms $ease-out;
   z-index: 1;
 
-  :host-context([dir='rtl']) & {
+  :host-context([dir="rtl"]) & {
     transform: translateX(calc(var(--step, 0) * (-100% - 4px)));
   }
 
@@ -1157,12 +1163,16 @@ $bp-mobile: 900px;
   }
 }
 
-// Diagram canvas is a fixed 609x280 composition — keep LTR coordinates so the
-// Figma geometry (rotated dashed connectors) holds in both languages.
+// Diagram canvas is a 609-wide, 280-tall-by-default composition — keep LTR
+// coordinates so the Figma geometry (rotated dashed connectors) holds in both
+// languages. Height is a floor, not a cap: .roles__courses is a normal-flow
+// child (unlike the job card / pills, which stay absolutely positioned at
+// their exact Figma coordinates), so a wrapped course title grows this box
+// instead of the second card overlapping the first.
 .roles__diagram {
   position: relative;
   inline-size: 609px;
-  block-size: 280px;
+  min-block-size: 280px;
   flex: 0 0 auto;
   direction: ltr;
 }
@@ -1196,7 +1206,7 @@ $bp-mobile: 900px;
   top: 36px;
   margin: 0;
   inline-size: 149px;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.2;
   font-weight: var(--font-weight-bold);
   color: var(--color-neutral-0);
@@ -1205,6 +1215,12 @@ $bp-mobile: 900px;
 .roles__pill {
   position: absolute;
   left: 196px;
+  // Fixed width (not auto/nowrap-grown) so the top and bottom pills always
+  // share the same right edge — otherwise a longer qualification string (some
+  // Arabic translations run noticeably longer than their English source)
+  // shrinks its connector gap to the course card while the other pill's stays
+  // wide, making the two rows look inconsistently spaced.
+  inline-size: 168px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1212,7 +1228,6 @@ $bp-mobile: 900px;
   background: var(--color-neutral-0);
   border: 1px solid var(--color-primary-500);
   border-radius: 999px;
-  white-space: nowrap;
 }
 
 .roles__pill--top {
@@ -1224,6 +1239,7 @@ $bp-mobile: 900px;
 }
 
 .roles__pill-dot {
+  flex-shrink: 0;
   inline-size: 8px;
   block-size: 8px;
   display: block;
@@ -1236,15 +1252,29 @@ $bp-mobile: 900px;
 }
 
 .roles__pill-text {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 14px;
   line-height: normal;
   font-weight: 600;
   color: var(--color-neutral-1000);
 }
 
+// Normal-flow column: the diagram's height grows with it, so a wrapped
+// title (2-3 lines) pushes the next card down instead of overlapping it.
+.roles__courses {
+  margin-inline-start: 389px;
+  padding-block: 8px;
+  inline-size: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .roles__course {
-  position: absolute;
-  left: 389px;
   inline-size: 220px;
   // Figma declares 134 fixed with content spilling into the padding; grow
   // instead so the Enrol row is never clipped (Arabic titles wrap taller).
@@ -1262,14 +1292,6 @@ $bp-mobile: 900px;
   box-shadow:
     inset 0 0 0 1px var(--color-neutral-300),
     $shadow-small;
-}
-
-.roles__course--top {
-  top: 0;
-}
-
-.roles__course--bottom {
-  top: 146px;
 }
 
 .roles__course-badge,
@@ -1472,7 +1494,7 @@ $bp-mobile: 900px;
   gap: 24px;
   direction: ltr; // fixed Figma connector coordinates
 
-  :host-context([dir='rtl']) & > * {
+  :host-context([dir="rtl"]) & > * {
     direction: rtl;
   }
 }
@@ -1739,13 +1761,14 @@ $bp-mobile: 900px;
   inline-size: 80px;
   block-size: 2px;
   margin-block: 39px; // occupies the 80px column Figma leaves between circles
-  background: url('/assets/landing/step-connector.svg') center / contain no-repeat;
+  background: url("/assets/landing/step-connector.svg") center / contain
+    no-repeat;
   transform: rotate(90deg);
 
   @media (max-width: $bp-mobile) {
     inline-size: 60px;
     margin-block: 29px;
-    background-image: url('/assets/landing/step-connector-mobile.svg');
+    background-image: url("/assets/landing/step-connector-mobile.svg");
   }
 }
 
@@ -1803,7 +1826,7 @@ $bp-mobile: 900px;
     transform 400ms $ease-out;
   transition-delay: 150ms;
 
-  :host-context([dir='rtl']) & {
+  :host-context([dir="rtl"]) & {
     transform: translateX(-32px);
   }
 
@@ -2161,7 +2184,7 @@ $bp-mobile: 900px;
   transform: scaleX(-1); // Figma: rotate(180°) + scaleY(-1)
   pointer-events: none;
 
-  :host-context([dir='rtl']) & {
+  :host-context([dir="rtl"]) & {
     transform: none;
   }
 }
@@ -2286,7 +2309,7 @@ $bp-mobile: 900px;
     font-weight: var(--font-weight-bold);
   }
 
-  &[aria-disabled='true'] {
+  &[aria-disabled="true"] {
     cursor: default;
   }
 
@@ -2433,7 +2456,7 @@ $bp-mobile: 900px;
     color: var(--color-primary-500);
   }
 
-  :host-context([dir='rtl']) & {
+  :host-context([dir="rtl"]) & {
     padding: 8px 12px 8px 8px;
   }
 }
@@ -2548,7 +2571,7 @@ $bp-mobile: 900px;
   block-size: 248.86px;
 
   &::before {
-    content: '';
+    content: "";
     inline-size: 203.2px;
     block-size: 203.2px;
     border-radius: 40.64px;
@@ -2586,7 +2609,7 @@ $bp-mobile: 900px;
   block-size: 157.1px;
 
   &::before {
-    content: '';
+    content: "";
     inline-size: 128.27px;
     block-size: 128.27px;
     border-radius: 40.64px;
@@ -2596,111 +2619,115 @@ $bp-mobile: 900px;
   }
 }
 
-// Decorative shapes drift/settle once on section entry — mirrors the
-// who-we-are CTA accent animation (same keyframes, offsets and easings).
-$cta-drift-ease: ease-in-out;
+// Decorative accents drift forever — mirrors the who-we-are CTA band.
+//
+// Three properties make the loop seamless, and all three matter:
+//  1. Each keyframe is SYMMETRIC — 0% and 100% hold the identical value, and
+//     that value is the shape's natural resting position (translate: 0 0). So
+//     the wrap point is a no-op and starting the animation never displaces the
+//     shape (an asymmetric loop, or one resting somewhere other than 0 0,
+//     shows a visible jump on both start and wrap).
+//  2. ease-in-out puts velocity at zero on BOTH ends, so the wrap is smooth in
+//     speed as well as position — no perceptible kick or reset.
+//  3. One single infinite animation per shape, so there is no handoff from an
+//     entrance animation to an idle one. That handoff was what read as "fast
+//     at first, then suddenly very slow".
+// The drift is deliberately NOT gated on `.is-live`: it runs from first paint,
+// so it can never appear stopped if the scroll-reveal observer hasn't fired.
 $cta-settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
-@keyframes cta-drift-in-out {
-  from {
-    translate: 30px 30px;
-  }
-  50% {
-    translate: 0 0;
-  }
-  to {
-    translate: 30px 30px;
-  }
+// A circular orbit (r = 12px, sampled every 45°) driven at `linear` speed,
+// rather than an up/down oscillation. This is what makes the drift read as
+// continuously moving:
+//   - An oscillation has to STOP and reverse at each extreme. With ease-in-out
+//     it also crawls near both ends, so most of the cycle is near-motionless
+//     and the whole thing looks frozen.
+//   - An orbit never reverses and never decelerates: speed is constant for the
+//     entire loop (~17px/s here vs. ~4px/s average before), and it still
+//     returns exactly to its origin, so the loop stays seamless.
+@keyframes cta-orbit {
+  0% { translate: 0 0; }
+  12.5% { translate: 8.49px -3.51px; }
+  25% { translate: 12px -12px; }
+  37.5% { translate: 8.49px -20.49px; }
+  50% { translate: 0 -24px; }
+  62.5% { translate: -8.49px -20.49px; }
+  75% { translate: -12px -12px; }
+  87.5% { translate: -8.49px -3.51px; }
+  100% { translate: 0 0; }
 }
-@keyframes cta-settle-pill {
-  from {
-    opacity: 0;
-    rotate: 8deg;
-    translate: -60px 0;
-    scale: 0.8;
-  }
-  to {
-    opacity: 0.3;
-    rotate: 0deg;
-    translate: 0 0;
-    scale: 1;
-  }
-}
-@keyframes cta-rect-drift {
-  from {
-    translate: 50px 30px;
-  }
-  50% {
-    translate: 20px 0;
-  }
-  to {
-    translate: 40px 0;
-  }
-}
-// Idle loop the settled shapes drift into once their entrance completes —
-// keeps the CTA band alive instead of freezing in its final pose.
-@keyframes cta-float {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-  50% {
-    translate: 0 -10px;
-  }
+// Same path travelled the other way round, so neighbouring shapes don't all
+// sweep in unison.
+@keyframes cta-orbit-rev {
+  0% { translate: 0 0; }
+  12.5% { translate: -8.49px -3.51px; }
+  25% { translate: -12px -12px; }
+  37.5% { translate: -8.49px -20.49px; }
+  50% { translate: 0 -24px; }
+  62.5% { translate: 8.49px -20.49px; }
+  75% { translate: 12px -12px; }
+  87.5% { translate: 8.49px -3.51px; }
+  100% { translate: 0 0; }
 }
 
-// The outline pill fades + settles in; the solid shapes drift and are visible
-// at rest (they only ever sit off in the margins before the section reveals).
+.cta__shape {
+  // Own compositor layer: the drift runs on the GPU, so main-thread work can't
+  // stutter it and the tempo stays constant.
+  will-change: transform;
+}
+
+// `linear` is deliberate — any ease would reintroduce slow patches at the ends
+// of the cycle, which is what made the motion look stalled. Negative delays
+// start each shape already mid-orbit (nothing waits for its turn) and the
+// mismatched durations keep them from ever re-synchronising.
+.cta__shape--diamond {
+  animation: cta-orbit 4400ms linear -900ms infinite;
+}
+.cta__shape--circle-lg {
+  animation: cta-orbit-rev 4800ms linear -2100ms infinite;
+}
+.cta__shape--circle-sm {
+  animation: cta-orbit 5200ms linear -3400ms infinite;
+}
+.cta__shape--outline {
+  animation: cta-orbit-rev 5000ms linear -4200ms infinite;
+}
+.cta__shape--ellipse {
+  animation: cta-orbit 5400ms linear -5100ms infinite;
+}
+.cta__shape--rect {
+  animation: cta-orbit-rev 4600ms linear -2700ms infinite;
+}
+.cta__shape--m-diamond {
+  animation: cta-orbit 4400ms linear -900ms infinite;
+}
+.cta__shape--m-circle {
+  animation: cta-orbit-rev 4800ms linear -2100ms infinite;
+}
+.cta__shape--m-rect {
+  animation: cta-orbit-rev 4600ms linear -2700ms infinite;
+}
+
+// The outline pill still settles in once on scroll-reveal, but as a TRANSITION
+// on opacity/rotate/scale. Those are separate properties from the animated
+// `translate`, so the one-shot reveal and the endless drift never fight over
+// the same value (as an animation it would have replaced the drift outright).
+.cta__shape--outline {
+  rotate: 8deg;
+  scale: 0.8;
+  transition:
+    opacity 1700ms $cta-settle-ease 400ms,
+    rotate 1700ms $cta-settle-ease 400ms,
+    scale 1700ms $cta-settle-ease 400ms;
+}
+
 .cta:not(.is-live) .cta__shape--outline {
   opacity: 0;
 }
 
-.cta.is-live {
-  .cta__shape--diamond {
-    animation:
-      cta-drift-in-out 2000ms $cta-drift-ease 77ms both,
-      cta-float 4200ms ease-in-out 2077ms infinite;
-  }
-  .cta__shape--circle-lg {
-    animation:
-      cta-drift-in-out 2000ms $cta-drift-ease 252ms both,
-      cta-float 4600ms ease-in-out 2252ms infinite;
-  }
-  .cta__shape--circle-sm {
-    animation:
-      cta-drift-in-out 2000ms $cta-drift-ease 529ms both,
-      cta-float 3800ms ease-in-out 2529ms infinite;
-  }
-  .cta__shape--ellipse {
-    animation:
-      cta-drift-in-out 2000ms $cta-drift-ease 400ms both,
-      cta-float 4400ms ease-in-out 2400ms infinite;
-  }
-  .cta__shape--outline {
-    animation: cta-settle-pill 1700ms $cta-settle-ease 400ms both;
-  }
-  .cta__shape--rect {
-    animation:
-      cta-rect-drift 2813ms $cta-drift-ease both,
-      cta-float 5000ms ease-in-out 2813ms infinite;
-  }
-
-  // Mobile accents drift with the same rhythm.
-  .cta__shape--m-diamond {
-    animation:
-      cta-drift-in-out 2000ms $cta-drift-ease 77ms both,
-      cta-float 4200ms ease-in-out 2077ms infinite;
-  }
-  .cta__shape--m-circle {
-    animation:
-      cta-drift-in-out 2000ms $cta-drift-ease 252ms both,
-      cta-float 4600ms ease-in-out 2252ms infinite;
-  }
-  .cta__shape--m-rect {
-    animation:
-      cta-rect-drift 2813ms $cta-drift-ease both,
-      cta-float 5000ms ease-in-out 2813ms infinite;
-  }
+.cta.is-live .cta__shape--outline {
+  rotate: 0deg;
+  scale: 1;
 }
 
 .cta__content {
@@ -2797,7 +2824,7 @@ $cta-settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 // connectors are directional artwork), but text containers read RTL and
 // directional arrow glyphs mirror.
 // -----------------------------------------------------------------------------
-:host-context([dir='rtl']) {
+:host-context([dir="rtl"]) {
   // Arabic copy inside the diagram cards reads right-to-left.
   .roles__course,
   .roles__pill-text {
@@ -2810,12 +2837,6 @@ $cta-settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
     right: 16px;
     direction: rtl;
     text-align: right;
-  }
-
-  // Arabic course titles wrap to two lines — drop the bottom card so the
-  // grown top card (min-height 134, auto-grow) can't overlap it.
-  .roles__course--bottom {
-    top: 170px;
   }
 
   // Forward-pointing arrows flip with the reading direction.
@@ -2851,9 +2872,17 @@ $cta-settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
     animation: none !important;
   }
 
-  // Decorative CTA shapes rest at their Figma position with no drift.
-  .cta.is-live .cta__shape {
+  // Decorative CTA shapes rest at their Figma position with no drift. Not
+  // scoped to `.is-live` — the drift now runs unconditionally.
+  .cta__shape {
     animation: none !important;
+  }
+
+  // The outline pill's reveal is a transition now; land it at its settled pose
+  // (the shared reset below zeroes translate/rotate but not scale).
+  .cta__shape--outline {
+    scale: 1 !important;
+    transition: none !important;
   }
 
   .quote__inner,

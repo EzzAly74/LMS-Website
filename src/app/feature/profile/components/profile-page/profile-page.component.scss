@@ -167,7 +167,12 @@
     border-radius: var(--radius-control-sm);
     color: var(--color-status-warning);
     cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
     @include typography('button-small', 'medium');
+
+    &:hover {
+      background: var(--color-status-warning-08);
+    }
 
     img {
       width: 14px;
