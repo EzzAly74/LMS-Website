@@ -13,18 +13,32 @@ import { ProfileService } from '../../../profile/services/profile.service';
 import { CourseOutline } from '../../models/my-learnings.models';
 import { MyLearningsService } from '../../services/my-learnings.service';
 
-interface RatingFace {
+interface RatingLevel {
   value: number;
-  emoji: string;
   labelKey: string;
 }
 
-const RATING_FACES: RatingFace[] = [
-  { value: 1, emoji: '😔', labelKey: 'feature.profile.learnings.rating.very_unsatisfied' },
-  { value: 2, emoji: '🙁', labelKey: 'feature.profile.learnings.rating.unsatisfied' },
-  { value: 3, emoji: '😐', labelKey: 'feature.profile.learnings.rating.neutral' },
-  { value: 4, emoji: '🙂', labelKey: 'feature.profile.learnings.rating.satisfied' },
-  { value: 5, emoji: '🤩', labelKey: 'feature.profile.learnings.rating.very_satisfied' },
+/**
+ * The 1-5 rating scale.
+ *
+ * W-13: this used to carry an emoji per level (rendered as a text character),
+ * which breaks the "no emoji or text characters as icons" rule. It also did not
+ * match the design: the Figma rating control is a STAR scale
+ * (evaluation modal 2194:78022), and the post-rating display on this very
+ * screen is "My Rating: * 4" (2181:114393). There is no emoji face scale
+ * anywhere in the Figma file - the five faces were invented by the
+ * implementation.
+ *
+ * No new asset was needed: `pi-star-fill` / `pi-star` are PrimeIcons, already a
+ * project dependency and already used a few lines up in this same template for
+ * the course rating.
+ */
+const RATING_LEVELS: RatingLevel[] = [
+  { value: 1, labelKey: 'feature.profile.learnings.rating.very_unsatisfied' },
+  { value: 2, labelKey: 'feature.profile.learnings.rating.unsatisfied' },
+  { value: 3, labelKey: 'feature.profile.learnings.rating.neutral' },
+  { value: 4, labelKey: 'feature.profile.learnings.rating.satisfied' },
+  { value: 5, labelKey: 'feature.profile.learnings.rating.very_satisfied' },
 ];
 
 /**
@@ -69,7 +83,19 @@ export class CourseDetailComponent implements OnInit {
   }
   @Output() back = new EventEmitter<void>();
 
-  protected readonly faces = RATING_FACES;
+  protected readonly levels = RATING_LEVELS;
+
+  /**
+   * Whether the star at `value` renders filled.
+   *
+   * `draftRating` is `number | null`, so the comparison is done here rather
+   * than in the template — under `strictTemplates` a null-unsafe `>=` in the
+   * template is a build error, and the honest fix is to handle the null, not
+   * to cast it away.
+   */
+  protected isStarFilled(value: number): boolean {
+    return (this.draftRating() ?? 0) >= value;
+  }
   protected readonly backLink = `/${LmsRoutes.MyLearnings}`;
 
   protected readonly inline = signal(false);

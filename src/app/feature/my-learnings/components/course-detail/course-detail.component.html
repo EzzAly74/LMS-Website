@@ -85,17 +85,24 @@
             <p class="rating-card__q">{{ 'feature.profile.learnings.rating.question' | translate }}</p>
             <p class="rating-card__sub">{{ 'feature.profile.learnings.rating.subtitle' | translate }}</p>
           </div>
-          <div class="rating-card__faces">
-            @for (face of faces; track face.value) {
+          <div class="rating-card__faces" role="radiogroup" [attr.aria-label]="'feature.profile.learnings.rating.question' | translate">
+            @for (level of levels; track level.value) {
               <button
                 type="button"
                 class="rating-face"
-                [class.is-picked]="draftRating() === face.value"
-                (click)="pickRating(face.value)"
-                [attr.aria-label]="face.labelKey | translate"
+                role="radio"
+                [attr.aria-checked]="draftRating() === level.value"
+                [class.is-picked]="draftRating() === level.value"
+                (click)="pickRating(level.value)"
+                [attr.aria-label]="level.labelKey | translate"
               >
-                <span class="rating-face__emoji">{{ face.emoji }}</span>
-                <span class="rating-face__label">{{ face.labelKey | translate }}</span>
+                <i
+                  class="rating-face__star pi"
+                  [class.pi-star-fill]="isStarFilled(level.value)"
+                  [class.pi-star]="!isStarFilled(level.value)"
+                  aria-hidden="true"
+                ></i>
+                <span class="rating-face__label">{{ level.labelKey | translate }}</span>
               </button>
             }
           </div>

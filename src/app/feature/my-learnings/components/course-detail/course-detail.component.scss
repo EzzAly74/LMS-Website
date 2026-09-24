@@ -451,9 +451,12 @@
   border-radius: var(--radius-control-md);
   cursor: pointer;
 
-  &__emoji {
+  // W-13: was `&__emoji` rendering a text character. Now a PrimeIcon star,
+  // matching the Figma rating control.
+  &__star {
     font-size: 24px;
     line-height: 1;
+    color: var(--color-warning-500, #f5a524);
   }
 
   &__label {
