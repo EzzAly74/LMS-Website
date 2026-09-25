@@ -12,13 +12,13 @@ import {
   provideRouter,
   withComponentInputBinding,
 } from '@angular/router';
-import { provideTranslateService } from '@ngx-translate/core';
-import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateLoader, provideTranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 
 import { routes } from './app.routes';
+import { BundledTranslateLoader } from './core/i18n/bundled-translate.loader';
 import { appInitializerFactory } from './core/initializers/app.initializer';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
@@ -40,16 +40,13 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimationsAsync(),
     provideTranslateService({
+      // Translations ship as content-hashed build chunks, so a deploy can
+      // never serve a stale cached file against new code. This replaces the
+      // HTTP loader, which fetched a fixed /assets/i18n/<lang>.json URL that
+      // the build never renamed. See BundledTranslateLoader.
+      loader: provideTranslateLoader(BundledTranslateLoader),
       fallbackLang: AppLanguage.En,
       lang: DEFAULT_LANGUAGE,
-    }),
-    // useHttpBackend bypasses the HTTP interceptors for translation files: the
-    // i18n fetch must NOT run localeInterceptor (which injects LanguageService ->
-    // TranslateService), otherwise the loader creates a circular DI (NG0200).
-    provideTranslateHttpLoader({
-      prefix: '/assets/i18n/',
-      suffix: '.json',
-      useHttpBackend: true,
     }),
     providePrimeNG({ theme: { preset: Aura } }),
     MessageService,
