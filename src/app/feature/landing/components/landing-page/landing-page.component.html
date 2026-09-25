@@ -70,14 +70,26 @@
         </div>
 
         <div class="hero__art-mobile u-hide-desktop">
+          <!-- Same srcset + sizes as the desktop copy below, so both resolve to
+               one URL and it downloads once, although one copy is always
+               display:none (C-02 / F1). -->
           <img
             class="hero__art-mobile-img"
-            src="assets/landing/hero-illustration.png"
+            src="assets/landing/hero-illustration-438.webp"
+            srcset="assets/landing/hero-illustration-200.webp 200w, assets/landing/hero-illustration-438.webp 438w, assets/landing/hero-illustration-876.webp 876w"
+            sizes="(max-width: 900px) 200px, 438px"
+            width="438"
+            height="438"
+            fetchpriority="high"
             alt=""
           />
           <img
             class="hero__art-mobile-card"
-            src="assets/landing/hero-card.png"
+            src="assets/landing/hero-card-144.webp"
+            srcset="assets/landing/hero-card-144.webp 144w, assets/landing/hero-card-288.webp 288w"
+            sizes="(max-width: 900px) 66px, 143px"
+            width="143"
+            height="191"
             alt=""
           />
         </div>
@@ -96,10 +108,23 @@
       <div class="hero__art u-hide-mobile">
         <img
           class="hero__illustration"
-          src="assets/landing/hero-illustration.png"
+          src="assets/landing/hero-illustration-438.webp"
+          srcset="assets/landing/hero-illustration-200.webp 200w, assets/landing/hero-illustration-438.webp 438w, assets/landing/hero-illustration-876.webp 876w"
+          sizes="(max-width: 900px) 200px, 438px"
+          width="438"
+          height="438"
+          fetchpriority="high"
           alt=""
         />
-        <img class="hero__card" src="assets/landing/hero-card.png" alt="" />
+        <img
+          class="hero__card"
+          src="assets/landing/hero-card-144.webp"
+          srcset="assets/landing/hero-card-144.webp 144w, assets/landing/hero-card-288.webp 288w"
+          sizes="(max-width: 900px) 66px, 143px"
+          width="143"
+          height="191"
+          alt=""
+        />
       </div>
     </div>
 
@@ -563,16 +588,28 @@
       </div>
 
       <div class="next__mockups u-hide-mobile" aria-hidden="true">
+        @let banner = mockupBanner();
+        @let dashboard = mockupDashboard();
         <img
           class="next__mockup-banner"
-          [src]="'assets/landing/next-mockup-banner' + mockupSuffix() + '.png'"
+          [src]="banner.src"
+          [srcset]="banner.srcset"
+          sizes="194px"
+          [width]="banner.width"
+          [height]="banner.height"
+          loading="lazy"
+          decoding="async"
           alt=""
         />
         <img
           class="next__mockup-dashboard"
-          [src]="
-            'assets/landing/next-mockup-dashboard' + mockupSuffix() + '.png'
-          "
+          [src]="dashboard.src"
+          [srcset]="dashboard.srcset"
+          sizes="288px"
+          [width]="dashboard.width"
+          [height]="dashboard.height"
+          loading="lazy"
+          decoding="async"
           alt=""
         />
       </div>

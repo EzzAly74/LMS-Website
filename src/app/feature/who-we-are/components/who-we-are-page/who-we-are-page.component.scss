@@ -927,7 +927,7 @@ $settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 /* RTL uses a dedicated pre-mirrored Arabic export of the road illustration
-   (hero-map-ar.png, swapped in the component) — a CSS flip would mirror the
+   (hero-map-ar, swapped in the component) — a CSS flip would mirror the
    baked-in milestone labels. */
 
 /* Accessibility: no motion → everything rests at its final state. */

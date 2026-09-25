@@ -16,6 +16,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { LanguageService } from '../../../../core/services/language.service';
+import { ResponsiveImage } from '../../../../core/models/responsive-image.model';
 
 /** Role keys of the "See it for a role" switcher (Figma Role Switcher). */
 type RoleKey =
@@ -151,11 +152,43 @@ export class LandingPageComponent implements AfterViewInit, OnDestroy {
   protected readonly requestDemoRoute = `/${LmsRoutes.RequestDemo}`;
 
   /**
-   * Filename suffix for the Next-Step mockups: Arabic uses pre-localised
-   * exports (next-mockup-*-ar.png) so the baked-in UI text reads RTL.
+   * The Next-Step mockups. Arabic uses pre-localised exports so the baked-in
+   * UI text reads RTL. Those were exported at 1x only, hence a single width
+   * and their own dimensions (C-04). width/height carry the aspect ratio,
+   * since the CSS sets only the inline size.
    */
-  protected readonly mockupSuffix = computed(() =>
-    this.language.isRtl() ? '-ar' : '',
+  protected readonly mockupBanner = computed<ResponsiveImage>(() =>
+    this.language.isRtl()
+      ? {
+          src: 'assets/landing/next-mockup-banner-ar-197.webp',
+          srcset: 'assets/landing/next-mockup-banner-ar-197.webp 197w',
+          width: 197,
+          height: 57,
+        }
+      : {
+          src: 'assets/landing/next-mockup-banner-194.webp',
+          srcset:
+            'assets/landing/next-mockup-banner-194.webp 194w, assets/landing/next-mockup-banner-388.webp 388w',
+          width: 194,
+          height: 59,
+        },
+  );
+
+  protected readonly mockupDashboard = computed<ResponsiveImage>(() =>
+    this.language.isRtl()
+      ? {
+          src: 'assets/landing/next-mockup-dashboard-ar-298.webp',
+          srcset: 'assets/landing/next-mockup-dashboard-ar-298.webp 298w',
+          width: 298,
+          height: 358,
+        }
+      : {
+          src: 'assets/landing/next-mockup-dashboard-288.webp',
+          srcset:
+            'assets/landing/next-mockup-dashboard-288.webp 288w, assets/landing/next-mockup-dashboard-576.webp 576w',
+          width: 288,
+          height: 345,
+        },
   );
 
   // ── Quote carousel (§2) ────────────────────────────────────────────

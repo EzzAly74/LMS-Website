@@ -13,6 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { LanguageService } from '../../../../core/services/language.service';
+import { ResponsiveImage } from '../../../../core/models/responsive-image.model';
 
 /** One entry on the "Our Journey" timeline (Figma Timeline_Node_1..6). */
 interface JourneyNode {
@@ -59,14 +60,20 @@ export class WhoWeArePageComponent implements AfterViewInit, OnDestroy {
 
   /**
    * The hero illustration has its milestone labels baked into the artwork,
-   * so RTL uses a dedicated pre-mirrored Arabic export (hero-map-ar.png)
+   * so RTL uses a dedicated pre-mirrored Arabic export (hero-map-ar)
    * instead of a CSS flip — a flip would mirror the label text itself.
    */
-  protected readonly heroMapSrc = computed(() =>
-    this.language.isRtl()
-      ? 'assets/who-we-are/hero-map-ar.png'
-      : 'assets/who-we-are/hero-map.png',
-  );
+  protected readonly heroMap = computed<ResponsiveImage>(() => {
+    const base = this.language.isRtl()
+      ? 'assets/who-we-are/hero-map-ar'
+      : 'assets/who-we-are/hero-map';
+    return {
+      src: `${base}-774.webp`,
+      srcset: `${base}-372.webp 372w, ${base}-774.webp 774w, ${base}-1024.webp 1024w`,
+      width: 774,
+      height: 774,
+    };
+  });
 
   protected readonly journeyNodes: JourneyNode[] = [
     {

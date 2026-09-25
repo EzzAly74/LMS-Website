@@ -14,9 +14,15 @@
           <span class="who-hero__body-more">{{ 'feature.who_we_are.hero.body_2' | translate }}</span>
         </p>
       </div>
+      @let map = heroMap();
       <img
         class="who-hero__map"
-        [src]="heroMapSrc()"
+        [src]="map.src"
+        [srcset]="map.srcset"
+        sizes="(max-width: 900px) 372px, (max-width: 1280px) 46vw, 774px"
+        [width]="map.width"
+        [height]="map.height"
+        fetchpriority="high"
         [alt]="'feature.who_we_are.hero.title' | translate"
       />
     </div>
