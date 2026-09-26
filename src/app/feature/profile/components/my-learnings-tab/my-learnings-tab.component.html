@@ -36,7 +36,35 @@
     <app-empty-state [config]="emptyState" />
   } @else {
     <div class="ml-list">
-      @for (course of completed(); track course.course_id) {
+      @for (course of completed(); track completedKey(course)) {
+        @if (course.kind === 'external') {
+        <!-- Approved External Training (Figma 2201:86051; D-057). -->
+        <article class="ml-row">
+          <div class="ml-row__thumb ml-row__thumb--external" aria-hidden="true">
+            <img src="assets/icons/external-training/upload-simple-teal-24.svg" width="24" height="24" alt="" />
+          </div>
+          <div class="ml-row__body">
+            <h3 class="ml-row__title">{{ course.title }}</h3>
+            <p class="ml-row__meta">
+              @if (course.completed_at) {
+                {{ 'feature.profile.learnings.completed_on' | translate }} {{ course.completed_at | date: 'mediumDate' }}
+              }
+              @if (course.provider) { · {{ course.provider }} }
+            </p>
+            <div class="ml-row__foot">
+              <span class="ml-row__external">
+                <img src="assets/icons/external-training/arrow-square-out-14.svg" width="14" height="14" alt="" />
+                {{ 'feature.external_training.badge' | translate }}
+              </span>
+              <button type="button" class="ml-row__cta" [disabled]="downloadingExternal() === course.external_id"
+                (click)="downloadExternalCertificate(course)">
+                <i class="pi pi-download" aria-hidden="true"></i>
+                {{ 'feature.profile.qualifications.download_certificate' | translate }}
+              </button>
+            </div>
+          </div>
+        </article>
+        } @else {
         <article class="ml-row">
           <div
             class="ml-row__thumb"
@@ -78,6 +106,7 @@
             </div>
           </div>
         </article>
+        }
       }
     </div>
   }

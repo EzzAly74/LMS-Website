@@ -284,3 +284,6 @@
     }
   }
 }
+
+// External Training card in the column when the rail is hidden.
+.profile-layout__card { display: block; margin-block-start: var(--spacing-13xs); }

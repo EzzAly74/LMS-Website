@@ -1,0 +1,190 @@
+@use 'mixins' as *;
+
+// Add External Training - Figma 2201:83481 (desktop), 2221:92592 (mobile).
+// Placeholders and muted text use neutral-800, not Figma's grey-500 (#cfd0d1,
+// 1.5:1 on white) - unreadable, and below AA.
+
+:host { display: block; }
+
+.etf {
+  max-inline-size: 1140px;
+  margin-inline: auto;
+  padding: 0 32px 48px;
+
+  &__crumbs {
+    display: flex;
+    gap: 8px;
+    padding-block: 20px;
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-800);
+
+    a { color: inherit; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible { outline: 2px solid var(--color-essential-tertiary); outline-offset: 2px; }
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 40px;
+    background: var(--color-essential-primary);
+  }
+
+  &__head { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    block-size: 23px;
+    padding: 3px 9px;
+    border-radius: var(--radius-full);
+    background: var(--color-status-operational-2);
+    @include typography('caption', 'medium');
+    color: var(--color-essential-primary);
+  }
+
+  &__title { margin: 0; @include typography('h1-small', 'bold'); color: #000; }
+  &__lead { margin: 0; @include typography('subtitle', 'regular'); color: #617173; }
+
+  &__form { display: flex; flex-direction: column; gap: 40px; }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 20px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-inline-size: 0;
+
+    label { @include typography('body-small', 'medium'); color: var(--color-essential-secondary); }
+
+    input {
+      min-block-size: 44px;
+      padding: 11px 14px;
+      border: 1px solid var(--color-neutral-400);
+      border-radius: 12px;
+      background: var(--color-neutral-0);
+      font: inherit;
+      @include typography('body-small', 'regular');
+      color: var(--color-essential-secondary);
+
+      &::placeholder { color: var(--color-neutral-800); }
+      &:focus-visible { outline: 2px solid var(--color-essential-tertiary); outline-offset: 1px; }
+      &[aria-invalid='true'] { border-color: var(--color-status-red-700); }
+    }
+  }
+
+  &__hint { margin: 0; @include typography('caption', 'regular'); color: var(--color-neutral-800); }
+
+  &__error { margin: 0; @include typography('caption', 'regular'); color: var(--color-status-red-700); }
+
+  &__upload {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--color-neutral-400);
+    border-radius: 12px;
+    background: var(--color-essential-primary);
+  }
+
+  &__upload-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    @include typography('subtitle', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__drop {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px;
+    border: 1px dashed #468599;
+    border-radius: 16px;
+    background: var(--color-neutral-0);
+    text-align: center;
+  }
+
+  &__drop-text,
+  &__file { margin: 0; @include typography('caption', 'regular'); color: var(--color-neutral-800); overflow-wrap: anywhere; }
+
+  &__file-input { @include visually-hidden; }
+
+  &__select {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 100%;
+    block-size: 40px;
+    border: 1px solid var(--color-essential-tertiary);
+    border-radius: 16px;
+    @include typography('button', 'medium');
+    color: var(--color-essential-tertiary);
+    cursor: pointer;
+
+    &:hover { background: var(--color-primary-100); }
+  }
+
+  // The native input is hidden; its focus shows on the visible button.
+  &__file-input:focus-visible + &__select { outline: 2px solid var(--color-essential-tertiary); outline-offset: 2px; }
+
+  &__guidance {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    @include typography('body-small', 'regular');
+    color: var(--color-neutral-800);
+  }
+
+  &__foot { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+  &__submit {
+    inline-size: 100%;
+    block-size: 48px;
+    padding: 12px 16px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--color-essential-tertiary);
+    @include typography('button-large', 'medium');
+    color: var(--color-essential-primary);
+    cursor: pointer;
+
+    &:disabled { background: #f0f0f0; color: #a3a3a3; cursor: default; }
+    &:focus-visible { outline: 2px solid var(--color-essential-tertiary); outline-offset: 2px; }
+  }
+
+  &__footnote { margin: 0; @include typography('caption', 'regular'); color: var(--color-essential-secondary); text-align: center; }
+
+  &__note { margin: 0; @include typography('body-small', 'regular'); color: var(--color-neutral-800); }
+
+  &__back,
+  &__link {
+    @include typography('body-small', 'medium');
+    color: var(--color-primary-700);
+    text-decoration: underline;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+
+    &:focus-visible { outline: 2px solid var(--color-essential-tertiary); outline-offset: 2px; }
+  }
+}
+
+@media (max-width: 767px) {
+  .etf { padding-inline: 16px; }
+  .etf__card { padding: 0; gap: 24px; }
+  .etf__grid { grid-template-columns: minmax(0, 1fr); }
+}

@@ -343,3 +343,24 @@
     transform: scaleX(-1);
   }
 }
+
+// Approved External Training in the Completed list (Figma 2201:86051).
+.ml-row__thumb--external {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-100);
+}
+
+.ml-row__external {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  background: var(--color-status-operational-2);
+  font-size: var(--font-size-2xs);
+  line-height: 14.4px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-essential-primary);
+}

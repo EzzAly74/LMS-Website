@@ -1,4 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../../../core/auth/auth.service';
@@ -18,6 +21,7 @@ import { ProfileService } from '../../services/profile.service';
 import { MessagesWidgetComponent } from '../../../messages/components/messages-widget/messages-widget.component';
 import { MyLearningsTabComponent } from '../my-learnings-tab/my-learnings-tab.component';
 import { ProfileSidebarComponent } from '../profile-sidebar/profile-sidebar.component';
+import { ExternalTrainingCardComponent } from '../external-training-card/external-training-card.component';
 import { QualificationsTabComponent } from '../qualifications-tab/qualifications-tab.component';
 
 interface StatCounter {
@@ -47,6 +51,7 @@ const STAT_COUNTERS: StatCounter[] = [
     QualificationsTabComponent,
     MyLearningsTabComponent,
     ProfileSidebarComponent,
+    ExternalTrainingCardComponent,
     MessagesWidgetComponent,
   ],
   templateUrl: './profile-page.component.html',
@@ -54,6 +59,12 @@ const STAT_COUNTERS: StatCounter[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfilePageComponent implements OnInit {
+  /** Below 1024 px the right rail is hidden (profile-page.component.scss). */
+  protected readonly narrow = toSignal(
+    inject(BreakpointObserver).observe('(max-width: 1024px)').pipe(map((s) => s.matches)),
+    { initialValue: false },
+  );
+
   private readonly service = inject(ProfileService);
   protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);

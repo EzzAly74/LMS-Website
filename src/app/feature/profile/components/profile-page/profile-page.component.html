@@ -80,11 +80,18 @@
       <app-profile-sidebar [activeCourse]="activeCourse()" [courses]="learnings()" tab="my_learnings" />
       } @else {
       <app-qualifications-tab [qualifications]="qualifications()" [loading]="loading()" [search]="searchTerm()" />
+      @if (narrow()) {
+      <!-- The rail is hidden at this width, so the card joins the column. -->
+      <app-external-training-card class="profile-layout__card" />
+      }
       }
     </div>
 
     <aside class="profile-layout__side">
       <app-profile-sidebar [activeCourse]="activeCourse()" [courses]="learnings()" [tab]="activeTab()" />
+      @if (activeTab() === 'qualifications' && !narrow()) {
+      <app-external-training-card />
+      }
     </aside>
   </div>
 </div>

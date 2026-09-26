@@ -104,6 +104,8 @@ $nas-type-weights: (
   --color-status-warning-50: var(--color-status-red-50);
 
   // COLOR — STATUS · Success (Green)
+  /* Figma colors/status/operational-2 - the "External Training" badge (D-057). */
+  --color-status-operational-2: #496e91;
   --color-status-success: var(--color-status-green-500);
   --color-status-success-08: var(--color-status-green-500-08);
   --color-status-success-10: var(--color-status-green-500-10);

@@ -99,6 +99,8 @@
   // Status — Red (Danger / Warning)
   --color-status-red-50: #feeceb;
   --color-status-red-500: #f14437;
+  // 6.5:1 on white - error text at 12-14 px needs AA 4.5:1, which red-500 (3.6:1) misses (A11Y-02).
+  --color-status-red-700: #b42318;
   --color-status-red-500-08: rgba(241, 68, 55, 0.08);
   --color-status-red-500-10: rgba(241, 68, 55, 0.1);
   --color-status-red-500-16: rgba(241, 68, 55, 0.16);

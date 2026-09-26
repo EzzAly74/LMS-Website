@@ -722,6 +722,77 @@
         "title": "Go beyond generic catalogues. Get NAS LMS.",
         "button": "Book a Demo"
       }
+    },
+    "external_training": {
+      "badge": "External Training",
+      "card_title": "Add External Training",
+      "none": "Log training you completed outside the LMS.",
+      "add": "External Training",
+      "load_failed": "Your requests could not be loaded.",
+      "retry": "Retry",
+      "hours": "{{hours}}h",
+      "status": {
+        "pending": "Pending",
+        "approved": "Accepted",
+        "rejected": "Not accepted"
+      },
+      "reason": "Reason:",
+      "edit": "Edit",
+      "withdraw": "Withdraw",
+      "withdraw_confirm": "Withdraw this request?",
+      "withdraw_yes": "Yes, withdraw",
+      "withdraw_no": "Keep it",
+      "withdrawn": "The request was withdrawn.",
+      "withdraw_failed": "The request could not be withdrawn.",
+      "breadcrumb": "Breadcrumb",
+      "crumb_learning": "My Learning",
+      "add_title": "Add External Training",
+      "edit_title": "Edit External Training",
+      "lead": "Log training you completed outside the LMS. The L&D team will review it before it's added to your history.",
+      "not_found": "This request does not exist, or it was withdrawn.",
+      "decided": "This request has already been reviewed, so it can no longer be changed.",
+      "back": "Back to my profile",
+      "field": {
+        "title": "Course / Training Title",
+        "provider": "Training Provider",
+        "start": "Start Date",
+        "end": "End Date",
+        "hours": "Training Hours",
+        "cost": "Cost (optional)"
+      },
+      "ph": {
+        "title": "e.g. Advanced Excel for Finance",
+        "provider": "e.g. Coursera, LinkedIn Learning",
+        "hours": "e.g. 8",
+        "cost": "e.g. 1500"
+      },
+      "cost_hint": "In EGP.",
+      "upload_title": "Upload certificate",
+      "types": "PDF, JPG, PNG",
+      "max_size": "Max file size: 10 MB",
+      "select_file": "Select file",
+      "replace_file": "Replace file",
+      "remove_file": "Remove",
+      "current_file": "Current certificate:",
+      "accepted": "Accepted file types: .pdf, .jpg, .png (max 10 MB)",
+      "submit": "Submit Request",
+      "save": "Save Changes",
+      "submitting": "Submitting…",
+      "footnote": "Your request will be reviewed by the L&D team before it's added to your training history.",
+      "submitted": "Your request was submitted for review.",
+      "updated": "Your request was updated.",
+      "save_failed": "The request could not be saved. Please try again.",
+      "errors": {
+        "required": "This field is required.",
+        "too_long": "This is too long.",
+        "hours_step": "Enter the hours in steps of 0.5.",
+        "hours_range": "Enter between 0.5 and 2000 hours.",
+        "cost_range": "Enter a cost of 0 or more.",
+        "end_before_start": "The end date must be on or after the start date.",
+        "end_in_future": "The end date cannot be in the future.",
+        "file_type": "Upload a PDF, JPG or PNG file.",
+        "file_size": "The file is larger than 10 MB."
+      }
     }
   }
 }

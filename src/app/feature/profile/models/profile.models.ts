@@ -128,7 +128,13 @@ export interface SessionAttendance {
 
 /** One completed course (the "Completed" My-Learnings sub-tab). */
 export interface CompletedCourse {
-  course_id: number;
+  /** `external` = approved External Training (D-057): no course_id, the
+   *  learner's own certificate, a provider and hours instead. */
+  kind: 'course' | 'external';
+  external_id?: number;
+  provider?: string;
+  hours?: number;
+  course_id: number | null;
   title: string;
   image: string | null;
   course_type: DeliveryType;
@@ -178,3 +184,33 @@ export type LearningStatus = 'upcoming' | 'current' | 'completed';
 /** Which top-level profile tab is active. `schedule` is a mobile-only tab that
  * surfaces the right-rail (Active Session / attendance) content. */
 export type ProfileTab = 'qualifications' | 'my_learnings' | 'schedule';
+
+/** A learner's External Training request (learner/external-training, D-057). */
+export type ExternalTrainingStatus = 'pending' | 'approved' | 'rejected';
+
+export interface ExternalTrainingRequest {
+  id: number;
+  title: string;
+  provider: string;
+  start_date: string;
+  end_date: string;
+  hours: number;
+  cost: number | null;
+  currency: string;
+  status: ExternalTrainingStatus;
+  rejection_reason: string | null;
+  qualification: { id: number; name: string } | null;
+  course: { id: number; title: string } | null;
+  certificate: { name: string; mime: string; size: number };
+  submitted_at: string | null;
+  decided_at: string | null;
+}
+
+export interface ExternalTrainingFields {
+  title: string;
+  provider: string;
+  start_date: string;
+  end_date: string;
+  hours: number;
+  cost: number | null;
+}

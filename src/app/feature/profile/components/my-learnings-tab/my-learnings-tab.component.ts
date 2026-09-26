@@ -11,6 +11,7 @@ import { ShimmerComponent } from '../../../../shared/components/shimmer/shimmer.
 import { CourseDetailComponent } from '../../../my-learnings/components/course-detail/course-detail.component';
 import { CertificateStatus, CompletedCourse, LearningCourse, LearningStatus } from '../../models/profile.models';
 import { ProfileService } from '../../services/profile.service';
+import { ExternalTrainingService } from '../../services/external-training.service';
 
 const STATUS_TABS: LearningStatus[] = ['upcoming', 'current', 'completed'];
 
@@ -53,9 +54,12 @@ export class MyLearningsTabComponent {
   private readonly translate = inject(TranslateService);
   private readonly profile = inject(ProfileService);
   private readonly notify = inject(NotificationService);
+  private readonly externalTraining = inject(ExternalTrainingService);
 
   /** Certificate id currently downloading (disables its button). */
   protected readonly downloadingId = signal<number | null>(null);
+  /** External training request whose certificate is downloading. */
+  protected readonly downloadingExternal = signal<number | null>(null);
 
   private readonly _courses = signal<LearningCourse[]>([]);
   private readonly _completed = signal<CompletedCourse[]>([]);
@@ -143,6 +147,38 @@ export class MyLearningsTabComponent {
       },
       error: () => {
         this.downloadingId.set(null);
+        this.notify.error(this.translate.instant('feature.my_learnings.download_failed'));
+      },
+    });
+  }
+
+  /** A course and an external training can share an id, and external rows have no course_id. */
+  protected completedKey(c: CompletedCourse): string {
+    return c.kind === 'external' ? `external-${c.external_id}` : `course-${c.course_id}`;
+  }
+
+  /** The learner's own uploaded certificate for an approved external training. */
+  protected downloadExternalCertificate(course: CompletedCourse): void {
+    const id = course.external_id;
+    if (id === undefined || this.downloadingExternal() !== null) {
+      return;
+    }
+    this.downloadingExternal.set(id);
+    this.externalTraining.certificate(id).subscribe({
+      next: (blob) => {
+        const ext = blob.type === 'application/pdf' ? 'pdf' : blob.type === 'image/png' ? 'png' : 'jpg';
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `external-training-${id}.${ext}`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        this.downloadingExternal.set(null);
+      },
+      error: () => {
+        this.downloadingExternal.set(null);
         this.notify.error(this.translate.instant('feature.my_learnings.download_failed'));
       },
     });

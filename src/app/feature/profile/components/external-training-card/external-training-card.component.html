@@ -1,0 +1,66 @@
+<section class="etc" aria-labelledby="etc-title">
+  <h2 class="etc__title" id="etc-title">{{ 'feature.external_training.card_title' | translate }}</h2>
+
+  @switch (state()) {
+    @case ('loading') {
+      <p class="etc__muted">{{ 'common.loading' | translate }}</p>
+    }
+    @case ('error') {
+      <p class="etc__muted" role="alert">
+        {{ 'feature.external_training.load_failed' | translate }}
+        <button type="button" class="etc__link" (click)="load()">{{ 'feature.external_training.retry' | translate }}</button>
+      </p>
+    }
+    @default {
+      @if (requests().length === 0) {
+        <p class="etc__muted">{{ 'feature.external_training.none' | translate }}</p>
+      } @else {
+        <ul class="etc__list">
+          @for (r of requests(); track r.id) {
+            <li class="etc__item">
+              <div class="etc__date" aria-hidden="true">
+                <span class="etc__month">{{ r.submitted_at | date: 'MMM' : undefined : locale() }}</span>
+                <span class="etc__day">{{ r.submitted_at | date: 'd' : undefined : locale() }}</span>
+              </div>
+              <div class="etc__body">
+                <p class="etc__name"><bdi>{{ r.title }}</bdi></p>
+                <p class="etc__meta"><bdi>{{ r.provider }}</bdi> · {{ 'feature.external_training.hours' | translate: { hours: r.hours } }}</p>
+                <span class="etc__status etc__status--{{ r.status }}">{{ 'feature.external_training.status.' + r.status | translate }}</span>
+
+                @if (r.status === 'rejected' && r.rejection_reason) {
+                  <p class="etc__reason">
+                    <span>{{ 'feature.external_training.reason' | translate }}&nbsp;</span><bdi>{{ r.rejection_reason }}</bdi>
+                  </p>
+                }
+
+                @if (r.status === 'pending') {
+                  @if (confirming() === r.id) {
+                    <div class="etc__confirm" role="group" [attr.aria-label]="'feature.external_training.withdraw_confirm' | translate">
+                      <span>{{ 'feature.external_training.withdraw_confirm' | translate }}</span>
+                      <button type="button" class="etc__link etc__link--danger" [disabled]="withdrawing() === r.id" (click)="withdraw(r)">
+                        {{ 'feature.external_training.withdraw_yes' | translate }}
+                      </button>
+                      <button type="button" class="etc__link" [disabled]="withdrawing() === r.id" (click)="confirming.set(null)">
+                        {{ 'feature.external_training.withdraw_no' | translate }}
+                      </button>
+                    </div>
+                  } @else {
+                    <div class="etc__actions">
+                      <a class="etc__link" [routerLink]="[base, r.id, 'edit']">{{ 'feature.external_training.edit' | translate }}</a>
+                      <button type="button" class="etc__link" (click)="confirming.set(r.id)">{{ 'feature.external_training.withdraw' | translate }}</button>
+                    </div>
+                  }
+                }
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    }
+  }
+
+  <a class="etc__cta" [routerLink]="[base, 'new']">
+    <i class="pi pi-plus-circle" aria-hidden="true"></i>
+    {{ 'feature.external_training.add' | translate }}
+  </a>
+</section>

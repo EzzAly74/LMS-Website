@@ -1,0 +1,127 @@
+<main class="etf">
+  <nav class="etf__crumbs" [attr.aria-label]="'feature.external_training.breadcrumb' | translate">
+    <a [routerLink]="profileLink">{{ 'feature.external_training.crumb_learning' | translate }}</a>
+    <span aria-hidden="true">/</span>
+    <span aria-current="page">{{ 'feature.external_training.badge' | translate }}</span>
+  </nav>
+
+  <section class="etf__card">
+    <header class="etf__head">
+      <span class="etf__badge">
+        <img src="assets/icons/external-training/arrow-square-out-14.svg" width="14" height="14" alt="" />
+        {{ 'feature.external_training.badge' | translate }}
+      </span>
+      <h1 class="etf__title">
+        {{ (editing() ? 'feature.external_training.edit_title' : 'feature.external_training.add_title') | translate }}
+      </h1>
+      <p class="etf__lead">{{ 'feature.external_training.lead' | translate }}</p>
+    </header>
+
+    @switch (state()) {
+      @case ('loading') {
+        <p class="etf__note" role="status">{{ 'common.loading' | translate }}</p>
+      }
+      @case ('not-found') {
+        <p class="etf__note" role="alert">{{ 'feature.external_training.not_found' | translate }}</p>
+        <a class="etf__back" [routerLink]="profileLink">{{ 'feature.external_training.back' | translate }}</a>
+      }
+      @case ('decided') {
+        <p class="etf__note" role="alert">{{ 'feature.external_training.decided' | translate }}</p>
+        <a class="etf__back" [routerLink]="profileLink">{{ 'feature.external_training.back' | translate }}</a>
+      }
+      @case ('error') {
+        <p class="etf__note" role="alert">
+          {{ 'feature.external_training.load_failed' | translate }}
+          <button type="button" class="etf__link" (click)="load()">{{ 'feature.external_training.retry' | translate }}</button>
+        </p>
+      }
+      @default {
+        <form class="etf__form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div class="etf__grid">
+            <div class="etf__field">
+              <label for="etf-title">{{ 'feature.external_training.field.title' | translate }}</label>
+              <input id="etf-title" formControlName="title" type="text" dir="auto" autocomplete="off" [attr.maxlength]="maxText"
+                [placeholder]="'feature.external_training.ph.title' | translate" [attr.aria-invalid]="invalid('title')"
+                [attr.aria-describedby]="invalid('title') ? 'etf-title-err' : null" (input)="clearServer('title')" />
+              @if (invalid('title')) { <p class="etf__error" id="etf-title-err" role="alert">{{ serverErrors().title ?? (errorKey('title') | translate) }}</p> }
+            </div>
+            <div class="etf__field">
+              <label for="etf-provider">{{ 'feature.external_training.field.provider' | translate }}</label>
+              <input id="etf-provider" formControlName="provider" type="text" dir="auto" autocomplete="off" [attr.maxlength]="maxText"
+                [placeholder]="'feature.external_training.ph.provider' | translate" [attr.aria-invalid]="invalid('provider')"
+                [attr.aria-describedby]="invalid('provider') ? 'etf-provider-err' : null" (input)="clearServer('provider')" />
+              @if (invalid('provider')) { <p class="etf__error" id="etf-provider-err" role="alert">{{ serverErrors().provider ?? (errorKey('provider') | translate) }}</p> }
+            </div>
+            <div class="etf__field">
+              <label for="etf-start">{{ 'feature.external_training.field.start' | translate }}</label>
+              <input id="etf-start" formControlName="start_date" type="date" [max]="today" [attr.aria-invalid]="invalid('start_date')"
+                [attr.aria-describedby]="invalid('start_date') ? 'etf-start-err' : null" (input)="clearServer('start_date')" />
+              @if (invalid('start_date')) { <p class="etf__error" id="etf-start-err" role="alert">{{ serverErrors().start_date ?? (errorKey('start_date') | translate) }}</p> }
+            </div>
+            <div class="etf__field">
+              <label for="etf-end">{{ 'feature.external_training.field.end' | translate }}</label>
+              <input id="etf-end" formControlName="end_date" type="date" [max]="today" [attr.aria-invalid]="invalid('end_date')"
+                [attr.aria-describedby]="invalid('end_date') ? 'etf-end-err' : null" (input)="clearServer('end_date')" />
+              @if (invalid('end_date')) { <p class="etf__error" id="etf-end-err" role="alert">{{ serverErrors().end_date ?? (errorKey('end_date') | translate) }}</p> }
+            </div>
+            <div class="etf__field">
+              <label for="etf-hours">{{ 'feature.external_training.field.hours' | translate }}</label>
+              <input id="etf-hours" formControlName="hours" type="number" inputmode="decimal" min="0.5" max="2000" step="0.5"
+                [placeholder]="'feature.external_training.ph.hours' | translate" [attr.aria-invalid]="invalid('hours')"
+                [attr.aria-describedby]="invalid('hours') ? 'etf-hours-err' : null" (input)="clearServer('hours')" />
+              @if (invalid('hours')) { <p class="etf__error" id="etf-hours-err" role="alert">{{ serverErrors().hours ?? (errorKey('hours') | translate) }}</p> }
+            </div>
+            <div class="etf__field">
+              <label for="etf-cost">{{ 'feature.external_training.field.cost' | translate }}</label>
+              <input id="etf-cost" formControlName="cost" type="number" inputmode="decimal" min="0" step="0.01"
+                [placeholder]="'feature.external_training.ph.cost' | translate" [attr.aria-invalid]="invalid('cost')"
+                [attr.aria-describedby]="invalid('cost') ? 'etf-cost-err' : 'etf-cost-hint'" (input)="clearServer('cost')" />
+              <p class="etf__hint" id="etf-cost-hint">{{ 'feature.external_training.cost_hint' | translate }}</p>
+              @if (invalid('cost')) { <p class="etf__error" id="etf-cost-err" role="alert">{{ serverErrors().cost ?? (errorKey('cost') | translate) }}</p> }
+            </div>
+          </div>
+
+          <div class="etf__upload">
+            <p class="etf__upload-title" id="etf-upload-title">
+              <img src="assets/icons/external-training/upload-simple-24.svg" width="24" height="24" alt="" />
+              {{ 'feature.external_training.upload_title' | translate }}
+            </p>
+            <div class="etf__drop">
+              @if (file(); as f) {
+                <p class="etf__file"><bdi>{{ f.name }}</bdi> · <bdi dir="ltr">{{ size(f.size) }}</bdi></p>
+                <button type="button" class="etf__link" (click)="removeFile()">{{ 'feature.external_training.remove_file' | translate }}</button>
+              } @else {
+                @if (existing(); as r) {
+                  <p class="etf__file">{{ 'feature.external_training.current_file' | translate }} <bdi>{{ r.certificate.name }}</bdi></p>
+                } @else {
+                  <img src="assets/icons/external-training/upload-simple-teal-24.svg" width="24" height="24" alt="" />
+                  <p class="etf__drop-text">{{ 'feature.external_training.types' | translate }}<br />{{ 'feature.external_training.max_size' | translate }}</p>
+                }
+              }
+              <input #fileEl id="etf-file" class="etf__file-input" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                aria-labelledby="etf-upload-title" [attr.aria-describedby]="fileError() || serverErrors().certificate ? 'etf-file-err' : 'etf-file-hint'"
+                (change)="onFile(fileEl)" />
+              <label class="etf__select" for="etf-file">
+                {{ (existing() || file() ? 'feature.external_training.replace_file' : 'feature.external_training.select_file') | translate }}
+              </label>
+            </div>
+            <p class="etf__guidance" id="etf-file-hint">
+              <img src="assets/icons/external-training/info-24.svg" width="24" height="24" alt="" />
+              {{ 'feature.external_training.accepted' | translate }}
+            </p>
+            @if (fileError() || serverErrors().certificate; as msg) {
+              <p class="etf__error" id="etf-file-err" role="alert">{{ msg }}</p>
+            }
+          </div>
+
+          <div class="etf__foot">
+            <button type="submit" class="etf__submit" [disabled]="!canSubmit()">
+              {{ (saving() ? 'feature.external_training.submitting' : editing() ? 'feature.external_training.save' : 'feature.external_training.submit') | translate }}
+            </button>
+            <p class="etf__footnote">{{ 'feature.external_training.footnote' | translate }}</p>
+          </div>
+        </form>
+      }
+    }
+  </section>
+</main>
