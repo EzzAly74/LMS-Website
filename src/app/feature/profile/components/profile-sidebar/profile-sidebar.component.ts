@@ -6,6 +6,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LearningCourse, ProfileTab, SessionAttendance, WeekSession } from '../../models/profile.models';
 import { ProfileService } from '../../services/profile.service';
 import { LanguageService } from '../../../../core/services/language.service';
+import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 
 /**
  * Profile right rail. Shows the learner's next/live "Active Session" (derived
@@ -229,6 +230,13 @@ export class ProfileSidebarComponent {
   }
 
   constructor() {
+    this.loadWeek();
+    // Session course titles come localized from the API: re-read them when
+    // the language changes instead of keeping the old ones until a refresh.
+    reloadOnLanguageChange(() => this.loadWeek());
+  }
+
+  private loadWeek(): void {
     this.service.getWeekSchedule().subscribe({
       next: (res) => {
         if (res.status === 'success' && res.result) {

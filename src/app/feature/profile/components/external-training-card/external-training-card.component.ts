@@ -6,6 +6,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { LanguageService } from '../../../../core/services/language.service';
+import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { ExternalTrainingRequest } from '../../models/profile.models';
 import { ExternalTrainingService } from '../../services/external-training.service';
@@ -41,6 +42,11 @@ export class ExternalTrainingCardComponent implements OnInit {
   /** The request whose withdraw is waiting for a yes / no. */
   protected readonly confirming = signal<number | null>(null);
   protected readonly withdrawing = signal<number | null>(null);
+
+  constructor() {
+    // The qualification / course names on a decided request are localized.
+    reloadOnLanguageChange(() => this.load());
+  }
 
   ngOnInit(): void {
     this.load();
