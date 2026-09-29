@@ -306,7 +306,8 @@
       "tabs": {
         "overview": "نظرة عامة",
         "curriculum": "المنهج",
-        "instructor": "المدرّب"
+        "instructor": "المدرّب",
+        "schedule": "الجدول"
       },
       "overview": {
         "what_you_will_learn": "ما ستتعلمه",
@@ -334,13 +335,32 @@
         "sessions": "الجلسات",
         "instructor": "المدرّب",
         "includes": "تشمل هذه الدورة",
-        "remaining_seats": "{{count}} مقعد متبقٍ"
+        "remaining_seats": "المقاعد المتبقية",
+        "seats_left": "متبقٍ {{count}}"
       },
       "includes": {
         "sessions": "{{count}} جلسة مباشرة",
         "reading": "مواد قراءة وموارد",
         "assessments": "اختبارات ومهام",
         "certificate": "شهادة عند إتمام الدورة"
+      },
+      "schedule": {
+        "title": "الجدول",
+        "subtitle": "راجع الجلسات القادمة وأماكنها وحالتها لهذه الدورة.",
+        "empty": "لم تُجدول أي جلسات لهذه الدورة بعد.",
+        "session": "الجلسة",
+        "session_n": "الجلسة {{n}}",
+        "date": "التاريخ",
+        "from": "من",
+        "to": "إلى",
+        "duration": "المدة",
+        "location": "المكان",
+        "status": "الحالة",
+        "status_completed": "مكتملة",
+        "status_upcoming": "قادمة",
+        "duration_hm": "{{h}} س {{m}} د",
+        "duration_h": "{{h}} س",
+        "duration_m": "{{m}} د"
       },
       "not_found": {
         "title": "الدورة غير موجودة",

@@ -306,7 +306,8 @@
       "tabs": {
         "overview": "Overview",
         "curriculum": "Curriculum",
-        "instructor": "Instructor"
+        "instructor": "Instructor",
+        "schedule": "Schedule"
       },
       "overview": {
         "what_you_will_learn": "What you'll learn",
@@ -334,13 +335,32 @@
         "sessions": "Sessions",
         "instructor": "Instructor",
         "includes": "This course includes",
-        "remaining_seats": "{{count}} Remaining Seats"
+        "remaining_seats": "Remaining Seats",
+        "seats_left": "{{count}} Left"
       },
       "includes": {
         "sessions": "{{count}} live sessions",
         "reading": "Reading materials & resources",
         "assessments": "Quizzes & assignments",
         "certificate": "Certificate upon completion"
+      },
+      "schedule": {
+        "title": "Schedule",
+        "subtitle": "Review upcoming sessions, locations, and status for this course.",
+        "empty": "No sessions have been scheduled for this course yet.",
+        "session": "Session",
+        "session_n": "Session {{n}}",
+        "date": "Date",
+        "from": "From",
+        "to": "To",
+        "duration": "Duration",
+        "location": "Location",
+        "status": "Status",
+        "status_completed": "Completed",
+        "status_upcoming": "Upcoming",
+        "duration_hm": "{{h}}h {{m}}m",
+        "duration_h": "{{h}}h",
+        "duration_m": "{{m}}m"
       },
       "not_found": {
         "title": "Course not found",

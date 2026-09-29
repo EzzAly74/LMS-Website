@@ -38,6 +38,9 @@ export interface CohortSession {
   time_from: string | null;
   time_to: string | null;
   location: string | null;
+  /** Derived by the API from the session's end (Figma 2027:97810). */
+  duration_minutes: number | null;
+  status: 'completed' | 'upcoming' | null;
 }
 
 export interface CohortBlock {
@@ -93,4 +96,4 @@ export interface CourseDetail {
   requirements: LocalizedList;
 }
 
-export type CourseDetailTab = 'overview' | 'curriculum' | 'instructor';
+export type CourseDetailTab = 'overview' | 'curriculum' | 'instructor' | 'schedule';

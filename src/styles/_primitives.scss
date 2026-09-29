@@ -84,6 +84,8 @@
   // Status — Green
   --color-status-green-50: #e7f8f0;
   --color-status-green-500: #0fb86a;
+  // 5.3:1 on white - status text at 12-14 px needs AA 4.5:1, which green-500 (2.6:1) misses (FG-47).
+  --color-status-green-700: #0a7d48;
   --color-status-green-500-08: rgba(15, 184, 106, 0.08);
   --color-status-green-500-10: rgba(15, 184, 106, 0.1);
   --color-status-green-500-16: rgba(15, 184, 106, 0.16);

@@ -1,0 +1,86 @@
+<section class="schedule" aria-labelledby="schedule-title">
+  <header class="schedule__head">
+    <h2 class="schedule__title" id="schedule-title">{{ 'feature.course_detail.schedule.title' | translate }}</h2>
+    <p class="schedule__subtitle">{{ 'feature.course_detail.schedule.subtitle' | translate }}</p>
+  </header>
+
+  @if (!sessions.length) {
+    <p class="schedule__empty">{{ 'feature.course_detail.schedule.empty' | translate }}</p>
+  } @else {
+    <!-- Wide: table -->
+    <div class="schedule__card schedule__table-wrap">
+      <table class="schedule__table">
+        <thead>
+          <tr>
+            <th scope="col" class="c-session">{{ 'feature.course_detail.schedule.session' | translate }}</th>
+            <th scope="col" class="c-date">{{ 'feature.course_detail.schedule.date' | translate }}</th>
+            <th scope="col" class="c-time">{{ 'feature.course_detail.schedule.from' | translate }}</th>
+            <th scope="col" class="c-time">{{ 'feature.course_detail.schedule.to' | translate }}</th>
+            <th scope="col" class="c-duration">{{ 'feature.course_detail.schedule.duration' | translate }}</th>
+            <th scope="col">{{ 'feature.course_detail.schedule.location' | translate }}</th>
+            <th scope="col" class="c-status">{{ 'feature.course_detail.schedule.status' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of sessions; track s.id; let i = $index) {
+            @let d = duration(s.duration_minutes);
+            <tr>
+              <th scope="row" class="schedule__name">{{ 'feature.course_detail.schedule.session_n' | translate: { n: i + 1 } }}</th>
+              <td>{{ s.session_date ? (s.session_date | date: 'd MMM' : undefined : lang()) : '—' }}</td>
+              <td><bdi>{{ time(s.time_from) }}</bdi></td>
+              <td><bdi>{{ time(s.time_to) }}</bdi></td>
+              <td>{{ d ? (d.key | translate: d.params) : '—' }}</td>
+              <td>
+                <span class="schedule__icon-text">
+                  <img src="assets/icons/course-detail/map-pin-18.svg" width="18" height="18" alt="" />
+                  {{ s.location || '—' }}
+                </span>
+              </td>
+              <td>
+                @if (s.status) {
+                  <span class="schedule__status" [class.schedule__status--done]="s.status === 'completed'">
+                    <img [src]="s.status === 'completed' ? 'assets/icons/course-detail/calendar-check-18.svg' : 'assets/icons/course-detail/calendar-blank-teal-18.svg'"
+                      width="18" height="18" alt="" />
+                    {{ 'feature.course_detail.schedule.status_' + s.status | translate }}
+                  </span>
+                } @else {
+                  —
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Narrow: one card per session -->
+    <ul class="schedule__card schedule__list">
+      @for (s of sessions; track s.id; let i = $index) {
+        @let d = duration(s.duration_minutes);
+        <li class="schedule__item">
+          <div class="schedule__item-head">
+            <h3 class="schedule__name">{{ 'feature.course_detail.schedule.session_n' | translate: { n: i + 1 } }}</h3>
+            @if (s.status) {
+              <span class="schedule__pill" [class.schedule__pill--done]="s.status === 'completed'">
+                <span class="schedule__dot" aria-hidden="true"></span>
+                {{ 'feature.course_detail.schedule.status_' + s.status | translate }}
+              </span>
+            }
+          </div>
+          <p class="schedule__icon-text">
+            <img src="assets/icons/course-detail/calendar-blank-grey-18.svg" width="18" height="18" alt="" />
+            {{ s.session_date ? (s.session_date | date: 'd MMM' : undefined : lang()) : '—' }}
+          </p>
+          <p class="schedule__icon-text">
+            <img src="assets/icons/course-detail/clock-18.svg" width="18" height="18" alt="" />
+            <span><bdi>{{ time(s.time_from) }} - {{ time(s.time_to) }}</bdi>@if (d) { · {{ d.key | translate: d.params }} }</span>
+          </p>
+          <p class="schedule__icon-text">
+            <img src="assets/icons/course-detail/map-pin-18.svg" width="18" height="18" alt="" />
+            {{ s.location || '—' }}
+          </p>
+        </li>
+      }
+    </ul>
+  }
+</section>

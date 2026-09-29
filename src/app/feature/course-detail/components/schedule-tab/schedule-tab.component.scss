@@ -1,0 +1,185 @@
+@use "mixins" as *;
+
+// Schedule tab (Figma 2027:97810). The table needs ~760 px; below that the
+// mobile frame's one-card-per-session layout is used.
+:host {
+  display: block;
+  container-type: inline-size;
+}
+
+.schedule {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-11xs);
+
+  &__head { display: flex; flex-direction: column; gap: var(--spacing-16xs); }
+
+  &__title {
+    margin: 0;
+    @include typography("subtitle", "bold");
+    color: var(--color-essential-secondary);
+  }
+
+  // Only the mobile frame carries the subtitle.
+  &__subtitle {
+    display: none;
+    margin: 0;
+    @include typography("body-small", "regular");
+    color: var(--color-neutral-800);
+  }
+
+  &__empty {
+    margin: 0;
+    @include typography("body-small", "regular");
+    color: var(--color-neutral-800);
+  }
+
+  &__card {
+    overflow: hidden;
+    border: var(--stroke-width-default) solid var(--color-neutral-400);
+    border-radius: var(--radius-sm);
+    background: var(--color-neutral-0);
+    box-shadow: 0 1px 1px 0 var(--color-grey-2000-12), 0 2px 5px 0 var(--color-grey-700-08);
+  }
+
+  // ── Table ──────────────────────────────────────────────────────────────
+  &__table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    th, td {
+      padding: var(--spacing-14xs) 0;
+      padding-inline-start: var(--spacing-13xs);
+      text-align: start;
+      vertical-align: middle;
+    }
+
+    // 12 px column gap + 12 px row inset, as drawn.
+    tr > :last-child { padding-inline-end: var(--spacing-13xs); }
+
+    thead th {
+      background: var(--color-primary-100);
+      border-block-end: var(--stroke-width-default) solid var(--color-neutral-400);
+      font-size: var(--font-size-2xs);
+      font-weight: var(--font-weight-bold);
+      line-height: normal;
+      // Figma draws neutral-700 (#8c8c8c, 3.2:1 on primary-100); neutral-800 meets AA (FG-47).
+      color: var(--color-neutral-800);
+    }
+
+    tbody td, tbody th {
+      border-block-end: var(--stroke-width-default) solid var(--color-neutral-400);
+      font-size: var(--font-size-xs);
+      line-height: normal;
+      color: var(--color-neutral-800);
+    }
+
+    tbody tr:last-child > * { border-block-end: 0; }
+
+    .c-session { inline-size: calc(120px + var(--spacing-13xs)); }
+    .c-date, .c-time { inline-size: calc(72px + var(--spacing-13xs)); }
+    .c-duration { inline-size: calc(80px + var(--spacing-13xs)); }
+    .c-status { inline-size: calc(110px + var(--spacing-13xs) * 2); }
+  }
+
+  &__name {
+    margin: 0;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    line-height: normal;
+    color: var(--color-essential-secondary) !important;
+  }
+
+  &__table &__name { font-weight: var(--font-weight-semibold); }
+
+  &__icon-text {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-inline-size: 0;
+    margin: 0;
+
+    img { flex-shrink: 0; }
+  }
+
+  // Inline-flex cells sit on the baseline and grow the row past 38 px.
+  &__table &__icon-text { display: inline-flex; vertical-align: middle; }
+
+  &__status {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    gap: 6px;
+    font-weight: var(--font-weight-bold);
+    white-space: nowrap;
+    color: var(--color-primary-700);
+
+    &--done { color: var(--color-status-green-700); }
+  }
+
+  // ── Cards (narrow) ─────────────────────────────────────────────────────
+  &__list {
+    display: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-radius: var(--radius-lg);
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-16xs);
+    padding: var(--spacing-13xs);
+    border-block-end: var(--stroke-width-default) solid var(--color-neutral-400);
+
+    &:last-child { border-block-end: 0; }
+
+    .schedule__icon-text {
+      @include typography("body-small", "regular");
+      color: var(--color-essential-secondary);
+    }
+  }
+
+  &__item-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-15xs);
+    margin-block-end: var(--spacing-16xs);
+
+    .schedule__name { font-weight: var(--font-weight-semibold); }
+  }
+
+  &__pill {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 5px;
+    padding: var(--spacing-16xs) 10px;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary-100);
+    @include typography("caption", "medium");
+    color: var(--color-primary-700);
+
+    &--done {
+      padding-inline: var(--spacing-15xs) var(--spacing-13xs);
+      background: var(--color-status-success-50);
+      color: var(--color-status-green-700);
+    }
+  }
+
+  &__dot {
+    inline-size: 7px;
+    block-size: 7px;
+    border-radius: 3.5px;
+    background: currentColor;
+  }
+}
+
+@container (max-width: 759px) {
+  .schedule__subtitle { display: block; }
+  .schedule__table-wrap { display: none; }
+  .schedule__list { display: block; }
+}

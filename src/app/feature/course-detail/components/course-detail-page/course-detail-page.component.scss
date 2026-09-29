@@ -6,6 +6,11 @@
   max-width: 1320px;
   margin-inline: auto;
   padding: var(--spacing-3xs) var(--spacing-3xs) var(--spacing-12xl);
+
+  // Phone frame 2003:80195 uses a 24 px gutter; the four tabs need 320 px.
+  @media (max-width: 640px) {
+    padding-inline: var(--spacing-7xs);
+  }
 }
 
 .breadcrumb {
@@ -29,21 +34,29 @@
 // hero-only column doesn't need, leaving a dead gap above the tabs.
 .detail-layout {
   display: grid;
-  grid-template-columns: 1fr 316px;
-  gap: var(--spacing-4xl);
+  grid-template-columns: minmax(0, 1fr) 316px;
+  grid-template-areas:
+    "head card"
+    "meta card"
+    "content card";
+  grid-template-rows: auto auto 1fr;
+  column-gap: var(--spacing-4xl);
   padding-block: var(--spacing-4xl);
   align-items: start;
 
+  // Phone frame 2003:80195: head, enrolment card, stats, tabs, 12 px apart.
   @media (max-width: 900px) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "head" "card" "meta" "content";
+    grid-template-rows: none;
+    row-gap: var(--spacing-13xs);
   }
 }
 
-.detail-main {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
+.detail-head { grid-area: head; min-width: 0; }
+.detail-meta { grid-area: meta; min-width: 0; }
+.detail-content { grid-area: content; min-width: 0; }
+.enrolment-card { grid-area: card; }
 
 .detail-hero__main {
   .detail-hero__eyebrow {
@@ -216,10 +229,11 @@
     color: var(--color-status-success);
   }
 
+  // "Remaining Seats" + bar + "8 Left" (Figma 2003:80108)
   &__seats {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-15xs);
+    gap: 5px;
   }
 
   &__cta {
@@ -249,44 +263,86 @@
   }
 }
 
+.seats-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-15xs);
+
+  &__left {
+    flex-shrink: 0;
+    min-inline-size: 32px;
+    text-align: end;
+    @include typography("caption", "medium");
+    // Figma draws red-500 (#f14437, 3.6:1); red-700 meets AA at 12 px (FG-47).
+    color: var(--color-status-red-700);
+  }
+}
+
 .seats-bar {
+  flex: 1 1 auto;
   height: 8px;
-  border-radius: var(--radius-full);
-  background: var(--color-neutral-300);
+  border-radius: 4px;
+  background: var(--color-neutral-400);
   overflow: hidden;
 
   &__fill {
     height: 100%;
     background: var(--color-primary-700);
-    border-radius: var(--radius-full);
+    border-radius: 4px;
   }
 }
 
 .detail-content {
   margin-top: var(--spacing-4xl);
+
+  // 24 px above the tabs on the phone frame (12 px row gap + 12).
+  @media (max-width: 900px) {
+    margin-top: var(--spacing-13xs);
+  }
 }
 
 .detail-tabs {
   display: flex;
-  gap: var(--spacing-13xs);
-  border-bottom: var(--stroke-width-default) solid var(--color-neutral-400);
+  overflow-x: auto;
+  padding-bottom: var(--stroke-width-2);
+  border-bottom: var(--stroke-width-2) solid var(--color-neutral-400);
+  scrollbar-width: none;
 
+  // Mobile frame 2003:80303: no rule, 12 px gaps, 12 / 4 / 14 padding.
+  @media (max-width: 640px) {
+    gap: var(--spacing-13xs);
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  // Figma 2003:80117: 9 / 18 / 11 padding, active = essential tertiary.
   button {
-    padding: var(--spacing-14xs) var(--spacing-15xs);
+    padding: 9px 18px 11px;
     background: none;
     border: none;
     border-bottom: var(--stroke-width-2) solid transparent;
     cursor: pointer;
-    @include typography("body-small", "medium");
-    color: var(--color-neutral-700);
+    white-space: nowrap;
+    @include typography("button", "medium");
+    // Figma draws neutral-700 (#8c8c8c, 3.4:1); neutral-800 meets AA (FG-47).
+    color: var(--color-neutral-800);
 
     &.is-active {
-      color: var(--color-primary-700);
-      border-bottom-color: var(--color-primary-700);
+      color: var(--color-essential-tertiary);
+      border-bottom-color: var(--color-essential-tertiary);
     }
+
+    &:focus-visible {
+      outline: var(--stroke-width-focus) solid var(--color-primary-600);
+      outline-offset: -2px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    button { padding: 12px 4px 14px; }
   }
 }
 
 .detail-tab-content {
-  padding-top: var(--spacing-4xl);
+  padding-top: var(--spacing-8xs); // 22 px under the tabs, as drawn
 }

@@ -22,6 +22,7 @@ import { CourseDetailSkeletonComponent } from '../course-detail-skeleton/course-
 import { CurriculumTabComponent } from '../curriculum-tab/curriculum-tab.component';
 import { InstructorTabComponent } from '../instructor-tab/instructor-tab.component';
 import { OverviewTabComponent } from '../overview-tab/overview-tab.component';
+import { ScheduleTabComponent } from '../schedule-tab/schedule-tab.component';
 
 @Component({
   selector: 'app-course-detail-page',
@@ -37,6 +38,7 @@ import { OverviewTabComponent } from '../overview-tab/overview-tab.component';
     OverviewTabComponent,
     CurriculumTabComponent,
     InstructorTabComponent,
+    ScheduleTabComponent,
     EnrolmentDialogComponent,
     LoginRequiredDialogComponent,
   ],
@@ -57,6 +59,7 @@ export class CourseDetailPageComponent implements OnInit {
   protected readonly course = signal<CourseDetail | null>(null);
   protected readonly loading = signal(true);
   protected readonly activeTab = signal<CourseDetailTab>('overview');
+  protected readonly tabs: readonly CourseDetailTab[] = ['overview', 'curriculum', 'instructor', 'schedule'];
 
   /** True while the "Request Enrolment" confirmation dialog is open. */
   protected readonly enrolDialogOpen = signal(false);
