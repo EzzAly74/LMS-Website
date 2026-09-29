@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { AnswerFeedback, AssessmentQuestion, SubmittedAnswer } from '../../models/course-player.models';
+import { FileAnswerComponent } from '../file-answer/file-answer.component';
 
 const DEFAULT_CHAR_LIMIT = 500;
 const YES_NO_FALLBACK_OPTIONS = ['True', 'False'];
@@ -22,7 +23,7 @@ const YES_NO_FALLBACK_OPTIONS = ['True', 'False'];
 @Component({
   selector: 'app-quiz-runner',
   standalone: true,
-  imports: [FormsModule, TranslatePipe],
+  imports: [FormsModule, TranslatePipe, FileAnswerComponent],
   templateUrl: './quiz-runner.component.html',
   styleUrl: './quiz-runner.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,7 +40,14 @@ export class QuizRunnerComponent implements OnChanges {
   /** Figma colours the type tag orange for Quiz, purple for Assignment
    *  (confirmed on the results screen, 1207:19636). */
   @Input() assessmentKind: 'quiz' | 'assignment' | null = null;
+  /** File questions (Figma 2003:79350): the assignment's instructions under the title. */
+  @Input() instructions: string | null = null;
+  @Input() fileBusy = false;
+  @Input() fileError: string | null = null;
   @Output() submit = new EventEmitter<SubmittedAnswer>();
+  @Output() submitFile = new EventEmitter<File>();
+  @Output() downloadAttachment = new EventEmitter<void>();
+  @Output() downloadMyFile = new EventEmitter<void>();
   @Output() next = new EventEmitter<void>();
   @Output() finish = new EventEmitter<void>();
 
@@ -80,6 +88,8 @@ export class QuizRunnerComponent implements OnChanges {
         return this.openText().trim().length > 0;
       case 'reorder':
         return true;
+      case 'file':
+        return false; // app-file-answer owns its own Submit
     }
   }
 
@@ -152,6 +162,8 @@ export class QuizRunnerComponent implements OnChanges {
         break;
       case 'reorder':
         this.submit.emit({ order: this.reorderItems() });
+        break;
+      case 'file':
         break;
     }
   }

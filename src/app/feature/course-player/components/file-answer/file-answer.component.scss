@@ -1,0 +1,178 @@
+@use "mixins" as *;
+
+// File question (Figma 2003:79369 / 2005:80841).
+:host { display: block; }
+
+.fa {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-11xs);
+}
+
+// "Download" (200 x 36, outline)
+.fa__download {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-15xs);
+  inline-size: 200px;
+  padding: var(--spacing-15xs) var(--spacing-13xs);
+  border: var(--stroke-width-default) solid var(--color-essential-tertiary);
+  border-radius: var(--radius-2xs);
+  background: transparent;
+  box-shadow: 0 2px 5px 0 var(--color-grey-750-08), 0 0 0 1px var(--color-grey-750-16), 0 1px 1px 0 var(--color-grey-2000-12);
+  font: inherit;
+  @include typography("button-large", "medium");
+  color: var(--color-essential-tertiary);
+  cursor: pointer;
+
+  &:hover { background: var(--color-primary-100); }
+  &:focus-visible { outline: var(--stroke-width-focus) solid var(--color-primary-600); outline-offset: 2px; }
+
+  @media (max-width: 640px) {
+    inline-size: 100%;
+    block-size: 32px;
+    @include typography("button", "medium");
+  }
+}
+
+.fa__upload {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-13xs);
+  padding: var(--spacing-11xs);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-sm);
+  background: var(--color-essential-primary);
+}
+
+.fa__upload-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-15xs);
+  margin: 0;
+  @include typography("subtitle", "bold");
+  color: var(--color-essential-secondary);
+
+  @media (max-width: 640px) { @include typography("body-small", "bold"); }
+}
+
+.fa__drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-11xs);
+  padding: var(--spacing-11xs) var(--spacing-7xs);
+  border: var(--stroke-width-default) dashed var(--color-additionally-800);
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-0);
+
+  &.is-dragging { background: var(--color-primary-100); border-style: solid; }
+  &.is-invalid { border-color: var(--color-status-red-700); }
+}
+
+.fa__drop-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-17xs);
+  margin: calc(-1 * var(--spacing-11xs) + 2px) 0 0; // 2 px under the icon, as drawn
+  @include typography("caption", "regular");
+  text-align: center;
+  color: var(--color-neutral-800);
+}
+
+// "Select file" (full width, 40 px, pill outline)
+.fa__select {
+  inline-size: 100%;
+  block-size: 40px;
+  border: var(--stroke-width-default) solid var(--color-essential-tertiary);
+  border-radius: var(--radius-lg);
+  background: transparent;
+  font: inherit;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: 19.6px;
+  color: var(--color-essential-tertiary);
+  cursor: pointer;
+
+  &:hover { background: var(--color-primary-100); }
+  &:focus-visible { outline: var(--stroke-width-focus) solid var(--color-primary-600); outline-offset: 2px; }
+
+  @media (max-width: 640px) { block-size: 32px; }
+}
+
+.fa__input { display: none; }
+
+.fa__error {
+  margin: 0;
+  @include typography("caption", "regular");
+  color: var(--color-status-red-700);
+
+  &:empty { display: none; }
+}
+
+.fa__remove {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  inline-size: 44px;
+  block-size: 44px;
+  margin: -10px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: none;
+  cursor: pointer;
+
+  &:hover { background: var(--color-status-red-50); }
+  &:focus-visible { outline: var(--stroke-width-focus) solid var(--color-primary-600); outline-offset: -4px; }
+}
+
+.fa__guidance {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  @include typography("body-small", "regular");
+  color: var(--color-neutral-800);
+
+  img { flex-shrink: 0; }
+}
+
+// "Submit Assignment" (216 x 48 desktop, full width 40 px on the phone)
+.fa__submit {
+  align-self: flex-start;
+  inline-size: 216px;
+  block-size: 48px;
+  margin-block-start: var(--spacing-7xs); // 40 px below the cards, with the 16 px gap
+  padding: var(--spacing-13xs) var(--spacing-11xs);
+  border: 0;
+  border-radius: var(--radius-2xs);
+  background: var(--color-essential-tertiary);
+  box-shadow: 0 2px 5px 0 var(--color-grey-750-08), 0 0 0 1px var(--color-grey-750-16), 0 1px 1px 0 var(--color-grey-2000-12);
+  font: inherit;
+  @include typography("button-large", "medium");
+  color: var(--color-neutral-0);
+  cursor: pointer;
+
+  &:hover:not(:disabled) { background: var(--color-primary-900); }
+  &:focus-visible { outline: var(--stroke-width-focus) solid var(--color-primary-600); outline-offset: 2px; }
+
+  // Figma's disabled button: #f0f0f0 / #d9d9d9. Disabled controls are exempt from AA.
+  &:disabled {
+    background: #f0f0f0;
+    box-shadow: none;
+    color: #d9d9d9;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 640px) {
+    align-self: stretch;
+    inline-size: auto;
+    block-size: 40px;
+    margin-block-start: var(--spacing-15xs);
+  }
+}

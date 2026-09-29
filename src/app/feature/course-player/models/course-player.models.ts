@@ -39,7 +39,18 @@ export interface CoursePlayerOutline {
   weeks: CourseWeekGroup[];
 }
 
-export type QuestionType = 'mcq' | 'yes_no' | 'open' | 'reorder';
+export type QuestionType = 'mcq' | 'yes_no' | 'open' | 'reorder' | 'file';
+
+/**
+ * A stored file as the API describes it (D-064): never a path. Downloads go
+ * through ApiService by ids, not `download_url` (it carries the API host).
+ */
+export interface StoredFile {
+  name: string | null;
+  size: number;
+  uploaded_at?: string | null;
+  download_url: string;
+}
 
 /** `assessment_type` selects the URL segment — 'quiz' -> 'quizzes', 'assignment' -> 'assignments'. */
 export type AssessmentType = 'quiz' | 'assignment';
@@ -59,6 +70,12 @@ export interface AssessmentQuestion {
   options: string[] | null;
   my_answer: { value?: string; order?: string[] } | null;
   is_answered: boolean;
+  /** File questions (assignments only): the instructor's template. */
+  attachment?: StoredFile | null;
+  /** File questions: the learner's uploaded answer. */
+  my_file?: StoredFile | null;
+  /** File questions: false once a person has scored the file (D-064). */
+  can_replace?: boolean;
 }
 
 export interface AssessmentMeta {
@@ -72,7 +89,10 @@ export interface AssessmentMeta {
   answered_count: number;
 }
 
-/** GET .../take response. */
+/**
+ * GET .../take response. The quiz endpoint names the meta `quiz`, the
+ * assignment endpoint `assignment`; the service fills `quiz` for both (B-140).
+ */
 export interface AssessmentTakeState {
   quiz: AssessmentMeta;
   submission_id: number;
@@ -92,7 +112,10 @@ export interface AnswerFeedback {
   awarded_score: number;
   max_score: number;
   correct_answer: string | string[] | null;
+  /** File questions: the file just stored. */
+  my_file?: StoredFile | null;
   running_total_score: number;
+  /** `assignment_max_score` from the assignment endpoint, normalised by the service. */
   quiz_max_score: number;
   answered_count: number;
   questions_count: number;
@@ -112,6 +135,7 @@ export interface QuestionReview {
   awarded_score: number | null;
   state: QuestionReviewState;
   my_answer: { value?: string; order?: string[] } | null;
+  my_file?: StoredFile | null;
   correct_answer: string | string[] | null;
 }
 

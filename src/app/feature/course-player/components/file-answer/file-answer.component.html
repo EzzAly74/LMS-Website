@@ -1,0 +1,70 @@
+@let q = question();
+
+<div class="fa">
+  @if (q.attachment; as att) {
+    <app-file-card [name]="att.name ?? ('feature.course_player.file.template' | translate)" [size]="att.size" [tall]="true">
+      <button fcAction type="button" class="fa__download" (click)="downloadAttachment.emit()"
+        [attr.aria-label]="'common.download_file' | translate: { name: att.name ?? '' }">
+        <img src="assets/icons/assignment/download-20.svg" width="20" height="20" alt="" />
+        {{ 'feature.course_player.file.download' | translate }}
+      </button>
+    </app-file-card>
+  }
+
+  <section class="fa__upload" aria-labelledby="fa-upload-title">
+    <h3 class="fa__upload-title" id="fa-upload-title">
+      <img src="assets/icons/assignment/upload-24.svg" width="24" height="24" alt="" />
+      {{ 'feature.course_player.file.upload_title' | translate }}
+    </h3>
+
+    @if (canChoose()) {
+      <div class="fa__drop" [class.is-dragging]="dragging()" [class.is-invalid]="error() || serverError()"
+        (dragover)="onDragOver($event)" (dragleave)="dragging.set(false)" (drop)="onDrop($event)">
+        <img src="assets/icons/assignment/upload-dropzone-24.svg" width="24" height="24" alt="" />
+        <p class="fa__drop-hint">
+          <bdi dir="ltr">{{ typesShort }}</bdi>
+          <span>{{ 'feature.course_player.file.max_size' | translate }}</span>
+        </p>
+        <button type="button" class="fa__select" (click)="pick()" aria-describedby="fa-guidance fa-error">
+          {{ (q.my_file && !chosen() ? 'feature.course_player.file.replace' : 'feature.course_player.file.select') | translate }}
+        </button>
+        <input #fileInput type="file" class="fa__input" [accept]="accept" tabindex="-1" aria-hidden="true" (change)="onInput($event)" />
+      </div>
+    }
+
+    <p class="fa__error" id="fa-error" role="alert">
+      @if (error(); as e) {
+        {{ 'feature.course_player.file.error_' + e | translate }}
+      } @else if (serverError()) {
+        {{ serverError() }}
+      }
+    </p>
+
+    @if (chosen(); as file) {
+      <app-file-card [name]="file.name" [size]="file.size" [date]="fileDate(file)">
+        <button fcAction type="button" class="fa__remove" (click)="remove()" [disabled]="busy()"
+          [attr.aria-label]="'feature.course_player.file.remove' | translate: { name: file.name }">
+          <img src="assets/icons/assignment/delete-24.svg" width="24" height="24" alt="" />
+        </button>
+      </app-file-card>
+    } @else if (q.my_file) {
+      <app-file-card [name]="q.my_file.name ?? ''" [size]="q.my_file.size" [date]="q.my_file.uploaded_at ?? null" [downloadable]="true"
+        (open)="downloadMyFile.emit()" />
+    }
+
+    <p class="fa__guidance" id="fa-guidance">
+      <img src="assets/icons/assignment/info-24.svg" width="24" height="24" alt="" />
+      @if (q.can_replace === false) {
+        {{ 'feature.course_player.file.locked' | translate }}
+      } @else {
+        <span>{{ 'feature.course_player.file.guidance' | translate }} <bdi dir="ltr">{{ extensions }}</bdi> {{ 'feature.course_player.file.guidance_max' | translate }}</span>
+      }
+    </p>
+  </section>
+
+  @if (q.can_replace !== false) {
+    <button type="button" class="fa__submit" [disabled]="!chosen() || busy()" [attr.aria-busy]="busy()" (click)="submit()">
+      {{ (busy() ? 'feature.course_player.file.uploading' : 'feature.course_player.file.submit') | translate }}
+    </button>
+  }
+</div>

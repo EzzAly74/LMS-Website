@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 import { ApiResponse } from '../../../core/models/api-response.model';
 import { ApiService } from '../../../core/services/api.service';
@@ -48,9 +48,16 @@ export class CoursePlayerService {
     courseId: number,
     assessmentId: number,
   ): Observable<ApiResponse<AssessmentTakeState>> {
-    return this.api.get<AssessmentTakeState>(
-      `courses/${courseId}/${this.segment(type)}/${assessmentId}/take`,
-    );
+    return this.api
+      .get<AssessmentTakeState & { assignment?: AssessmentTakeState['quiz'] }>(
+        `courses/${courseId}/${this.segment(type)}/${assessmentId}/take`,
+      )
+      .pipe(
+        // B-140: the assignment endpoint names the meta `assignment`.
+        map((res) => (res.result && !res.result.quiz && res.result.assignment
+          ? { ...res, result: { ...res.result, quiz: res.result.assignment } }
+          : res)),
+      );
   }
 
   submitAnswer(
@@ -60,10 +67,34 @@ export class CoursePlayerService {
     questionId: number,
     answer: SubmittedAnswer,
   ): Observable<ApiResponse<AnswerFeedback>> {
-    return this.api.post<AnswerFeedback>(
-      `courses/${courseId}/${this.segment(type)}/${assessmentId}/questions/${questionId}/answer`,
-      answer,
-    );
+    return this.api
+      .post<AnswerFeedback>(
+        `courses/${courseId}/${this.segment(type)}/${assessmentId}/questions/${questionId}/answer`,
+        answer,
+      )
+      .pipe(map(normaliseFeedback));
+  }
+
+  /**
+   * File question (D-064): multipart `file` on the same answer route. Allowed
+   * until a person scores it, also after the attempt is submitted.
+   */
+  submitFile(courseId: number, assignmentId: number, questionId: number, file: File): Observable<ApiResponse<AnswerFeedback>> {
+    const body = new FormData();
+    body.append('file', file, file.name);
+    return this.api
+      .post<AnswerFeedback>(`courses/${courseId}/assignments/${assignmentId}/questions/${questionId}/answer`, body)
+      .pipe(map(normaliseFeedback));
+  }
+
+  /** The instructor's template for a file question. */
+  downloadAttachment(courseId: number, assignmentId: number, questionId: number): Observable<Blob> {
+    return this.api.getBlob(`courses/${courseId}/assignments/${assignmentId}/questions/${questionId}/attachment`);
+  }
+
+  /** The learner's own uploaded answer. */
+  downloadMyFile(courseId: number, assignmentId: number, questionId: number): Observable<Blob> {
+    return this.api.getBlob(`courses/${courseId}/assignments/${assignmentId}/questions/${questionId}/my-file`);
   }
 
   finish(
@@ -86,4 +117,13 @@ export class CoursePlayerService {
       `courses/${courseId}/${this.segment(type)}/${assessmentId}/results`,
     );
   }
+}
+
+/** B-140: the assignment endpoint names the total `assignment_max_score`. */
+function normaliseFeedback(res: ApiResponse<AnswerFeedback>): ApiResponse<AnswerFeedback> {
+  const r = res.result as (AnswerFeedback & { assignment_max_score?: number }) | null | undefined;
+  if (r && r.quiz_max_score === undefined && r.assignment_max_score !== undefined) {
+    return { ...res, result: { ...r, quiz_max_score: r.assignment_max_score } };
+  }
+  return res;
 }

@@ -1,5 +1,6 @@
 {
   "common": {
+    "download_file": "Download {{name}}",
     "loading": "Loading…",
     "retry": "Try again",
     "cancel": "Cancel",
@@ -524,6 +525,25 @@
       }
     },
     "course_player": {
+      "file": {
+        "title": "Assignment: {{question}}",
+        "template": "Assignment file",
+        "download": "Download",
+        "upload_title": "Upload your completed work",
+        "max_size": "Max. file size: 10 MB",
+        "select": "Select file",
+        "replace": "Replace file",
+        "remove": "Remove {{name}}",
+        "guidance": "Accepted file types:",
+        "guidance_max": "(max 10 MB)",
+        "locked": "Your file has been graded and can no longer be replaced.",
+        "submit": "Submit Assignment",
+        "uploading": "Uploading…",
+        "error_type": "This file type is not accepted.",
+        "error_size": "The file is larger than 10 MB.",
+        "replaced": "Your file was replaced.",
+        "download_failed": "The file could not be downloaded."
+      },
       "back": "My Learnings",
       "modules_completed": "{{completed}} of {{total}} modules completed",
       "curriculum": "Course Curriculum",
@@ -574,6 +594,8 @@
         "false": "False"
       },
       "results": {
+        "score_pending": "Score pending",
+        "out_of_short": "out of {{total}}",
         "title": "Review Results",
         "final_score": "Final Score",
         "out_of": "out of {{total}} points",

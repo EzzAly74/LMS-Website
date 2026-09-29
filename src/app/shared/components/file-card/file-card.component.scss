@@ -1,0 +1,103 @@
+@use "mixins" as *;
+
+:host { display: block; }
+
+.fc {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-11xs);
+  inline-size: 100%;
+  padding: var(--spacing-15xs) var(--spacing-11xs);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-4xs);
+  background: var(--color-essential-primary);
+
+  &--tall { min-block-size: 80px; }
+
+  // Phone frame 2005:81199: the Download button drops under the file.
+  @media (max-width: 640px) {
+    &--tall {
+      flex-direction: column;
+      align-items: stretch;
+      min-block-size: 0;
+    }
+  }
+}
+
+.fc__main {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--spacing-11xs);
+  min-inline-size: 0;
+
+  &--button {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+
+    &:hover .fc__name { text-decoration: underline; }
+    &:focus-visible { outline: var(--stroke-width-focus) solid var(--color-primary-600); outline-offset: 2px; }
+    &:disabled { cursor: progress; }
+  }
+}
+
+.fc__icon {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  justify-content: center;
+  inline-size: 28px;
+  block-size: 28px;
+}
+
+.fc__badge {
+  position: absolute;
+  inset-inline: 1px;
+  inset-block-start: 13px;
+  border-radius: 1px;
+  font-size: 9px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 11.7px;
+  text-align: center;
+  color: var(--color-neutral-0);
+
+  // Figma "Attachments format" colours (none are tokens): XLS Green, PDF Red,
+  // PNG Blue, JPG Purple, DOC; PowerPoint has no badge in Figma (FG-43).
+  &--xls { background: #0f8105; }
+  &--pdf { background: #f14848; }
+  &--png { background: #4881f1; }
+  &--jpg { background: #c548f1; }
+  &--doc { background: #3197d7; }
+  &--ppt { background: #d24726; }
+  &--other { background: var(--color-neutral-750); }
+}
+
+.fc__text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing-16xs);
+  min-inline-size: 0;
+}
+
+.fc__name {
+  @include typography("body-small", "regular");
+  color: var(--color-essential-secondary);
+  overflow-wrap: anywhere;
+}
+
+.fc__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  @include typography("caption", "regular");
+  color: var(--color-neutral-900);
+}
+
+// A bullet, not a middle dot: next to Arabic-Indic digits "·" reads as "٠".
+.fc__sep { font-size: 8px; }

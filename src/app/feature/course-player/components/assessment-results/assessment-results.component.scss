@@ -10,8 +10,8 @@
   gap: var(--spacing-m);
   width: 100%;
 
-  // Orange "Quiz" / purple "Assignment" tag — same treatment as the quiz
-  // runner's header tag (Figma 1207:19927/19928).
+  // Orange "Quiz" / "Assignment" tag, as in the runner (Figma 2003:79885;
+  // the older 1207:19636 drew Assignment purple, FG-48).
   &__type-tag {
     align-self: flex-start;
     padding: 2px var(--spacing-15xs);
@@ -19,11 +19,21 @@
     background: var(--color-status-hold-50);
     color: #a85e05;
     @include typography('caption', 'medium');
+  }
 
-    &--assignment {
-      background: rgba(191, 170, 224, 0.3);
-      color: #6c49a3;
-    }
+  // Phone only (2005:80896)
+  &__heading { display: none; }
+  &__eyebrow { margin: 0; @include typography('body-small', 'bold'); color: var(--color-primary-700); }
+  &__course { margin: 0; @include typography('h1-small', 'bold'); color: var(--color-neutral-1000); }
+
+  &__sr { @include visually-hidden; }
+
+  @media (max-width: 640px) {
+    align-items: stretch;
+    gap: var(--spacing-7xs);
+
+    &__heading { display: flex; flex-direction: column; gap: var(--spacing-15xs); }
+    &__type-tag { display: none; }
   }
 }
 
@@ -56,11 +66,65 @@
     }
   }
 
+  // Nothing scored yet (2003:79880): a solid grey disc with "---".
+  &__ring.is-pending {
+    background: var(--color-neutral-400);
+
+    span { background: transparent; }
+  }
+
   // "out of X" — regular weight, same dark colour as the score (Figma
-  // 1207:19651). There is no separate "Final Score" label in this design.
+  // 1207:19651). "Final Score" appears only on the phone card (2005:80899).
+  &__text { display: contents; }
+  &__label { display: none; }
+
   &__total {
+    margin: 0;
     @include typography('h2', 'regular');
     color: var(--color-essential-secondary);
+  }
+
+  &__total-narrow { display: none; }
+
+  // Phone (2005:80899): a row card, 64 px ring, "Final Score / out of N points".
+  @media (max-width: 640px) {
+    flex-direction: row;
+    gap: var(--spacing-11xs);
+    padding: var(--spacing-11xs);
+    border: var(--stroke-width-default) solid var(--color-neutral-400);
+    border-radius: 14px;
+    background: var(--color-neutral-0);
+    box-shadow: 0 1px 1px 0 var(--color-grey-2000-12), 0 2px 5px 0 var(--color-grey-700-08);
+
+    &__ring {
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
+
+      span { width: 52px; height: 52px; @include typography('h1-small', 'bold'); }
+    }
+
+    &__text { display: flex; flex-direction: column; gap: 2px; }
+    &__label { display: block; margin: 0; @include typography('caption', 'regular'); color: var(--color-neutral-800); }
+    &__total { @include typography('h2', 'bold'); color: var(--color-neutral-1000); }
+    &__total-wide { display: none; }
+    &__total-narrow { display: inline; }
+  }
+}
+
+// "Question Review · N Total" (phone only, 2005:80906)
+.question-review-head {
+  display: none;
+
+  @media (max-width: 640px) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-block-end: calc(-1 * var(--spacing-15xs));
+    color: var(--color-neutral-800);
+
+    p { margin: 0; @include typography('caption', 'regular'); }
+    p:first-child { @include typography('body-small', 'bold'); }
   }
 }
 
@@ -234,5 +298,38 @@
   &__points-label {
     @include typography('caption', 'regular');
     color: var(--color-neutral-600);
+  }
+
+  &__replace {
+    align-self: flex-start;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    @include typography('body-small', 'medium');
+    color: var(--color-primary-700);
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:focus-visible { outline: var(--stroke-width-focus) solid var(--color-primary-600); outline-offset: 2px; }
+    &:disabled { opacity: var(--opacity-disabled); cursor: progress; }
+  }
+
+  &__file-input { display: none; }
+
+  &__error { margin: 0; @include typography('caption', 'regular'); color: var(--color-status-red-700); }
+
+  // Phone (2005:80910): number + points on one row, the body full width below.
+  @media (max-width: 640px) {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "icon points" "body body";
+    align-items: start;
+
+    &__icon { grid-area: icon; width: 48px; }
+    &__points { grid-area: points; justify-self: end; width: auto; }
+    &__body { grid-area: body; }
+    &__state-icon { width: 16px; height: 16px; }
+    &__points-value { @include typography('body-small', 'bold'); }
   }
 }

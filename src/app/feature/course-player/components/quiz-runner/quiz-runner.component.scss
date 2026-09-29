@@ -32,12 +32,8 @@
     color: #a85e05;
     @include typography('caption', 'medium');
 
-    // Assignment: purple, not orange (Figma 1207:19636 — neither colour has
-    // a matching design token).
-    &--assignment {
-      background: rgba(191, 170, 224, 0.3);
-      color: #6c49a3;
-    }
+    // Assignment: the 2027:97785 frames draw it orange like Quiz; the older
+    // 1207:19636 drew purple (FG-48). The newest frames win.
   }
 
   // Progress row: an 8px bar capped at 320px + "Question X of Y" label,
@@ -72,8 +68,28 @@
   }
 
   &__question-text {
+    margin: 0;
     @include typography('h1-small', 'bold');
     color: var(--color-essential-secondary);
+
+    @media (max-width: 640px) { @include typography('h2', 'bold'); }
+  }
+
+  // File question: title + instructions, 16 px apart (4 on the phone).
+  &__file-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-11xs);
+
+    @media (max-width: 640px) { gap: var(--spacing-16xs); }
+  }
+
+  &__instructions {
+    margin: 0;
+    @include typography('body', 'regular');
+    // Figma #617173 has no token; neutral-800 is the nearest AA grey.
+    color: var(--color-neutral-800);
+    white-space: pre-line;
   }
 
   // 720px column of option cards (Figma 913:46461/46882).

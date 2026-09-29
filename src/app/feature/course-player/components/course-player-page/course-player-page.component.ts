@@ -1,10 +1,13 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Observable } from 'rxjs';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
+import { saveBlob } from '../../../../core/utils/save-blob';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import {
   AnswerFeedback,
@@ -65,6 +68,13 @@ export class CoursePlayerPageComponent implements OnInit {
   protected readonly runningScore = signal<number | null>(null);
   protected readonly quizMaxScore = signal<number | null>(null);
 
+  /** File questions (D-064): an upload in flight, and a 422 shown under the drop zone. */
+  protected readonly fileBusy = signal(false);
+  protected readonly fileError = signal<string | null>(null);
+  /** Results: the question whose file is downloading or being replaced. */
+  protected readonly busyQuestionId = signal<number | null>(null);
+  protected readonly replaceError = signal<{ questionId: number; message: string } | null>(null);
+
   protected readonly currentQuestion = computed(() => {
     const take = this.currentTake();
     return take ? (take.questions[this.currentQuestionIndex()] ?? null) : null;
@@ -75,8 +85,7 @@ export class CoursePlayerPageComponent implements OnInit {
     return !!take && this.currentQuestionIndex() === take.questions.length - 1;
   });
 
-  /** Drives the orange-Quiz / purple-Assignment tag colour (Figma
-   *  distinguishes them — 1207:19636 uses purple for "Assignment"). */
+  /** Quiz or Assignment tag (FG-48). */
   protected readonly assessmentKind = computed<'quiz' | 'assignment' | null>(() => {
     const item = this.activeItem();
     return item && item.kind !== 'lecture' ? item.kind : null;
@@ -244,6 +253,123 @@ export class CoursePlayerPageComponent implements OnInit {
     });
   }
 
+  /** File question: the file goes up only on "Submit Assignment". */
+  protected onSubmitFile(file: File): void {
+    const item = this.activeItem();
+    const take = this.currentTake();
+    const question = this.currentQuestion();
+    if (!item || item.kind !== 'assignment' || !take || !question || this.fileBusy()) {
+      return;
+    }
+    this.fileBusy.set(true);
+    this.fileError.set(null);
+    this.service.submitFile(this.courseId, item.id, question.id, file).subscribe({
+      next: (res) => {
+        this.fileBusy.set(false);
+        const feedback = res.result;
+        if (res.status !== 'success' || !feedback) {
+          return;
+        }
+        const updated = [...take.questions];
+        updated[this.currentQuestionIndex()] = { ...question, is_answered: true, my_file: feedback.my_file ?? null };
+        this.currentTake.set({ ...take, questions: updated });
+
+        if (feedback.finalized) {
+          this.openResults(item.id, feedback.results);
+          this.loadOutline(true);
+        } else if (this.hasNextQuestion()) {
+          this.onNextQuestion();
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        this.fileBusy.set(false);
+        if (err.status === 422) {
+          this.fileError.set(this.validationMessage(err));
+        }
+      },
+    });
+  }
+
+  /** Results: replace a file that no person has scored yet (D-064). */
+  protected onReplaceFile(event: { questionId: number; file: File }): void {
+    const item = this.activeItem();
+    if (!item || item.kind !== 'assignment' || this.busyQuestionId() !== null) {
+      return;
+    }
+    this.busyQuestionId.set(event.questionId);
+    this.replaceError.set(null);
+    this.service.submitFile(this.courseId, item.id, event.questionId, event.file).subscribe({
+      next: () => {
+        this.busyQuestionId.set(null);
+        this.notify.success(this.translate.instant('feature.course_player.file.replaced'));
+        this.openResults(item.id, null);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.busyQuestionId.set(null);
+        if (err.status === 422) {
+          this.replaceError.set({ questionId: event.questionId, message: this.validationMessage(err) });
+        } else if (err.status === 409) {
+          this.openResults(item.id, null); // scored meanwhile: show the locked result
+        }
+      },
+    });
+  }
+
+  protected onDownloadAttachment(): void {
+    const item = this.activeItem();
+    const question = this.currentQuestion();
+    if (item?.kind === 'assignment' && question) {
+      this.download(this.service.downloadAttachment(this.courseId, item.id, question.id), question.attachment?.name ?? 'attachment');
+    }
+  }
+
+  protected onDownloadMyFile(questionId?: number): void {
+    const item = this.activeItem();
+    const id = questionId ?? this.currentQuestion()?.id;
+    if (item?.kind !== 'assignment' || id === undefined || this.busyQuestionId() !== null) {
+      return;
+    }
+    const name = this.currentResults()?.answers.find((a) => a.question_id === id)?.my_file?.name
+      ?? this.currentQuestion()?.my_file?.name ?? 'answer';
+    this.busyQuestionId.set(id);
+    this.download(this.service.downloadMyFile(this.courseId, item.id, id), name, () => this.busyQuestionId.set(null));
+  }
+
+  private download(request: Observable<Blob>, filename: string, done?: () => void): void {
+    request.subscribe({
+      next: (blob) => {
+        saveBlob(blob, filename);
+        done?.();
+      },
+      error: () => {
+        done?.();
+        this.notify.error(this.translate.instant('feature.course_player.file.download_failed'));
+      },
+    });
+  }
+
+  private validationMessage(err: HttpErrorResponse): string {
+    const body = err.error as { message?: string; errors?: Record<string, string[]> } | null;
+    return body?.errors?.['file']?.[0] ?? body?.message ?? this.translate.instant('common.error_generic');
+  }
+
+  /** Show results, fetching them unless the finalizing answer carried them. */
+  private openResults(assignmentId: number, results: AssessmentResults | null): void {
+    this.viewMode.set('results');
+    if (results) {
+      this.currentResults.set(results);
+      return;
+    }
+    this.service.getResults('assignment', this.courseId, assignmentId).subscribe({
+      next: (res) => {
+        if (res.status === 'success' && res.result) {
+          this.currentResults.set(res.result);
+        }
+      },
+      error: () => this.showError(),
+    });
+  }
+
   protected onNextQuestion(): void {
     if (this.hasNextQuestion()) {
       this.currentQuestionIndex.update((i) => i + 1);
@@ -331,6 +457,13 @@ export class CoursePlayerPageComponent implements OnInit {
         }
         this.currentTake.set(res.result);
         this.quizMaxScore.set(res.result.quiz.total_score);
+        this.fileError.set(null);
+        // A submitted assignment opens on its results ("Review Results",
+        // 2003:79618), where a file can still be replaced until scored.
+        if (kind === 'assignment' && res.result.submission_status === 'submitted') {
+          this.openResults(assessmentId, null);
+          return;
+        }
         // The take endpoint doesn't return an accumulated score for a
         // resumed submission — 0 is the correct value for a fresh attempt,
         // and updates immediately once the learner answers anything.

@@ -1,4 +1,12 @@
 <div class="assessment-results">
+  <!-- Phone frame 2005:80895: "Review Results" + course title above the score card. -->
+  @if (courseTitle) {
+    <div class="assessment-results__heading">
+      <p class="assessment-results__eyebrow">{{ 'feature.course_player.results.title' | translate }}</p>
+      <p class="assessment-results__course">{{ courseTitle }}</p>
+    </div>
+  }
+
   <span
     class="assessment-results__type-tag"
     [class.assessment-results__type-tag--assignment]="assessmentKind === 'assignment'"
@@ -7,12 +15,27 @@
   </span>
 
   <div class="score-summary">
-    <div class="score-summary__ring" [style.--score-percent.%]="results.percent">
-      <span>{{ results.total_score }}</span>
+    <div class="score-summary__ring" [class.is-pending]="pending()" [style.--score-percent.%]="pending() ? 0 : results.percent">
+      @if (pending()) {
+        <!-- Figma 2003:79881: "---" until every answer is scored. -->
+        <span aria-hidden="true">---</span>
+        <span class="assessment-results__sr">{{ 'feature.course_player.results.score_pending' | translate }}</span>
+      } @else {
+        <span>{{ results.total_score }}</span>
+      }
     </div>
-    <p class="score-summary__total">
-      {{ 'feature.course_player.results.out_of' | translate: { total: results.max_score } }}
-    </p>
+    <div class="score-summary__text">
+      <p class="score-summary__label">{{ 'feature.course_player.results.final_score' | translate }}</p>
+      <p class="score-summary__total">
+        <span class="score-summary__total-wide">{{ 'feature.course_player.results.out_of_short' | translate: { total: results.max_score } }}</span>
+        <span class="score-summary__total-narrow">{{ 'feature.course_player.results.out_of' | translate: { total: results.max_score } }}</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="question-review-head">
+    <p>{{ 'feature.course_player.results.question_review' | translate }}</p>
+    <p>{{ 'feature.course_player.results.total_questions' | translate: { count: results.answers.length } }}</p>
   </div>
 
   <div class="question-review-list">
@@ -26,7 +49,24 @@
         <div class="question-card__body">
           <p class="question-card__text">{{ q.question }}</p>
 
-          @if (q.type === 'reorder') {
+          @if (q.type === 'file') {
+            @if (q.my_file; as mine) {
+              <app-file-card [name]="mine.name ?? ''" [size]="mine.size" [date]="mine.uploaded_at ?? null" [downloadable]="true"
+                [busy]="busyQuestionId === q.question_id" (open)="downloadMyFile.emit(q.question_id)" />
+            }
+            <!-- D-064: the file may be replaced until a person scores it. -->
+            @if (q.state === 'pending') {
+              <button type="button" class="question-card__replace" [disabled]="busyQuestionId !== null" (click)="replaceInput.click()">
+                {{ 'feature.course_player.file.replace' | translate }}
+              </button>
+              <input #replaceInput type="file" class="question-card__file-input" [accept]="accept" tabindex="-1" aria-hidden="true"
+                (change)="onReplace(q.question_id, $event)" />
+              @let err = clientError() ?? replaceError;
+              @if (err?.questionId === q.question_id) {
+                <p class="question-card__error" role="alert">{{ err!.message }}</p>
+              }
+            }
+          } @else if (q.type === 'reorder') {
             <div class="question-card__reorder">
               <div>
                 <p class="question-card__reorder-label">{{ 'feature.course_player.quiz.your_order' | translate }}</p>

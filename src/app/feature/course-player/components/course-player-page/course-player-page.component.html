@@ -88,13 +88,17 @@
       <app-quiz-runner [question]="question" [feedback]="currentFeedback()" [runningScore]="runningScore()"
         [quizMaxScore]="quizMaxScore()" [isLastQuestion]="isLastQuestion()"
         [assessmentTypeLabel]="assessmentTypeLabel()" [assessmentKind]="assessmentKind()"
-        (submit)="onSubmitAnswer($event)" (next)="onNextQuestion()" (finish)="onFinishAssessment()" />
+        [instructions]="currentTake()?.quiz?.instructions ?? null" [fileBusy]="fileBusy()" [fileError]="fileError()"
+        (submit)="onSubmitAnswer($event)" (next)="onNextQuestion()" (finish)="onFinishAssessment()"
+        (submitFile)="onSubmitFile($event)" (downloadAttachment)="onDownloadAttachment()" (downloadMyFile)="onDownloadMyFile()" />
       }
       }
       @case ('results') {
       @if (currentResults(); as results) {
       <app-assessment-results [results]="results" [assessmentTypeLabel]="assessmentTypeLabel()"
-        [assessmentKind]="assessmentKind()" />
+        [assessmentKind]="assessmentKind()" [courseTitle]="o.course_title"
+        [busyQuestionId]="busyQuestionId()" [replaceError]="replaceError()"
+        (downloadMyFile)="onDownloadMyFile($event)" (replaceFile)="onReplaceFile($event)" />
       }
       }
       }

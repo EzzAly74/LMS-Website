@@ -1,5 +1,6 @@
 {
   "common": {
+    "download_file": "تنزيل {{name}}",
     "loading": "جارٍ التحميل…",
     "retry": "أعد المحاولة",
     "cancel": "إلغاء",
@@ -524,6 +525,25 @@
       }
     },
     "course_player": {
+      "file": {
+        "title": "المهمة: {{question}}",
+        "template": "ملف المهمة",
+        "download": "تنزيل",
+        "upload_title": "ارفع عملك المكتمل",
+        "max_size": "الحد الأقصى لحجم الملف: 10 ميجابايت",
+        "select": "اختر ملفًا",
+        "replace": "استبدال الملف",
+        "remove": "إزالة {{name}}",
+        "guidance": "أنواع الملفات المقبولة:",
+        "guidance_max": "(بحد أقصى 10 ميجابايت)",
+        "locked": "تم تقييم ملفك ولم يعد بالإمكان استبداله.",
+        "submit": "تسليم المهمة",
+        "uploading": "جارٍ الرفع…",
+        "error_type": "نوع الملف هذا غير مقبول.",
+        "error_size": "حجم الملف أكبر من 10 ميجابايت.",
+        "replaced": "تم استبدال ملفك.",
+        "download_failed": "تعذّر تنزيل الملف."
+      },
       "back": "تعلّمي",
       "modules_completed": "{{completed}} من {{total}} وحدات مكتملة",
       "curriculum": "منهج الدورة",
@@ -574,6 +594,8 @@
         "false": "خطأ"
       },
       "results": {
+        "score_pending": "الدرجة قيد التقييم",
+        "out_of_short": "من {{total}}",
         "title": "مراجعة النتائج",
         "final_score": "النتيجة النهائية",
         "out_of": "من أصل {{total}} نقطة",

@@ -14,10 +14,23 @@
       </div>
     </div>
 
-    <p class="quiz-runner__question-text">{{ question.question }}</p>
+    @if (question.type === 'file') {
+      <div class="quiz-runner__file-head">
+        <h2 class="quiz-runner__question-text">{{ 'feature.course_player.file.title' | translate: { question: question.question } }}</h2>
+        @if (instructions) {
+          <p class="quiz-runner__instructions">{{ instructions }}</p>
+        }
+      </div>
+    } @else {
+      <p class="quiz-runner__question-text">{{ question.question }}</p>
+    }
   </div>
 
   @switch (question.type) {
+    @case ('file') {
+      <app-file-answer [question]="question" [busy]="fileBusy" [serverError]="fileError"
+        (submitFile)="submitFile.emit($event)" (downloadAttachment)="downloadAttachment.emit()" (downloadMyFile)="downloadMyFile.emit()" />
+    }
     @case ('open') {
       <div class="quiz-runner__open-answer">
         <textarea
@@ -93,7 +106,9 @@
 
   <!-- "Score  XX/YY" pill (Figma 913:47077) — shown on every question, not
        just once answered (running_total_score persists via the parent). -->
-  @if (quizMaxScore !== null) {
+  <!-- A file answer is scored later by a person, so no running score or
+       continue button (Figma 2003:79350 draws neither). -->
+  @if (quizMaxScore !== null && question.type !== 'file') {
     <div class="quiz-runner__score">
       <span class="quiz-runner__score-label">{{ 'feature.course_player.quiz.score' | translate }}</span>
       <span class="quiz-runner__score-pill" [class.is-passed]="feedback?.finalized">{{ runningScore ?? 0 }}/{{ quizMaxScore }}</span>
@@ -103,15 +118,17 @@
     </div>
   }
 
-  <div class="quiz-runner__actions">
-    @if (!answered) {
-      <button type="button" class="quiz-runner__submit-btn" [disabled]="!canSubmit" (click)="onSubmit()">
-        {{ 'feature.course_player.quiz.submit' | translate }}
-      </button>
-    } @else {
-      <button type="button" class="quiz-runner__submit-btn" (click)="onContinue()">
-        {{ (isLastQuestion ? 'feature.course_player.quiz.finish' : 'feature.course_player.quiz.next_question') | translate }}
-      </button>
-    }
-  </div>
+  @if (question.type !== 'file') {
+    <div class="quiz-runner__actions">
+      @if (!answered) {
+        <button type="button" class="quiz-runner__submit-btn" [disabled]="!canSubmit" (click)="onSubmit()">
+          {{ 'feature.course_player.quiz.submit' | translate }}
+        </button>
+      } @else {
+        <button type="button" class="quiz-runner__submit-btn" (click)="onContinue()">
+          {{ (isLastQuestion ? 'feature.course_player.quiz.finish' : 'feature.course_player.quiz.next_question') | translate }}
+        </button>
+      }
+    </div>
+  }
 </div>
