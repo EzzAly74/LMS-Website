@@ -369,6 +369,26 @@
       }
     },
     "my_learnings": {
+      "evaluation": {
+        "row_title": "تقييم الدورة",
+        "row_action": "أضف ملاحظاتي",
+        "title": "تقييم المتعلم",
+        "subtitle": "شاركنا تجربتك مع الدورة والمدرب. تساعدنا الحقول المطلوبة على تحسين الدفعات القادمة.",
+        "progress": "التقدم",
+        "progress_count": "{{answered}} من {{total}} أسئلة",
+        "instructor": "المدرب الذي تقيّمه",
+        "instructor_placeholder": "اختر المدرب",
+        "label_min": "يحتاج إلى تحسين كبير",
+        "label_max": "ممتاز",
+        "stars": "{{count}} من 5 نجوم",
+        "text_placeholder": "اكتب إجابتك",
+        "cancel": "إلغاء",
+        "submit": "إرسال التقييم",
+        "group_count": "تمت الإجابة: {{answered}}/{{total}}",
+        "required_left": "الإجابات المطلوبة المتبقية: {{count}}",
+        "ready": "تمت الإجابة عن جميع الأسئلة المطلوبة.",
+        "thanks": "شكرًا لك. تم إرسال تقييمك."
+      },
       "title": "دوراتي النشطة",
       "search_ph": "ابحث في دوراتك…",
       "upcoming": "القادمة",

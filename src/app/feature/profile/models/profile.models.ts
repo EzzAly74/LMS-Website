@@ -107,6 +107,8 @@ export interface LearningCourse {
   /** Certificate badge ("Certificate: On track / At Risk") — Figma frame 6. */
   certificate_status: CertificateStatus;
   certificate_projection: CertificateProjection | null;
+  /** Course evaluation offered (Website "Evaluate course", Figma 2078:104643). */
+  evaluation?: { available: boolean };
   rate: number | null;
   rate_label: string | null;
   session_number: number | null;

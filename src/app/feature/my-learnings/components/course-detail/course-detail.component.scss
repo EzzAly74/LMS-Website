@@ -344,133 +344,6 @@
   }
 }
 
-/* ── Rating widget (mirrors profile my-learnings rating-card) ── */
-.rating-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-7xs);
-  padding: var(--spacing-3xs);
-  background: var(--color-neutral-0);
-  border: var(--stroke-width-default) solid var(--color-neutral-400);
-  border-radius: var(--radius-container-md);
-
-  &__head {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-15xs);
-  }
-
-  &__q {
-    @include typography("h1-small", "bold");
-    color: var(--color-essential-secondary);
-  }
-
-  &__sub {
-    @include typography("body-small", "regular");
-    color: var(--color-neutral-700);
-  }
-
-  &__faces {
-    display: flex;
-    gap: var(--spacing-13xs);
-    flex-wrap: wrap;
-  }
-
-  &__comment {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-15xs);
-
-    &-label {
-      @include typography("body-small", "bold");
-      color: var(--color-essential-secondary);
-    }
-
-    &-input {
-      width: 100%;
-      height: 100px;
-      padding: var(--spacing-11xs);
-      border: var(--stroke-width-default) solid var(--color-neutral-400);
-      border-radius: var(--radius-control-sm);
-      resize: none;
-      color: var(--color-essential-secondary);
-      @include typography("body-small", "regular");
-      background: #fff;
-
-      &::placeholder {
-        color: var(--color-neutral-700);
-      }
-      &:focus {
-        outline: none;
-        border-color: var(--color-primary-500);
-      }
-    }
-
-    &-hint {
-      @include typography("caption", "regular");
-      color: var(--color-status-warning);
-    }
-  }
-
-  &__submit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 40px;
-    border: none;
-    border-radius: var(--radius-control-sm);
-    background: var(--color-essential-tertiary);
-    box-shadow: var(--elevation-shadow-sm);
-    color: var(--color-essential-primary);
-    cursor: pointer;
-    transition: background-color 0.25s ease-in-out;
-    @include typography("button", "medium");
-
-    &:not(:disabled):hover {
-      background: var(--color-primary-700);
-    }
-
-    &:disabled {
-      opacity: var(--opacity-disabled);
-      cursor: not-allowed;
-    }
-  }
-}
-
-.rating-face {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-16xs);
-  width: 68px;
-  padding: var(--spacing-15xs);
-  background: var(--color-neutral-0);
-  border: var(--stroke-width-default) solid var(--color-neutral-400);
-  border-radius: var(--radius-control-md);
-  cursor: pointer;
-
-  // W-13: was `&__emoji` rendering a text character. Now a PrimeIcon star,
-  // matching the Figma rating control.
-  &__star {
-    font-size: 24px;
-    line-height: 1;
-    color: var(--color-warning-500, #f5a524);
-  }
-
-  &__label {
-    @include typography("minimum-size", "medium");
-    color: var(--color-neutral-700);
-    text-align: center;
-  }
-
-  &.is-picked {
-    background: var(--color-primary-100);
-    border-color: var(--color-primary-700);
-  }
-}
-
 // Directional icons point the wrong way once reading order flips: "back"
 // (arrow-left) should point toward the reading-start side (right in RTL),
 // and "continue" (arrow-right) should point toward reading-end (left in RTL).
@@ -479,5 +352,47 @@
   .cd-header__cta i {
     display: inline-block;
     transform: scaleX(-1);
+  }
+}
+
+// ── Evaluate course (Figma 2078:104643): a bordered row, title + outline button.
+.cd-evaluate {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px;
+  border: 1px solid var(--color-neutral-400);
+  border-radius: var(--radius-container-md);
+  background: var(--color-neutral-0);
+
+  &__title { margin: 0; font-size: var(--font-size-xs); line-height: 16.8px; font-weight: var(--font-weight-bold); color: var(--color-essential-secondary); }
+
+  &__btn {
+    flex-shrink: 0;
+    min-block-size: 36px;
+    padding: 8px 12px;
+    border: 1px solid var(--color-essential-tertiary);
+    border-radius: 8px;
+    background: var(--color-neutral-0);
+    color: var(--color-essential-tertiary);
+    font: inherit;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+
+    &:hover { background: var(--color-neutral-200); }
+    &:focus-visible { outline: 2px solid var(--color-primary-700); outline-offset: 2px; }
+  }
+}
+
+// Phone (2194:79138): right under the course card, the button full width.
+@media (max-width: 599px) {
+  .cd-evaluate {
+    order: -1;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+    background: var(--color-neutral-200);
   }
 }

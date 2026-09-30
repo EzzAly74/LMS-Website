@@ -369,6 +369,26 @@
       }
     },
     "my_learnings": {
+      "evaluation": {
+        "row_title": "Evaluate course",
+        "row_action": "Add My Feedback",
+        "title": "Learner Evaluation",
+        "subtitle": "Share your experience with the course and instructor. Required fields help us improve future cohorts.",
+        "progress": "Progress",
+        "progress_count": "{{answered}} out of {{total}} questions",
+        "instructor": "Instructor you are evaluating",
+        "instructor_placeholder": "Select instructor",
+        "label_min": "Needs significant improvement",
+        "label_max": "Excellent",
+        "stars": "{{count}} out of 5 stars",
+        "text_placeholder": "Write your answer",
+        "cancel": "Cancel",
+        "submit": "Submit Evaluation",
+        "group_count": "{{answered}}/{{total}} answered",
+        "required_left": "Required answers left: {{count}}",
+        "ready": "All required questions are answered.",
+        "thanks": "Thank you. Your evaluation was submitted."
+      },
       "title": "My Active Courses",
       "search_ph": "Search your courses…",
       "upcoming": "Upcoming",

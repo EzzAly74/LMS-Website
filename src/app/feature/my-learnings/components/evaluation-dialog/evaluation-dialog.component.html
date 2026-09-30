@@ -1,0 +1,169 @@
+<!-- Learner Evaluation - Figma 2194:78325 / 2274:132908; phone 2180:112624 -->
+<dialog #dialog class="ev" aria-labelledby="ev-title" aria-describedby="ev-subtitle" (cancel)="onNativeCancel($event)">
+  <form class="ev__card" (submit)="$event.preventDefault(); submit()" novalidate>
+    <!-- Title and progress stay in view while the questions scroll. -->
+    <header class="ev__head">
+      <div class="ev__head-text">
+        <h2 class="ev__title" id="ev-title">{{ 'feature.my_learnings.evaluation.title' | translate }}</h2>
+        <p class="ev__subtitle" id="ev-subtitle">{{ 'feature.my_learnings.evaluation.subtitle' | translate }}</p>
+      </div>
+
+      <section class="ev__progress" aria-labelledby="ev-progress-label">
+        <div class="ev__progress-top">
+          <p class="ev__progress-label" id="ev-progress-label">{{ 'feature.my_learnings.evaluation.progress' | translate }}</p>
+          <span class="ev__progress-count" aria-hidden="true">
+            {{ 'feature.my_learnings.evaluation.progress_count' | translate: { answered: answered(), total: total() } }}
+          </span>
+        </div>
+        <span class="ev__bar" role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="total()" [attr.aria-valuenow]="answered()"
+          [attr.aria-valuetext]="'feature.my_learnings.evaluation.progress_count' | translate: { answered: answered(), total: total() }"
+          aria-labelledby="ev-progress-label">
+          <span class="ev__bar-fill" [style.inline-size.%]="percent()"></span>
+        </span>
+      </section>
+    </header>
+
+    <div class="ev__scroll">
+      @if (form().instructors.length > 1) {
+        <div class="ev__group ev__instructor">
+          <label class="ev__q-title" for="ev-instructor">
+            {{ 'feature.my_learnings.evaluation.instructor' | translate }}<span class="ev__req" aria-hidden="true">*</span>
+          </label>
+          <select id="ev-instructor" class="ev__select" required [attr.aria-invalid]="tried() && instructorId() === null"
+            (change)="onInstructor($event)">
+            <option value="" [selected]="instructorId() === null">{{ 'feature.my_learnings.evaluation.instructor_placeholder' | translate }}</option>
+            @for (i of form().instructors; track i.id) {
+              <option [value]="i.id" [selected]="instructorId() === i.id"><bdi>{{ i.name }}</bdi></option>
+            }
+          </select>
+        </div>
+      }
+
+      @for (g of groups(); track g.id) {
+        <section class="ev__group" [attr.aria-labelledby]="showTemplateNames() ? 'ev-g-' + g.id : null">
+          @if (showTemplateNames()) {
+            <header class="ev__group-head">
+              <h3 class="ev__group-title" [id]="'ev-g-' + g.id">{{ g.name }}</h3>
+              <span class="ev__group-count" [class.is-done]="answeredIn(g.questions) === g.questions.length">
+                {{ 'feature.my_learnings.evaluation.group_count' | translate: { answered: answeredIn(g.questions), total: g.questions.length } }}
+              </span>
+            </header>
+          }
+
+          <div class="ev__group-body">
+            @for (q of g.questions; track q.id) {
+              @switch (q.type) {
+                @case ('text') {
+                  <div class="ev__q" [class.is-missing]="isMissing(q.id)">
+                    <label class="ev__q-title" [for]="'ev-q-' + q.id">
+                      <span class="ev__n" aria-hidden="true">{{ q.n }}</span>
+                      <span class="ev__q-text">{{ q.title }}@if (q.is_required) {<span class="ev__req" aria-hidden="true">*</span>}</span>
+                    </label>
+                    <textarea class="ev__text" [id]="'ev-q-' + q.id" rows="3" [attr.maxlength]="textMax" [required]="q.is_required"
+                      [attr.aria-required]="q.is_required" [attr.aria-invalid]="isMissing(q.id)"
+                      [placeholder]="'feature.my_learnings.evaluation.text_placeholder' | translate"
+                      [value]="value(q.id) ?? ''" (input)="onText(q.id, $event)"></textarea>
+                    <span class="ev__chars" aria-hidden="true">{{ length(q.id) }}/{{ textMax }}</span>
+                  </div>
+                }
+                @case ('five') {
+                  <fieldset class="ev__q" [class.is-missing]="isMissing(q.id)" [id]="'ev-q-' + q.id" tabindex="-1"
+                    [attr.aria-required]="q.is_required" [attr.aria-invalid]="isMissing(q.id)">
+                    <legend class="ev__q-title">
+                      <span class="ev__n" aria-hidden="true">{{ q.n }}</span>
+                      <span class="ev__q-text">{{ q.title }}@if (q.is_required) {<span class="ev__req" aria-hidden="true">*</span>}</span>
+                    </legend>
+                    <div class="ev__stars">
+                      @for (p of q.points; track p) {
+                        <label class="ev__star">
+                          <input class="ev__sr" type="radio" [name]="'ev-' + q.id" [value]="p" [checked]="value(q.id) === p"
+                            [required]="q.is_required" (change)="choose(q.id, p)" />
+                          <img [src]="isStarOn(q.id, p) ? 'assets/icons/evaluation/star-fill-32.svg' : 'assets/icons/evaluation/star-regular-32.svg'"
+                            width="32" height="32" alt="" />
+                          <span class="ev__sr">{{ 'feature.my_learnings.evaluation.stars' | translate: { count: p } }}</span>
+                        </label>
+                      }
+                    </div>
+                  </fieldset>
+                }
+                @case ('ten') {
+                  <!-- 1-10 (not drawn in Figma): an even row of numbered pills, end labels under the ends -->
+                  <fieldset class="ev__q" [class.is-missing]="isMissing(q.id)" [id]="'ev-q-' + q.id" tabindex="-1"
+                    [attr.aria-required]="q.is_required" [attr.aria-invalid]="isMissing(q.id)">
+                    <legend class="ev__q-title">
+                      <span class="ev__n" aria-hidden="true">{{ q.n }}</span>
+                      <span class="ev__q-text">{{ q.title }}@if (q.is_required) {<span class="ev__req" aria-hidden="true">*</span>}</span>
+                    </legend>
+                    <div class="ev__pills">
+                      @for (p of q.points; track p) {
+                        <label class="ev__pill" [class.is-on]="value(q.id) === p">
+                          <input class="ev__radio" type="radio" [name]="'ev-' + q.id" [value]="p" [checked]="value(q.id) === p"
+                            [required]="q.is_required" (change)="choose(q.id, p)" [attr.aria-label]="pointLabel(q, p)" />
+                          <span aria-hidden="true">{{ p }}</span>
+                        </label>
+                      }
+                    </div>
+                    <div class="ev__pill-ends" aria-hidden="true">
+                      <span>{{ q.scale_label_min ?? ('feature.my_learnings.evaluation.label_min' | translate) }}</span>
+                      <span>{{ q.scale_label_max ?? ('feature.my_learnings.evaluation.label_max' | translate) }}</span>
+                    </div>
+                  </fieldset>
+                }
+                @default {
+                  <!-- scale (1-5): numbered radios between the end labels (Figma 2194:78325) -->
+                  <fieldset class="ev__q" [class.is-missing]="isMissing(q.id)" [id]="'ev-q-' + q.id" tabindex="-1"
+                    [attr.aria-required]="q.is_required" [attr.aria-invalid]="isMissing(q.id)">
+                    <legend class="ev__q-title">
+                      <span class="ev__n" aria-hidden="true">{{ q.n }}</span>
+                      <span class="ev__q-text">{{ q.title }}@if (q.is_required) {<span class="ev__req" aria-hidden="true">*</span>}</span>
+                    </legend>
+                    <div class="ev__scale">
+                      <span class="ev__end ev__end--min" aria-hidden="true">{{ q.scale_label_min ?? ('feature.my_learnings.evaluation.label_min' | translate) }}</span>
+                      <span class="ev__points">
+                        @for (p of q.points; track p) {
+                          <label class="ev__point" [class.is-on]="value(q.id) === p">
+                            <input class="ev__radio" type="radio" [name]="'ev-' + q.id" [value]="p" [checked]="value(q.id) === p"
+                              [required]="q.is_required" (change)="choose(q.id, p)" [attr.aria-label]="pointLabel(q, p)" />
+                            @if (value(q.id) === p) {
+                              <img class="ev__radio-img" src="assets/icons/evaluation/radio-fill-24.svg" width="24" height="24" alt="" />
+                            } @else {
+                              <span class="ev__radio-ring" aria-hidden="true"></span>
+                            }
+                            <span class="ev__point-n" aria-hidden="true">{{ p }}</span>
+                          </label>
+                        }
+                      </span>
+                      <span class="ev__end ev__end--max" aria-hidden="true">{{ q.scale_label_max ?? ('feature.my_learnings.evaluation.label_max' | translate) }}</span>
+                    </div>
+                  </fieldset>
+                }
+              }
+            }
+          </div>
+        </section>
+      }
+
+      @if (serverError(); as msg) {
+        <p class="ev__error" role="alert">{{ msg }}</p>
+      }
+    </div>
+
+    <footer class="ev__foot">
+      <p class="ev__hint" [class.is-ready]="leftToAnswer() === 0" aria-live="polite">
+        @if (leftToAnswer() > 0) {
+          {{ 'feature.my_learnings.evaluation.required_left' | translate: { count: leftToAnswer() } }}
+        } @else {
+          {{ 'feature.my_learnings.evaluation.ready' | translate }}
+        }
+      </p>
+      <div class="ev__actions">
+        <button type="button" class="ev__btn ev__btn--outline" (click)="cancel()" [disabled]="saving()">
+          {{ 'feature.my_learnings.evaluation.cancel' | translate }}
+        </button>
+        <button type="submit" class="ev__btn ev__btn--primary" [disabled]="!canSubmit()" [attr.aria-busy]="saving()">
+          {{ 'feature.my_learnings.evaluation.submit' | translate }}
+        </button>
+      </div>
+    </footer>
+  </form>
+</dialog>

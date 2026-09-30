@@ -65,3 +65,35 @@ export interface CourseOutline {
   /** Ordered, titled groups (backend returns an array of {label, items}). */
   weeks: OutlineGroup[];
 }
+
+/* ── Course evaluation (Figma 2194:78325, GET/POST courses/{course}/evaluate) ── */
+
+/** five = 32 px stars; scale = 1-5 radios with end labels; ten = 1-10 radios; text = free text. */
+export type EvaluationQuestionType = 'five' | 'scale' | 'ten' | 'text';
+
+export interface EvaluationQuestion {
+  id: number;
+  type: EvaluationQuestionType;
+  title: string;
+  is_required: boolean;
+  /** Top of the scale (5 or 10); null for free text. */
+  scale_max: number | null;
+  scale_label_min: string | null;
+  scale_label_max: string | null;
+}
+
+export interface EvaluationTemplate {
+  id: number;
+  name: string;
+  questions: EvaluationQuestion[];
+}
+
+export interface EvaluationForm {
+  already_evaluated: boolean;
+  /** POST needs one of these as `instructor_id`. */
+  instructors: { id: number; name: string }[];
+  evaluation_categories: EvaluationTemplate[];
+}
+
+/** question id → a 1..scale_max number, or the text answer. */
+export type EvaluationAnswers = Record<number, number | string>;

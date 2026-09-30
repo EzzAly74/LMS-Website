@@ -1,0 +1,444 @@
+// Learner Evaluation - Figma 2194:78325 (832 px, 16 px radius, 31 px padding,
+// a 16 px footer with Cancel / Submit Evaluation), phone 2180:112624 (full screen).
+//
+// Long forms (several templates, 15+ questions) stay readable: the title and
+// progress are pinned above the scrolling area, each template is its own card,
+// and the scrollbar is hidden. Soft edge shades show there is more to scroll;
+// wheel, touch and Tab (every control is focusable) still scroll it.
+
+.ev {
+  inline-size: min(832px, calc(100vw - 32px));
+  max-inline-size: none;
+  max-block-size: min(90vh, 900px);
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--color-neutral-400);
+  border-radius: var(--radius-container-md);
+  background: var(--color-essential-primary);
+  color: var(--color-essential-secondary);
+  box-shadow: 0 24px 48px -12px rgba(12, 36, 39, 0.28);
+  overflow: hidden;
+
+  &::backdrop { background: rgba(12, 36, 39, 0.56); }
+  &[open] { animation: ev-in 0.18s ease-out; }
+}
+
+@keyframes ev-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.99); }
+  to { opacity: 1; transform: none; }
+}
+
+.ev__card {
+  display: flex;
+  flex-direction: column;
+  max-block-size: inherit;
+  block-size: 100%;
+}
+
+// ── Pinned header: title, subtitle, progress ────────────────────────────────
+.ev__head {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+  padding: 31px 31px 20px;
+  border-block-end: 1px solid var(--color-neutral-400);
+  background: var(--color-essential-primary);
+}
+
+.ev__head-text { display: flex; flex-direction: column; gap: 8px; }
+
+.ev__title {
+  margin: 0;
+  font-size: var(--font-size-l);
+  line-height: 24px;
+  font-weight: var(--font-weight-bold);
+}
+
+// neutral-750, not Figma's #8c8c8c (3.4:1), for AA (FG-47).
+.ev__subtitle { margin: 0; font-size: var(--font-size-xs); line-height: 16.8px; color: var(--color-neutral-750); }
+
+.ev__progress { display: flex; flex-direction: column; gap: 8px; }
+.ev__progress-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.ev__progress-label { margin: 0; font-size: var(--font-size-s); line-height: 19.2px; font-weight: var(--font-weight-bold); }
+.ev__progress-count { flex-shrink: 0; font-size: var(--font-size-xs); line-height: 16.8px; font-weight: var(--font-weight-medium); color: var(--color-neutral-750); }
+
+.ev__bar {
+  position: relative;
+  display: block;
+  block-size: 8px;
+  border-radius: 4px;
+  background: var(--color-neutral-400);
+  overflow: hidden;
+}
+
+.ev__bar-fill {
+  display: block;
+  block-size: 100%;
+  border-radius: inherit;
+  background: var(--color-primary-700);
+  transition: inline-size 0.2s ease;
+}
+
+// ── Scrolling questions ──────────────────────────────────────────────────────
+.ev__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  min-block-size: 0;
+  padding: 20px 31px 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+
+  // Scroll shades: the covers scroll with the content (local), the shades stay
+  // on the edges (scroll), so a shade shows only where there is more to see.
+  background:
+    linear-gradient(var(--color-essential-primary) 30%, transparent) top / 100% 32px no-repeat local,
+    linear-gradient(transparent, var(--color-essential-primary) 70%) bottom / 100% 32px no-repeat local,
+    radial-gradient(farthest-side at 50% 0, rgba(12, 36, 39, 0.14), transparent) top / 100% 12px no-repeat scroll,
+    radial-gradient(farthest-side at 50% 100%, rgba(12, 36, 39, 0.14), transparent) bottom / 100% 12px no-repeat scroll,
+    var(--color-essential-primary);
+}
+
+// One card per template.
+.ev__group {
+  flex-shrink: 0;
+  border: 1px solid var(--color-neutral-400);
+  border-radius: 12px;
+  background: var(--color-neutral-0);
+  overflow: hidden;
+}
+
+.ev__group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  border-block-end: 1px solid var(--color-neutral-400);
+  background: var(--color-neutral-200);
+}
+
+.ev__group-title { margin: 0; font-size: var(--font-size-s); line-height: 19.2px; font-weight: var(--font-weight-bold); color: var(--color-essential-secondary); }
+
+.ev__group-count {
+  flex-shrink: 0;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--color-neutral-0);
+  border: 1px solid var(--color-neutral-400);
+  font-size: var(--font-size-2xs);
+  line-height: 16px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-neutral-750);
+  white-space: nowrap;
+
+  &.is-done { border-color: var(--color-primary-700); color: var(--color-primary-700); }
+}
+
+.ev__group-body > .ev__q + .ev__q { border-block-start: 1px solid var(--color-neutral-300); }
+
+.ev__q {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 18px 20px;
+  border: 0;
+
+  &:focus-visible { outline: 2px solid var(--color-primary-700); outline-offset: -2px; }
+  &.is-missing { background: rgba(196, 30, 30, 0.04); }
+  &.is-missing .ev__q-text { color: var(--color-status-red-700); }
+}
+
+// A <legend> ignores flex on the fieldset, so the layout lives on its children.
+.ev__q-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  inline-size: 100%;
+  float: inline-start; // lets the legend sit inside the padded fieldset like a label
+  padding: 0;
+  font-size: var(--font-size-s);
+  line-height: 20px;
+  font-weight: var(--font-weight-medium);
+
+  + * { clear: both; }
+}
+
+.ev__n {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  min-inline-size: 22px;
+  block-size: 22px;
+  padding-inline: 4px;
+  margin-block-start: -1px;
+  border-radius: 6px;
+  background: var(--color-neutral-200);
+  font-size: var(--font-size-2xs);
+  line-height: 1;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-750);
+}
+
+.ev__q-text { min-inline-size: 0; }
+.ev__req { margin-inline-start: 3px; color: var(--color-status-red-700); }
+
+// ── Scale 1-5 (Figma): min label, the points spread out, max label ─────────
+.ev__scale { display: flex; align-items: center; gap: 16px; padding-inline: 4px; }
+
+.ev__end {
+  flex-shrink: 0;
+  max-inline-size: 120px;
+  font-size: var(--font-size-xs);
+  line-height: 16.8px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-neutral-750);
+
+  &--max { text-align: end; }
+}
+
+.ev__points { display: flex; flex: 1; align-items: flex-start; justify-content: space-between; min-inline-size: 0; }
+
+.ev__point {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-inline-size: 36px;
+  cursor: pointer;
+}
+
+// The native radio covers the visual: it takes the click and focus.
+.ev__radio {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ev__radio-ring {
+  display: block;
+  inline-size: 20px;
+  block-size: 20px;
+  margin: 2px;
+  border: 1.5px solid var(--color-neutral-600);
+  border-radius: 50%;
+  transition: border-color 0.12s ease;
+}
+
+.ev__radio-img { display: block; }
+
+// neutral-750 for the idle numbers (Figma #8c8c8c is 3.4:1); primary-700 when picked.
+.ev__point-n { font-size: var(--font-size-s); line-height: 19.2px; font-weight: var(--font-weight-medium); color: var(--color-neutral-750); }
+.ev__point.is-on .ev__point-n { color: var(--color-primary-700); font-weight: var(--font-weight-bold); }
+.ev__point:has(.ev__radio:focus-visible) .ev__radio-ring,
+.ev__point:has(.ev__radio:focus-visible) .ev__radio-img { outline: 2px solid var(--color-primary-700); outline-offset: 2px; border-radius: 50%; }
+.ev__point:hover .ev__radio-ring { border-color: var(--color-primary-700); }
+
+// ── 1-10: an even row of pills, end labels below ────────────────────────────
+.ev__pills { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 8px; }
+
+.ev__pill {
+  position: relative;
+  display: grid;
+  place-items: center;
+  block-size: 44px;
+  border: 1px solid var(--color-neutral-400);
+  border-radius: 8px;
+  background: var(--color-neutral-0);
+  font-size: var(--font-size-s);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-essential-secondary);
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+
+  &:hover { border-color: var(--color-primary-700); color: var(--color-primary-700); }
+  &:has(.ev__radio:focus-visible) { outline: 2px solid var(--color-primary-700); outline-offset: 2px; }
+
+  &.is-on {
+    border-color: var(--color-essential-tertiary);
+    background: var(--color-essential-tertiary);
+    color: var(--color-essential-primary);
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+.ev__pill-ends {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-block-start: -6px;
+  font-size: var(--font-size-2xs);
+  line-height: 14.4px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-neutral-750);
+
+  span:last-child { text-align: end; }
+}
+
+// ── Stars: 32 px, 10.667 px apart ────────────────────────────────────────────
+.ev__stars { display: flex; align-items: center; gap: 10.667px; }
+
+.ev__star {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+
+  img { display: block; }
+  &:hover { transform: scale(1.08); }
+
+  // The (visually hidden) radio sits over the star so it is the click target too.
+  .ev__sr:first-child { inset: 0; inline-size: 100%; block-size: 100%; clip: auto; opacity: 0; margin: 0; cursor: pointer; }
+  &:has(input:focus-visible) img { outline: 2px solid var(--color-primary-700); outline-offset: 2px; border-radius: 4px; }
+}
+
+// ── Free text and instructor ────────────────────────────────────────────────
+.ev__text,
+.ev__select {
+  inline-size: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-neutral-400);
+  border-radius: 8px;
+  background: var(--color-essential-primary);
+  font: inherit;
+  font-size: var(--font-size-xs);
+  line-height: 18px;
+  color: var(--color-essential-secondary);
+  transition: border-color 0.12s ease, background-color 0.12s ease;
+
+  &::placeholder { color: var(--color-neutral-750); }
+  &:hover { border-color: var(--color-neutral-600); }
+  &:focus-visible { outline: 2px solid var(--color-primary-700); outline-offset: 1px; background: var(--color-neutral-0); }
+  &[aria-invalid='true'] { border-color: var(--color-status-red-700); }
+}
+
+.ev__text { min-block-size: 96px; resize: vertical; }
+.ev__select { block-size: 44px; }
+.ev__chars { align-self: flex-end; margin-block-start: -8px; font-size: var(--font-size-2xs); color: var(--color-neutral-750); }
+
+.ev__instructor { display: flex; flex-direction: column; gap: 12px; padding: 18px 20px; overflow: visible; }
+
+.ev__error { margin: 0; font-size: var(--font-size-xs); color: var(--color-status-red-700); }
+
+// ── Footer ───────────────────────────────────────────────────────────────────
+.ev__foot {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+  padding: 16px 31px;
+  border-block-start: 1px solid var(--color-neutral-400);
+  background: var(--color-essential-primary);
+}
+
+.ev__hint {
+  flex: 1;
+  margin: 0;
+  font-size: var(--font-size-xs);
+  line-height: 16.8px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-neutral-750);
+
+  &.is-ready { color: var(--color-primary-700); }
+}
+
+.ev__actions { display: flex; gap: 12px; flex-shrink: 0; }
+
+.ev__btn {
+  min-inline-size: 140px;
+  white-space: nowrap;
+  block-size: 44px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: var(--font-size-s);
+  line-height: 19.2px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  box-shadow: 0 2px 5px 0 rgba(103, 110, 118, 0.08), 0 0 0 0 rgba(103, 110, 118, 0.16), 0 1px 1px 0 rgba(0, 0, 0, 0.12);
+
+  &:focus-visible { outline: 2px solid var(--color-primary-700); outline-offset: 2px; }
+
+  &--outline {
+    border: 1px solid var(--color-essential-tertiary);
+    background: var(--color-neutral-0);
+    color: var(--color-essential-tertiary);
+    &:hover:not(:disabled) { background: var(--color-neutral-200); }
+  }
+
+  &--primary {
+    border: 0;
+    background: var(--color-essential-tertiary);
+    color: var(--color-essential-primary);
+    &:hover:not(:disabled) { background: var(--color-primary-900); }
+    // Drawn grey while required answers are missing (Figma 2274:132908); neutral-750 text keeps AA.
+    &:disabled { background: var(--color-neutral-300); color: var(--color-neutral-750); cursor: not-allowed; box-shadow: none; }
+  }
+}
+
+.ev__sr {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ── Tablet: the footer hint sits above the buttons ──────────────────────────
+@media (max-width: 767px) {
+  .ev__foot { flex-direction: column; align-items: stretch; gap: 12px; }
+  .ev__hint { text-align: center; }
+  .ev__actions .ev__btn { flex: 1; min-inline-size: 0; }
+  .ev__pills { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
+
+// ── Phone (Figma 2180:112624): full screen, labels wrap ─────────────────────
+@media (max-width: 599px) {
+  .ev {
+    inline-size: 100vw;
+    max-inline-size: 100vw;
+    block-size: 100dvh;
+    max-block-size: 100dvh;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .ev__head { padding: 20px 16px 16px; gap: 16px; }
+  .ev__scroll { padding: 16px; gap: 12px; }
+  .ev__group-head { padding: 12px 16px; }
+  .ev__q { padding: 16px; }
+  .ev__scale { gap: 8px; padding-inline: 0; }
+  .ev__end { max-inline-size: 72px; font-size: var(--font-size-2xs); line-height: 14.4px; }
+  .ev__point { min-inline-size: 28px; }
+  .ev__stars { justify-content: space-between; }
+  .ev__foot { padding: 12px 16px; }
+  .ev__btn { padding-inline: 12px; font-size: var(--font-size-xs); }
+}
+
+// Tight phones: the 1-5 end labels go above the points.
+@media (max-width: 399px) {
+  .ev__scale { flex-wrap: wrap; row-gap: 12px; }
+  .ev__scale .ev__points { order: 1; flex-basis: 100%; }
+  .ev__end--max { margin-inline-start: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ev[open] { animation: none; }
+  .ev__bar-fill, .ev__radio-ring, .ev__pill, .ev__star, .ev__text, .ev__select { transition: none; }
+  .ev__star:hover { transform: none; }
+}

@@ -78,65 +78,16 @@
         </section>
       }
 
-      <!-- ── Rating widget (hidden once rated) ────────────────── -->
-      @if (myRating() === null) {
-        <section class="rating-card">
-          <div class="rating-card__head">
-            <p class="rating-card__q">{{ 'feature.profile.learnings.rating.question' | translate }}</p>
-            <p class="rating-card__sub">{{ 'feature.profile.learnings.rating.subtitle' | translate }}</p>
-          </div>
-          <div class="rating-card__faces" role="radiogroup" [attr.aria-label]="'feature.profile.learnings.rating.question' | translate">
-            @for (level of levels; track level.value) {
-              <button
-                type="button"
-                class="rating-face"
-                role="radio"
-                [attr.aria-checked]="draftRating() === level.value"
-                [class.is-picked]="draftRating() === level.value"
-                (click)="pickRating(level.value)"
-                [attr.aria-label]="level.labelKey | translate"
-              >
-                <i
-                  class="rating-face__star pi"
-                  [class.pi-star-fill]="isStarFilled(level.value)"
-                  [class.pi-star]="!isStarFilled(level.value)"
-                  aria-hidden="true"
-                ></i>
-                <span class="rating-face__label">{{ level.labelKey | translate }}</span>
-              </button>
-            }
-          </div>
-          <div class="rating-card__comment">
-            <label class="rating-card__comment-label">
-              {{
-                (commentRequired()
-                  ? 'feature.profile.learnings.rating.comment_label_required'
-                  : 'feature.profile.learnings.rating.comment_label'
-                ) | translate
-              }}
-            </label>
-            <textarea
-              class="rating-card__comment-input"
-              [placeholder]="'feature.profile.learnings.rating.comment_ph' | translate"
-              [value]="draftComment()"
-              (input)="draftComment.set($any($event.target).value)"
-            ></textarea>
-            @if (commentRequired() && !draftComment().trim()) {
-              <span class="rating-card__comment-hint">
-                {{ 'feature.profile.learnings.rating.comment_required' | translate }}
-              </span>
-            }
-          </div>
-          <button
-            type="button"
-            class="rating-card__submit"
-            [disabled]="draftRating() === null || submitting() || (commentRequired() && !draftComment().trim())"
-            (click)="submitRating()"
-          >
-            {{ 'feature.profile.learnings.rating.submit' | translate }}
+      <!-- ── Evaluate course (Figma 2078:104643; under the card on phones, 2194:79138) ── -->
+      @if (canEvaluate()) {
+        <section class="cd-evaluate" aria-labelledby="cd-evaluate-title">
+          <h2 class="cd-evaluate__title" id="cd-evaluate-title">{{ 'feature.my_learnings.evaluation.row_title' | translate }}</h2>
+          <button type="button" class="cd-evaluate__btn" aria-haspopup="dialog" (click)="openEvaluation()">
+            {{ 'feature.my_learnings.evaluation.row_action' | translate }}
           </button>
         </section>
       }
+
     </div>
 
     <!-- ── Right rail: attendance + certificate status ──────────── -->
@@ -198,4 +149,9 @@
     </aside>
     }
   </div>
+}
+
+@if (evaluationForm(); as ef) {
+  <app-evaluation-dialog [courseId]="courseData()?.id ?? 0" [form]="ef" [open]="evaluationOpen()"
+    (closed)="evaluationOpen.set(false)" (submitted)="onEvaluated()" />
 }

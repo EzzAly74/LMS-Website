@@ -58,14 +58,6 @@ export class ProfileService {
     return this.api.getBlob(`${this.base}/certificates/${certificateId}/download`);
   }
 
-  submitRating(
-    courseId: number,
-    rating: number,
-    comment: string | null,
-  ): Observable<ApiResponse<{ id: number; rating: number }>> {
-    return this.api.post(`${this.base}/courses/${courseId}/rating`, { rating, comment });
-  }
-
   /** Mark the learner present for a live session via passcode (mobile S-06 twin). */
   markPresent(
     courseId: number,

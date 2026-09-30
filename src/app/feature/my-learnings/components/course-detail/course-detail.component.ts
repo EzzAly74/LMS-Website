@@ -1,45 +1,17 @@
 import { DatePipe, KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
-import { NotificationService } from '../../../../core/services/notification.service';
 import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { ShimmerComponent } from '../../../../shared/components/shimmer/shimmer.component';
 import { LearningCourse, SessionAttendance } from '../../../profile/models/profile.models';
 import { ProfileService } from '../../../profile/services/profile.service';
-import { CourseOutline } from '../../models/my-learnings.models';
+import { CourseOutline, EvaluationForm } from '../../models/my-learnings.models';
 import { MyLearningsService } from '../../services/my-learnings.service';
-
-interface RatingLevel {
-  value: number;
-  labelKey: string;
-}
-
-/**
- * The 1-5 rating scale.
- *
- * W-13: this used to carry an emoji per level (rendered as a text character),
- * which breaks the "no emoji or text characters as icons" rule. It also did not
- * match the design: the Figma rating control is a STAR scale
- * (evaluation modal 2194:78022), and the post-rating display on this very
- * screen is "My Rating: * 4" (2181:114393). There is no emoji face scale
- * anywhere in the Figma file - the five faces were invented by the
- * implementation.
- *
- * No new asset was needed: `pi-star-fill` / `pi-star` are PrimeIcons, already a
- * project dependency and already used a few lines up in this same template for
- * the course rating.
- */
-const RATING_LEVELS: RatingLevel[] = [
-  { value: 1, labelKey: 'feature.profile.learnings.rating.very_unsatisfied' },
-  { value: 2, labelKey: 'feature.profile.learnings.rating.unsatisfied' },
-  { value: 3, labelKey: 'feature.profile.learnings.rating.neutral' },
-  { value: 4, labelKey: 'feature.profile.learnings.rating.satisfied' },
-  { value: 5, labelKey: 'feature.profile.learnings.rating.very_satisfied' },
-];
+import { EvaluationDialogComponent } from '../evaluation-dialog/evaluation-dialog.component';
 
 /**
  * Course Detail (Figma 851-44908 / 951-48857). Rendered INLINE inside the
@@ -55,7 +27,7 @@ const RATING_LEVELS: RatingLevel[] = [
 @Component({
   selector: 'app-course-detail',
   standalone: true,
-  imports: [DatePipe, KeyValuePipe, RouterLink, TranslatePipe, BadgeComponent, ShimmerComponent],
+  imports: [DatePipe, KeyValuePipe, RouterLink, TranslatePipe, BadgeComponent, ShimmerComponent, EvaluationDialogComponent],
   templateUrl: './course-detail.component.html',
   styleUrl: './course-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,8 +37,6 @@ export class CourseDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly myLearnings = inject(MyLearningsService);
   private readonly profile = inject(ProfileService);
-  private readonly translate = inject(TranslateService);
-  private readonly notify = inject(NotificationService);
 
   /** Inline usage: the selected course + a back handler (master-detail). */
   @Input() set courseId(value: number | null | undefined) {
@@ -83,19 +53,6 @@ export class CourseDetailComponent implements OnInit {
   }
   @Output() back = new EventEmitter<void>();
 
-  protected readonly levels = RATING_LEVELS;
-
-  /**
-   * Whether the star at `value` renders filled.
-   *
-   * `draftRating` is `number | null`, so the comparison is done here rather
-   * than in the template — under `strictTemplates` a null-unsafe `>=` in the
-   * template is a build error, and the honest fix is to handle the null, not
-   * to cast it away.
-   */
-  protected isStarFilled(value: number): boolean {
-    return (this.draftRating() ?? 0) >= value;
-  }
   protected readonly backLink = `/${LmsRoutes.MyLearnings}`;
 
   protected readonly inline = signal(false);
@@ -107,17 +64,36 @@ export class CourseDetailComponent implements OnInit {
   protected readonly courseData = this._course.asReadonly();
   protected readonly sessions = signal<SessionAttendance[]>([]);
 
-  protected readonly draftRating = signal<number | null>(null);
-  protected readonly draftComment = signal('');
-  protected readonly submitting = signal(false);
-  protected readonly justRated = signal<number | null>(null);
-  /** Neutral or worse (value ≤ 3) requires a comment before submitting (§7.7). */
-  protected readonly commentRequired = computed(() => {
-    const r = this.draftRating();
-    return r !== null && r <= 3;
+  /**
+   * Course evaluation (Figma 2078:104643 "Evaluate course · Add My Feedback").
+   * The row shows only when the course is evaluated, this learner has not
+   * answered yet, there is something to answer and an instructor to name.
+   */
+  protected readonly evaluationForm = signal<EvaluationForm | null>(null);
+  protected readonly evaluationOpen = signal(false);
+  protected readonly evaluationDone = signal(false);
+  protected readonly canEvaluate = computed(() => {
+    const f = this.evaluationForm();
+    return !!f && !this.evaluationDone() && !f.already_evaluated && f.instructors.length > 0
+      && f.evaluation_categories.some((t) => t.questions.length > 0);
   });
 
-  protected readonly myRating = computed(() => this.justRated() ?? this._course()?.rate ?? null);
+  protected openEvaluation(): void {
+    this.evaluationOpen.set(true);
+  }
+
+  /** Answered (or already answered elsewhere): the row goes, as in Figma 2181:114393. */
+  protected onEvaluated(): void {
+    this.evaluationOpen.set(false);
+    this.evaluationDone.set(true);
+  }
+
+  /**
+   * The learner's stored course rating, shown as "My Rating". The old inline
+   * "How are you finding this course?" widget is gone: the course evaluation
+   * (Figma 2078:104643 / 2194:78325) is how a learner gives feedback now.
+   */
+  protected readonly myRating = computed(() => this._course()?.rate ?? null);
   protected readonly attended = computed(() => this.sessions().filter((s) => s.attended).length);
   /** Future-dated, not-yet-attended sessions aren't "absent" (spec review). */
   protected readonly absent = computed(
@@ -179,29 +155,6 @@ export class CourseDetailComponent implements OnInit {
     return `feature.my_learnings.content.${type}`;
   }
 
-  protected pickRating(value: number): void {
-    this.draftRating.set(value);
-  }
-
-  protected submitRating(): void {
-    const rating = this.draftRating();
-    if (rating === null || this.submitting()) {
-      return;
-    }
-    if (this.commentRequired() && !this.draftComment().trim()) {
-      return;
-    }
-    this.submitting.set(true);
-    this.profile.submitRating(this._courseId(), rating, this.draftComment().trim() || null).subscribe({
-      next: () => {
-        this.submitting.set(false);
-        this.justRated.set(rating);
-        this.notify.success(this.translate.instant('feature.profile.learnings.rating.thanks'));
-      },
-      error: () => this.submitting.set(false),
-    });
-  }
-
   private load(): void {
     const id = this._courseId();
     if (!id) {
@@ -219,12 +172,24 @@ export class CourseDetailComponent implements OnInit {
       error: () => this.loading.set(false),
     });
 
+    // Evaluation form: asked for only when the course offers one.
+    this.evaluationForm.set(null);
+    const loadEvaluation = (course: LearningCourse | null) => {
+      if (!course?.evaluation?.available) return;
+      this.myLearnings.getEvaluation(id).subscribe({
+        next: (res) => this.evaluationForm.set(res.status === 'success' && res.result ? res.result : null),
+        error: () => this.evaluationForm.set(null),
+      });
+    };
+    if (this._course() !== null) loadEvaluation(this._course());
+
     // Header info: use the course passed in inline, else fetch the list.
     if (this._course() === null) {
       this.profile.getLearnings().subscribe({
         next: (res) => {
           if (res.status === 'success' && res.result) {
             this._course.set(res.result.find((c) => c.id === id) ?? null);
+            loadEvaluation(this._course());
           }
         },
       });
