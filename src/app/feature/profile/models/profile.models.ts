@@ -148,6 +148,10 @@ export interface CompletedCourse {
    * neutral "Completed" (never offered) vs a red "Not certified" (offered
    * but not earned). Backend ProfileDashboardService::completedCourses. */
   certificate_offered: boolean;
+  /** The learner's own "My Rating" (set by the course evaluation); null when not rated. */
+  rate: number | null;
+  /** Localized sentiment for `rate` ("Satisfied"); null when not rated or not configured. */
+  rate_label: string | null;
 }
 
 /** One session in the "This week" calendar card. */

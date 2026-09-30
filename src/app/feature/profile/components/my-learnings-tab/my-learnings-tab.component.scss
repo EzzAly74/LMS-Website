@@ -114,6 +114,18 @@
     color: var(--color-neutral-800);
   }
 
+  // My Rating on a completed course: the course page header's style.
+  &__rating {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-17xs);
+    margin: 0;
+    color: var(--color-essential-secondary);
+    @include typography("caption", "medium");
+
+    .pi-star-fill { color: var(--color-status-hold-500); }
+  }
+
   &__progress {
     display: flex;
     align-items: center;

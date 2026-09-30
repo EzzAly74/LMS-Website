@@ -80,6 +80,14 @@
                 · {{ 'feature.profile.learnings.score' | translate: { score: course.score_percent } }}
               }
             </p>
+            @if (course.rate !== null) {
+              <!-- My Rating, as on the course page header (human, 2026-09-30). -->
+              <p class="ml-row__rating">
+                {{ 'feature.profile.learnings.my_rating' | translate }}
+                <i class="pi pi-star-fill" aria-hidden="true"></i> {{ course.rate }}
+                @if (course.rate_label) { ({{ course.rate_label }}) }
+              </p>
+            }
             <div class="ml-row__foot">
               @if (course.certificate_earned) {
                 <!-- Earned → download certificate (Figma frame 9, row 1–2). -->
