@@ -210,7 +210,7 @@ export class EvaluationDialogComponent {
       .subscribe({
         next: (res) => {
           this.saving.set(false);
-          this.notify.success(this.translate.instant('feature.my_learnings.evaluation.thanks'));
+          this.notify.success('feature.my_learnings.evaluation.thanks');
           this.submitted.emit(res.result ?? null);
         },
         error: (e: unknown) => {

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, signal 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { LanguageService } from '../../../../core/services/language.service';
@@ -32,7 +32,6 @@ type LoadState = 'loading' | 'ready' | 'error';
 export class ExternalTrainingCardComponent implements OnInit {
   private readonly service = inject(ExternalTrainingService);
   private readonly notify = inject(NotificationService);
-  private readonly translate = inject(TranslateService);
   private readonly destroyRef = inject(DestroyRef);
   protected readonly locale = inject(LanguageService).current;
 
@@ -70,12 +69,12 @@ export class ExternalTrainingCardComponent implements OnInit {
         this.withdrawing.set(null);
         this.confirming.set(null);
         this.requests.update((rows) => rows.filter((x) => x.id !== r.id));
-        this.notify.success(this.translate.instant('feature.external_training.withdrawn'));
+        this.notify.success('feature.external_training.withdrawn');
       },
       error: () => {
         this.withdrawing.set(null);
         this.confirming.set(null);
-        this.notify.error(this.translate.instant('feature.external_training.withdraw_failed'));
+        this.notify.error('feature.external_training.withdraw_failed');
         this.load();
       },
     });

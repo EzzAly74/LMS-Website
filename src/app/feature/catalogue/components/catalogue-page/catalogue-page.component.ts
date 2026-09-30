@@ -213,8 +213,8 @@ export class CataloguePageComponent implements OnInit {
       next: (res) => {
         if (res.status === 'success' && res.result?.is_success) {
           this.notify.success(
-            this.translate.instant('feature.catalogue.enrol.success'),
-            this.translate.instant('feature.catalogue.enrol.success_title'),
+            'feature.catalogue.enrol.success',
+            'feature.catalogue.enrol.success_title',
           );
           this.loadScopes();
           this.loadCourses(true);
@@ -232,7 +232,7 @@ export class CataloguePageComponent implements OnInit {
       return;
     }
     this.catalogue.notifyMe(course.id).subscribe({
-      next: () => this.notify.success(this.translate.instant('feature.catalogue.notify.success')),
+      next: () => this.notify.success('feature.catalogue.notify.success'),
       error: () => this.showEnrolError(),
     });
   }
@@ -247,8 +247,8 @@ export class CataloguePageComponent implements OnInit {
 
   private showEnrolError(): void {
     this.notify.error(
-      this.translate.instant('common.error_generic'),
-      this.translate.instant('feature.catalogue.enrol.error_title'),
+      'common.error_generic',
+      'feature.catalogue.enrol.error_title',
     );
   }
 

@@ -91,7 +91,7 @@ export class QualificationsTabComponent {
       },
       error: () => {
         this.downloadingId.set(null);
-        this.notify.error(this.translate.instant('feature.profile.qualifications.download_failed'));
+        this.notify.error('feature.profile.qualifications.download_failed');
       },
     });
   }

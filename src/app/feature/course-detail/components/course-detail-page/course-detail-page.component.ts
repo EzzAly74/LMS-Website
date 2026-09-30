@@ -196,7 +196,7 @@ export class CourseDetailPageComponent implements OnInit {
     }
     if (c.cta.state === 'get_notified') {
       this.service.notifyMe(c.id).subscribe({
-        next: () => this.notify.success(this.translate.instant('feature.catalogue.notify.success')),
+        next: () => this.notify.success('feature.catalogue.notify.success'),
         error: () => this.showError(),
       });
     } else if (c.cta.state === 'enrol_now') {
@@ -232,8 +232,8 @@ export class CourseDetailPageComponent implements OnInit {
       next: (res) => {
         if (res.status === 'success' && res.result?.is_success) {
           this.notify.success(
-            this.translate.instant('feature.catalogue.enrol.success'),
-            this.translate.instant('feature.catalogue.enrol.success_title'),
+            'feature.catalogue.enrol.success',
+            'feature.catalogue.enrol.success_title',
           );
           this.loadCourse(false);
         } else {
@@ -246,8 +246,8 @@ export class CourseDetailPageComponent implements OnInit {
 
   private showError(): void {
     this.notify.error(
-      this.translate.instant('common.error_generic'),
-      this.translate.instant('feature.catalogue.enrol.error_title'),
+      'common.error_generic',
+      'feature.catalogue.enrol.error_title',
     );
   }
 }

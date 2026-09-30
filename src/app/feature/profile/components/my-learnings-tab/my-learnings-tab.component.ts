@@ -147,7 +147,7 @@ export class MyLearningsTabComponent {
       },
       error: () => {
         this.downloadingId.set(null);
-        this.notify.error(this.translate.instant('feature.my_learnings.download_failed'));
+        this.notify.error('feature.my_learnings.download_failed');
       },
     });
   }
@@ -179,7 +179,7 @@ export class MyLearningsTabComponent {
       },
       error: () => {
         this.downloadingExternal.set(null);
-        this.notify.error(this.translate.instant('feature.my_learnings.download_failed'));
+        this.notify.error('feature.my_learnings.download_failed');
       },
     });
   }

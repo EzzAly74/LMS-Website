@@ -29,6 +29,13 @@
     }
   },
   "core": {
+    "toast": {
+      "success": "Done",
+      "info": "For your information",
+      "warn": "Please check",
+      "error": "Something went wrong",
+      "close": "Dismiss notification"
+    },
     "nav": {
       "catalogue": "Catalogue",
       "my_learnings": "My Learnings",

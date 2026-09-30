@@ -1,0 +1,159 @@
+@use 'mixins' as *;
+
+// The app's toasts (D-072), on the design tokens. PrimeNG owns the stack and
+// its enter / leave animation; its own card chrome is cleared so only .tst draws.
+
+:host ::ng-deep .app-toaster.p-toast {
+  // Above every overlay (dialogs, drawers): a toast is always readable.
+  z-index: 12000;
+  // Clear of the 64 px header. !important: PrimeNG 18 writes top / left /
+  // right as an inline style on the container, and only these three need it.
+  top: calc(var(--size-64) + 12px) !important;
+  inline-size: 380px;
+  max-inline-size: calc(100vw - 32px);
+
+  .p-toast-message {
+    margin: 0 0 var(--spacing-13xs);
+    border: 0;
+    border-radius: var(--radius-container-md);
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+  }
+}
+
+// Physical on purpose: the corner itself flips with the language.
+:host ::ng-deep .app-toaster.p-toast-top-right { right: 24px !important; }
+:host ::ng-deep .app-toaster.p-toast-top-left { left: 24px !important; }
+
+@media (max-width: 560px) {
+  :host ::ng-deep .app-toaster.p-toast { top: calc(var(--size-64) + 8px) !important; }
+  // The breakpoint width spans the gutter on both sides.
+  :host ::ng-deep .app-toaster.p-toast-top-right,
+  :host ::ng-deep .app-toaster.p-toast-top-left { left: 16px !important; right: 16px !important; }
+}
+
+// ── The card ─────────────────────────────────────────────────────────────
+.tst {
+  // Per severity: accent (stripe, line), icon badge background and glyph.
+  --tst-accent: var(--color-status-operational);
+  --tst-soft: var(--color-status-operational-10);
+  --tst-ink: var(--color-status-operational);
+
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--spacing-13xs);
+  padding-block: 14px 16px;
+  padding-inline: 18px var(--spacing-13xs);
+  border: var(--stroke-width-default, 1px) solid var(--color-neutral-400);
+  border-radius: var(--radius-container-md);
+  background: var(--color-essential-primary);
+  box-shadow:
+    0 18px 40px -12px rgba(12, 36, 39, 0.22),
+    0 4px 10px -4px rgba(12, 36, 39, 0.08);
+  overflow: hidden;
+
+  // Severity stripe on the reading start.
+  &::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 4px;
+    background: var(--tst-accent);
+  }
+
+  &--success { --tst-accent: var(--color-status-success);    --tst-soft: var(--color-status-success-50); --tst-ink: var(--color-status-green-700); }
+  &--error   { --tst-accent: var(--color-status-warning);    --tst-soft: var(--color-status-warning-50); --tst-ink: var(--color-status-red-700); }
+  &--warn    { --tst-accent: var(--color-status-orange-500); --tst-soft: var(--color-status-orange-50);  --tst-ink: var(--color-status-orange-800); }
+}
+
+.tst__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 34px;
+  block-size: 34px;
+  border-radius: var(--radius-pill);
+  background: var(--tst-soft);
+  color: var(--tst-ink);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tst-soft) 55%, transparent);
+}
+
+// Phosphor glyphs as masks, so they take the text colour.
+.tst__glyph {
+  display: block;
+  inline-size: 18px;
+  block-size: 18px;
+  background: currentColor;
+  mask: var(--tst-glyph) center / contain no-repeat;
+
+  &--success { --tst-glyph: url('/assets/icons/toast/check.svg'); }
+  &--error   { --tst-glyph: url('/assets/icons/toast/x.svg'); }
+  &--warn    { --tst-glyph: url('/assets/icons/toast/warning.svg'); }
+  &--info    { --tst-glyph: url('/assets/icons/toast/info.svg'); }
+  &--close   { --tst-glyph: url('/assets/icons/toast/x.svg'); inline-size: 14px; block-size: 14px; }
+}
+
+.tst__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-inline-size: 0;
+  padding-block-start: 1px;
+}
+
+.tst__title,
+.tst__detail {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.tst__title {
+  @include typography('subtitle-small', 'bold');
+  color: var(--color-essential-secondary);
+}
+
+.tst__detail {
+  @include typography('body-small', 'regular');
+  color: var(--color-neutral-800);
+}
+
+.tst__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 28px;
+  block-size: 28px;
+  margin-block-start: -2px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control-sm);
+  background: transparent;
+  color: var(--color-neutral-700);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover { background: var(--color-neutral-200); color: var(--color-essential-secondary); }
+  &:focus-visible { outline: 2px solid var(--color-primary-700); outline-offset: 1px; }
+}
+
+// Countdown line along the bottom; drains toward the reading start.
+.tst__progress {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 3px;
+  background: var(--tst-accent);
+  opacity: 0.55;
+  transform-origin: left center;
+
+  :host-context([dir='rtl']) & { transform-origin: right center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tst__progress { display: none; }
+  .tst__close { transition: none; }
+}

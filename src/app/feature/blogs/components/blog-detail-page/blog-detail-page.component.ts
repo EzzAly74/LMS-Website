@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { AuthService } from '../../../../core/auth/auth.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -40,7 +40,6 @@ export class BlogDetailPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly notify = inject(NotificationService);
-  private readonly translate = inject(TranslateService);
   private readonly auth = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -101,7 +100,7 @@ export class BlogDetailPageComponent implements OnInit {
     navigator.clipboard?.writeText(window.location.href).then(
       () => {
         this.copied.set(true);
-        this.notify.success(this.translate.instant('feature.blogs.link_copied'));
+        this.notify.success('feature.blogs.link_copied');
         setTimeout(() => this.copied.set(false), 2000);
       },
       () => undefined,
@@ -118,7 +117,7 @@ export class BlogDetailPageComponent implements OnInit {
       return;
     }
     if (!this.auth.isAuthenticated()) {
-      this.notify.info(this.translate.instant('feature.blogs.login_to_love'));
+      this.notify.info('feature.blogs.login_to_love');
       return;
     }
 

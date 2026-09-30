@@ -301,7 +301,7 @@ export class CoursePlayerPageComponent implements OnInit {
     this.service.submitFile(this.courseId, item.id, event.questionId, event.file).subscribe({
       next: () => {
         this.busyQuestionId.set(null);
-        this.notify.success(this.translate.instant('feature.course_player.file.replaced'));
+        this.notify.success('feature.course_player.file.replaced');
         this.openResults(item.id, null);
       },
       error: (err: HttpErrorResponse) => {
@@ -343,7 +343,7 @@ export class CoursePlayerPageComponent implements OnInit {
       },
       error: () => {
         done?.();
-        this.notify.error(this.translate.instant('feature.course_player.file.download_failed'));
+        this.notify.error('feature.course_player.file.download_failed');
       },
     });
   }
@@ -491,6 +491,6 @@ export class CoursePlayerPageComponent implements OnInit {
   }
 
   private showError(): void {
-    this.notify.error(this.translate.instant('common.error_generic'));
+    this.notify.error('common.error_generic');
   }
 }

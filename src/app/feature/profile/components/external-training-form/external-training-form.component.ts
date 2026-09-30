@@ -238,9 +238,9 @@ export class ExternalTrainingFormComponent {
       this.serverErrors.set(mapped);
       const other = errors['request']?.[0];
       if (other) this.notify.error(other);
-      if (!Object.keys(mapped).length && !other) this.notify.error(this.translate.instant('feature.external_training.save_failed'));
+      if (!Object.keys(mapped).length && !other) this.notify.error('feature.external_training.save_failed');
       return;
     }
-    this.notify.error(this.translate.instant('feature.external_training.save_failed'));
+    this.notify.error('feature.external_training.save_failed');
   }
 }

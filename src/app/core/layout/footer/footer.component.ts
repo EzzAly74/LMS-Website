@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { LmsRoutes } from '../../enums/lms-routes.enum';
 import { NotificationService } from '../../services/notification.service';
@@ -21,7 +21,6 @@ import { NotificationService } from '../../services/notification.service';
 })
 export class FooterComponent {
   private readonly notify = inject(NotificationService);
-  private readonly translate = inject(TranslateService);
 
   protected readonly routes = LmsRoutes;
   protected readonly year = new Date().getFullYear();
@@ -32,7 +31,7 @@ export class FooterComponent {
       this.email.markAsTouched();
       return;
     }
-    this.notify.success(this.translate.instant('core.footer.newsletter.success'));
+    this.notify.success('core.footer.newsletter.success');
     this.email.reset('');
   }
 }

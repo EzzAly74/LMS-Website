@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { NotificationService } from '../../../../core/services/notification.service';
 import { ContactInfo } from '../../models/contact.models';
@@ -18,7 +18,6 @@ export class ContactPageComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly contact = inject(ContactService);
   private readonly notify = inject(NotificationService);
-  private readonly translate = inject(TranslateService);
 
   protected readonly info = signal<ContactInfo | null>(null);
   protected readonly submitting = signal(false);
@@ -90,6 +89,6 @@ export class ContactPageComponent implements OnInit {
   }
 
   private showError(): void {
-    this.notify.error(this.translate.instant('common.error_generic'));
+    this.notify.error('common.error_generic');
   }
 }

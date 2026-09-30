@@ -84,7 +84,7 @@ export class MyLearningsPageComponent implements OnInit {
       },
       error: () => {
         this.downloadingId.set(null);
-        this.notify.error(this.translate.instant('feature.my_learnings.download_failed'));
+        this.notify.error('feature.my_learnings.download_failed');
       },
     });
   }

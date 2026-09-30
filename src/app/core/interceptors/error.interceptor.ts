@@ -1,7 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { catchError, throwError } from 'rxjs';
 
 import { AuthService } from '../auth/auth.service';
@@ -23,7 +22,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const router = inject(Router);
   const notify = inject(NotificationService);
-  const translate = inject(TranslateService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -37,8 +35,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
       const callerHandles = error.status === HTTP_UNAUTHORIZED || error.status === HTTP_UNPROCESSABLE;
       if (!callerHandles) {
-        const body = error.error as ApiResponse | null;
-        notify.error(body?.message ?? translate.instant('common.error_generic'));
+        // A Blob body (a failed file download) carries no message.
+        const message = (error.error as ApiResponse | null)?.message;
+        notify.error(typeof message === 'string' && message ? message : 'common.error_generic');
       }
 
       return throwError(() => error);
