@@ -97,3 +97,12 @@ export interface EvaluationForm {
 
 /** question id → a 1..scale_max number, or the text answer. */
 export type EvaluationAnswers = Record<number, number | string>;
+
+/**
+ * POST courses/{id}/evaluate result: the learner's new "My Rating" (the
+ * rounded average of their star and 1-5 answers), null when the form had none.
+ */
+export interface EvaluationSubmitResult {
+  rating: number | null;
+  rate_label: string | null;
+}

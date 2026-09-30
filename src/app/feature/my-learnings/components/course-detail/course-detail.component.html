@@ -42,7 +42,7 @@
           <span class="cd-header__myrating">
             {{ 'feature.profile.learnings.my_rating' | translate }}
             <i class="pi pi-star-fill"></i> {{ r }}
-            @if (c.rate_label) { ({{ c.rate_label }}) }
+            @if (myRatingLabel(); as label) { ({{ label }}) }
           </span>
         }
       </div>
@@ -153,5 +153,5 @@
 
 @if (evaluationForm(); as ef) {
   <app-evaluation-dialog [courseId]="courseData()?.id ?? 0" [form]="ef" [open]="evaluationOpen()"
-    (closed)="evaluationOpen.set(false)" (submitted)="onEvaluated()" />
+    (closed)="evaluationOpen.set(false)" (submitted)="onEvaluated($event)" />
 }

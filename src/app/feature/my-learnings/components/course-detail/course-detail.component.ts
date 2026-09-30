@@ -9,7 +9,7 @@ import { BadgeComponent } from '../../../../shared/components/badge/badge.compon
 import { ShimmerComponent } from '../../../../shared/components/shimmer/shimmer.component';
 import { LearningCourse, SessionAttendance } from '../../../profile/models/profile.models';
 import { ProfileService } from '../../../profile/services/profile.service';
-import { CourseOutline, EvaluationForm } from '../../models/my-learnings.models';
+import { CourseOutline, EvaluationForm, EvaluationSubmitResult } from '../../models/my-learnings.models';
 import { MyLearningsService } from '../../services/my-learnings.service';
 import { EvaluationDialogComponent } from '../evaluation-dialog/evaluation-dialog.component';
 
@@ -82,18 +82,28 @@ export class CourseDetailComponent implements OnInit {
     this.evaluationOpen.set(true);
   }
 
-  /** Answered (or already answered elsewhere): the row goes, as in Figma 2181:114393. */
-  protected onEvaluated(): void {
+  /**
+   * Answered (or already answered elsewhere): the row goes, as in Figma
+   * 2181:114393, and "My Rating" shows the rating the evaluation set.
+   */
+  protected onEvaluated(result: EvaluationSubmitResult | null): void {
     this.evaluationOpen.set(false);
     this.evaluationDone.set(true);
+    if (result?.rating != null) this.ratedNow.set(result);
   }
 
+  /** The rating the evaluation just set, until the course is reloaded. */
+  private readonly ratedNow = signal<EvaluationSubmitResult | null>(null);
+
   /**
-   * The learner's stored course rating, shown as "My Rating". The old inline
-   * "How are you finding this course?" widget is gone: the course evaluation
-   * (Figma 2078:104643 / 2194:78325) is how a learner gives feedback now.
+   * "My Rating": taken from the learner's course evaluation (the rounded
+   * average of their star and 1-5 answers, human 2026-09-30). The old inline
+   * "How are you finding this course?" widget is gone.
    */
-  protected readonly myRating = computed(() => this._course()?.rate ?? null);
+  protected readonly myRating = computed(() => this.ratedNow()?.rating ?? this._course()?.rate ?? null);
+  protected readonly myRatingLabel = computed(() =>
+    this.ratedNow() ? this.ratedNow()?.rate_label ?? null : this._course()?.rate_label ?? null,
+  );
   protected readonly attended = computed(() => this.sessions().filter((s) => s.attended).length);
   /** Future-dated, not-yet-attended sessions aren't "absent" (spec review). */
   protected readonly absent = computed(
@@ -173,7 +183,10 @@ export class CourseDetailComponent implements OnInit {
     });
 
     // Evaluation form: asked for only when the course offers one.
+    // Per course: the inline detail is reused when the learner picks another one.
     this.evaluationForm.set(null);
+    this.evaluationDone.set(false);
+    this.ratedNow.set(null);
     const loadEvaluation = (course: LearningCourse | null) => {
       if (!course?.evaluation?.available) return;
       this.myLearnings.getEvaluation(id).subscribe({

@@ -3,7 +3,13 @@ import { Observable } from 'rxjs';
 
 import { ApiResponse } from '../../../core/models/api-response.model';
 import { ApiService } from '../../../core/services/api.service';
-import { ActiveCourse, CourseOutline, EvaluationAnswers, EvaluationForm } from '../models/my-learnings.models';
+import {
+  ActiveCourse,
+  CourseOutline,
+  EvaluationAnswers,
+  EvaluationForm,
+  EvaluationSubmitResult,
+} from '../models/my-learnings.models';
 
 /** My Learnings dashboard API access — GET my/learnings (learner-facing composite). */
 @Injectable({ providedIn: 'root' })
@@ -25,7 +31,11 @@ export class MyLearningsService {
   }
 
   /** Submit the evaluation once (409 if already answered). Optional questions left blank are left out. */
-  submitEvaluation(courseId: number, instructorId: number, answers: EvaluationAnswers): Observable<ApiResponse<unknown>> {
+  submitEvaluation(
+    courseId: number,
+    instructorId: number,
+    answers: EvaluationAnswers,
+  ): Observable<ApiResponse<EvaluationSubmitResult>> {
     return this.api.post(`courses/${courseId}/evaluate`, { instructor_id: instructorId, questions: answers });
   }
 

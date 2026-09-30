@@ -96,11 +96,12 @@ test.describe('behaviour', () => {
     await page.route(`${API}courses/${COURSE_ID}/evaluate`, (r) => {
       if (r.request().method() !== 'POST') return r.fallback();
       posts.push(r.request().postDataJSON());
-      return r.fulfill({ status: 201, json: { status: 'success', message: 'Created' } });
+      return r.fulfill({ status: 201, json: { status: 'success', message: 'Created', result: { rating: 4, rate_label: 'Satisfied' } } });
     });
 
     const row = page.locator('.cd-evaluate');
     await expect(row).toContainText('Evaluate course');
+    await expect(page.locator('.cd-header__myrating')).toHaveCount(0); // not rated yet
     const open = row.getByRole('button', { name: 'Add My Feedback' });
     await open.click();
 
@@ -133,6 +134,8 @@ test.describe('behaviour', () => {
     expect(posts).toEqual([{ instructor_id: 3, questions: { 11: 4, 13: 5, 14: 4, 15: 'Great pacing.' } }]);
     await expect(page.getByText('Thank you. Your evaluation was submitted.')).toBeVisible();
     await expect(page.locator('.cd-evaluate')).toHaveCount(0);
+    // My Rating: the rounded average of the star and 1-5 answers, from the server.
+    await expect(page.locator('.cd-header__myrating')).toHaveText(/My Rating:?\s*4\s*\(Satisfied\)/);
   });
 
   test('Escape and Cancel close without sending, and focus returns to the button', async ({ page }) => {

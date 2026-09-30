@@ -22,6 +22,7 @@ import {
   EvaluationAnswers,
   EvaluationForm,
   EvaluationQuestion,
+  EvaluationSubmitResult,
 } from '../../models/my-learnings.models';
 import { MyLearningsService } from '../../services/my-learnings.service';
 
@@ -70,8 +71,8 @@ export class EvaluationDialogComponent {
   readonly form = input.required<EvaluationForm>();
   readonly open = input(false);
   readonly closed = output<void>();
-  /** Submitted (or the server says it already was). */
-  readonly submitted = output<void>();
+  /** Submitted, with the new My Rating; null when the server says it already was (409). */
+  readonly submitted = output<EvaluationSubmitResult | null>();
 
   private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
   private opener: HTMLElement | null = null;
@@ -207,16 +208,16 @@ export class EvaluationDialogComponent {
       .submitEvaluation(this.courseId(), instructor, payload)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => {
+        next: (res) => {
           this.saving.set(false);
           this.notify.success(this.translate.instant('feature.my_learnings.evaluation.thanks'));
-          this.submitted.emit();
+          this.submitted.emit(res.result ?? null);
         },
         error: (e: unknown) => {
           this.saving.set(false);
           if (e instanceof HttpErrorResponse && e.status === HTTP_CONFLICT) {
             // Answered meanwhile (another tab or device): the page drops the row.
-            this.submitted.emit();
+            this.submitted.emit(null);
             return;
           }
           if (e instanceof HttpErrorResponse && e.status === HTTP_UNPROCESSABLE) {
