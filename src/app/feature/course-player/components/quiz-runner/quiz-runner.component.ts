@@ -6,14 +6,15 @@ import { AnswerFeedback, AssessmentQuestion, SubmittedAnswer } from '../../model
 import { FileAnswerComponent } from '../file-answer/file-answer.component';
 
 const DEFAULT_CHAR_LIMIT = 500;
-const YES_NO_FALLBACK_OPTIONS = ['True', 'False'];
+// The API now always sends Yes / No in the learner's language (NEW2B-5783); this is a last resort.
+const YES_NO_FALLBACK_OPTIONS = ['Yes', 'No'];
 
 /**
  * Renders the current question (MCQ / Yes-No / Short answer / Reorder) with
  * its default/answered/correct/incorrect states. mcq and yes_no are both
  * "choice" questions server-side (a string `value` matched case-insensitively
  * against the configured correct answer) — this component treats them
- * identically, falling back to True/False only if a yes_no question has no
+ * identically, falling back to Yes/No only if a yes_no question has no
  * authored `options` array.
  *
  * One question per view — the parent owns question navigation, running
