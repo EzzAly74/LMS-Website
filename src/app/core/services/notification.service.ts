@@ -23,6 +23,9 @@ export const TOAST_LIFE: Readonly<Record<ToastSeverity, number>> = {
   error: 7000,
 };
 
+/** A second problem toast this soon after one is the same failure reported twice. */
+const PROBLEM_WINDOW_MS = 1500;
+
 /**
  * App-wide toast messages (D-072) - the only way to show one. This is distinct
  * from the in-app notification bell/panel, which is a feature-owned surface.
@@ -51,7 +54,25 @@ export class NotificationService {
     this.messages.clear();
   }
 
+  /** When the last problem (warn / error) toast was shown. */
+  private lastProblemAt = 0;
+
+  /**
+   * One failure, one toast: the error interceptor reports a failed request
+   * first, and a page's own handler for the same failure a moment later would
+   * stack a second one. A problem toast within PROBLEM_WINDOW_MS of another is
+   * that echo and is dropped (same rule as the Dashboard, D-072).
+   */
+  private isEcho(severity: ToastSeverity): boolean {
+    if (severity !== 'warn' && severity !== 'error') return false;
+    const now = Date.now();
+    const echo = now - this.lastProblemAt < PROBLEM_WINDOW_MS;
+    if (!echo) this.lastProblemAt = now;
+    return echo;
+  }
+
   private show(severity: ToastSeverity, message: string, options?: string | ToastOptions): void {
+    if (this.isEcho(severity)) return;
     const o: ToastOptions = typeof options === 'string' ? { title: options } : (options ?? {});
     this.messages.add({
       severity,
