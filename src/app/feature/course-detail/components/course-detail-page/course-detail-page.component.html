@@ -75,7 +75,7 @@
             <p class="enrolment-card__label">{{ 'feature.course_detail.card.includes' | translate }}</p>
             <ul>
               @for (item of includesList(); track item.key) {
-                <li><i class="pi pi-check"></i>{{ item.key | translate: item.params }}</li>
+                <li><i class="pi pi-check"></i>{{ item.key | pluralKey: countOf(item.params) | translate: item.params }}</li>
               }
             </ul>
           </div>
@@ -108,7 +108,7 @@
         <span><app-rating-stars [score]="c.rating.avg" [count]="c.rating.count" /></span>
         <span><i class="pi pi-users"></i><b>{{ c.enrolled_users_count }}</b> {{ 'feature.course_detail.hero.enrolled' | translate }}</span>
         @if (c.duration_weeks) {
-          <span><i class="pi pi-clock"></i><b>{{ 'feature.course_detail.curriculum.duration_weeks' | translate: { count: c.duration_weeks } }}</b></span>
+          <span><i class="pi pi-clock"></i><b>{{ 'feature.course_detail.curriculum.duration_weeks' | pluralKey: c.duration_weeks | translate: { count: c.duration_weeks } }}</b></span>
         }
         @if (c.anchor_cohort) {
           <span>

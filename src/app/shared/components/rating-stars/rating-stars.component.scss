@@ -21,6 +21,11 @@
     color: var(--color-essential-secondary);
   }
 
+  &--none {
+    @include typography('caption', 'regular');
+    color: var(--color-neutral-800);
+  }
+
   &__count {
     @include typography('caption', 'regular');
     color: var(--color-neutral-700);

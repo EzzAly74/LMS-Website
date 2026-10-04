@@ -149,7 +149,7 @@
           <p class="ml-row__meta">
             {{ 'feature.catalogue.delivery.' + course.course_type | translate }}
             @if (course.progress.total_sessions) {
-              · {{ 'feature.my_learnings.card.sessions' | translate: { count: course.progress.total_sessions } }}
+              · {{ 'feature.my_learnings.card.sessions' | pluralKey: course.progress.total_sessions | translate: { count: course.progress.total_sessions } }}
             }
             @if (course.cohort?.start_date) {
               · {{ 'feature.my_learnings.card.started' | translate }} {{ course.cohort!.start_date | date: 'mediumDate' }}

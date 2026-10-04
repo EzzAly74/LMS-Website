@@ -18,6 +18,7 @@
     "apply": "Apply"
   },
   "shared": {
+    "no_ratings": "No ratings yet",
     "filter_sidebar": {
       "title": "Filters"
     },
@@ -326,7 +327,9 @@
       "curriculum": {
         "locked_note": "Full module content is visible after enrolment. Module names and session counts shown below.",
         "modules_count": "{{count}} modules",
+        "sessions_count_one": "{{count}} session total",
         "sessions_count": "{{count}} sessions total",
+        "duration_weeks_one": "{{count}} week",
         "duration_weeks": "{{count}} weeks",
         "locked": "Locked until enrolment"
       },
@@ -354,6 +357,7 @@
         "seats_left": "{{count}} Left"
       },
       "includes": {
+        "sessions_one": "{{count}} live session",
         "sessions": "{{count}} live sessions",
         "reading": "Reading materials & resources",
         "assessments": "Quizzes & assignments",
@@ -413,6 +417,7 @@
         "external_link": "External"
       },
       "card": {
+        "sessions_one": "{{count}} session",
         "sessions": "{{count}} sessions",
         "started": "Started in",
         "total": "Total"

@@ -10,7 +10,7 @@ import { course } from './fixtures/course-detail';
  */
 const TEXT = {
   en: { tab: 'Instructor', learners: '1,204 learners', courses: '3 courses', rating: '4.8 rating', other: 'Other courses by Sara' },
-  ar: { tab: 'المدرّب', learners: '1,204 متدرب', courses: '3 دورات', rating: 'تقييم 4.8', other: 'دورات أخرى للمدرب Sara' },
+  ar: { tab: 'المدرّب', learners: '1,204 متدربين', courses: '3 دورات', rating: 'تقييم 4.8', other: 'دورات أخرى للمدرب Sara' },
 } as const;
 
 for (const lang of ['en', 'ar'] as Lang[]) {

@@ -12,6 +12,7 @@ import { ProfileService } from '../../../profile/services/profile.service';
 import { CourseOutline, EvaluationForm, EvaluationSubmitResult } from '../../models/my-learnings.models';
 import { MyLearningsService } from '../../services/my-learnings.service';
 import { EvaluationDialogComponent } from '../evaluation-dialog/evaluation-dialog.component';
+import { PluralKeyPipe } from '../../../../shared/pipes/plural-key.pipe';
 
 /**
  * Course Detail (Figma 851-44908 / 951-48857). Rendered INLINE inside the
@@ -27,7 +28,7 @@ import { EvaluationDialogComponent } from '../evaluation-dialog/evaluation-dialo
 @Component({
   selector: 'app-course-detail',
   standalone: true,
-  imports: [DatePipe, KeyValuePipe, RouterLink, TranslatePipe, BadgeComponent, ShimmerComponent, EvaluationDialogComponent],
+  imports: [PluralKeyPipe, DatePipe, KeyValuePipe, RouterLink, TranslatePipe, BadgeComponent, ShimmerComponent, EvaluationDialogComponent],
   templateUrl: './course-detail.component.html',
   styleUrl: './course-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -12,6 +12,7 @@ import { CourseDetailComponent } from '../../../my-learnings/components/course-d
 import { CertificateStatus, CompletedCourse, LearningCourse, LearningStatus } from '../../models/profile.models';
 import { ProfileService } from '../../services/profile.service';
 import { ExternalTrainingService } from '../../services/external-training.service';
+import { PluralKeyPipe } from '../../../../shared/pipes/plural-key.pipe';
 
 const STATUS_TABS: LearningStatus[] = ['upcoming', 'current', 'completed'];
 
@@ -26,6 +27,7 @@ const STATUS_TABS: LearningStatus[] = ['upcoming', 'current', 'completed'];
   selector: 'app-my-learnings-tab',
   standalone: true,
   imports: [
+    PluralKeyPipe,
     DatePipe,
     RouterLink,
     TranslatePipe,

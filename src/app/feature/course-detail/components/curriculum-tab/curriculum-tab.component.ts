@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, computed, signal } from '@an
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { CourseUnit } from '../../models/course-detail.models';
+import { PluralKeyPipe } from '../../../../shared/pipes/plural-key.pipe';
 
 /**
  * Curriculum tab: numbered module/unit list. Module content is only visible
@@ -11,7 +12,7 @@ import { CourseUnit } from '../../models/course-detail.models';
 @Component({
   selector: 'app-curriculum-tab',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [PluralKeyPipe, TranslatePipe],
   templateUrl: './curriculum-tab.component.html',
   styleUrl: './curriculum-tab.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

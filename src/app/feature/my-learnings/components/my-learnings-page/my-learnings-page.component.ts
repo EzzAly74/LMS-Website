@@ -12,11 +12,12 @@ import { EmptyStateComponent, EmptyStateConfig } from '../../../../shared/compon
 import { SearchInputComponent } from '../../../../shared/components/search-input/search-input.component';
 import { ActiveCourse } from '../../models/my-learnings.models';
 import { MyLearningsService } from '../../services/my-learnings.service';
+import { PluralKeyPipe } from '../../../../shared/pipes/plural-key.pipe';
 
 @Component({
   selector: 'app-my-learnings-page',
   standalone: true,
-  imports: [DatePipe, TranslatePipe, RouterLink, BadgeComponent, CardSkeletonComponent, EmptyStateComponent, SearchInputComponent],
+  imports: [PluralKeyPipe, DatePipe, TranslatePipe, RouterLink, BadgeComponent, CardSkeletonComponent, EmptyStateComponent, SearchInputComponent],
   templateUrl: './my-learnings-page.component.html',
   styleUrl: './my-learnings-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

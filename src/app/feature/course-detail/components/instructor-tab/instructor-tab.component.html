@@ -14,11 +14,11 @@
       }
       <li>
         <img src="assets/icons/course-detail/users-11.svg" width="11" height="11" alt="" />
-        {{ (instructor.learners_count === 1 ? 'feature.course_detail.instructor.learners_one' : 'feature.course_detail.instructor.learners') | translate: { count: (instructor.learners_count | number) } }}
+        {{ 'feature.course_detail.instructor.learners' | pluralKey: instructor.learners_count | translate: { count: (instructor.learners_count | number) } }}
       </li>
       <li>
         <img src="assets/icons/course-detail/stack-10.svg" width="10" height="10" alt="" />
-        {{ (instructor.courses_count === 1 ? 'feature.course_detail.instructor.courses_one' : 'feature.course_detail.instructor.courses') | translate: { count: (instructor.courses_count | number) } }}
+        {{ 'feature.course_detail.instructor.courses' | pluralKey: instructor.courses_count | translate: { count: (instructor.courses_count | number) } }}
       </li>
     </ul>
   </div>
@@ -47,7 +47,7 @@
               <span class="mini-course__meta">
                 {{ 'feature.catalogue.delivery.' + course.course_type | translate }}
                 @if (knownLevel(course.level)) { · {{ 'feature.catalogue.level.' + course.level | translate }} }
-                @if (course.duration_weeks) { · {{ 'feature.course_detail.curriculum.duration_weeks' | translate: { count: course.duration_weeks } }} }
+                @if (course.duration_weeks) { · {{ 'feature.course_detail.curriculum.duration_weeks' | pluralKey: course.duration_weeks | translate: { count: course.duration_weeks } }} }
               </span>
             </span>
           </a>

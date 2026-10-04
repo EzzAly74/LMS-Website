@@ -6,10 +6,10 @@
 <div class="curr-summary">
   <span>{{ 'feature.course_detail.curriculum.modules_count' | translate: { count: totalUnits() } }}</span>
   @if (totalSessions() > 0) {
-    <span>{{ 'feature.course_detail.curriculum.sessions_count' | translate: { count: totalSessions() } }}</span>
+    <span>{{ 'feature.course_detail.curriculum.sessions_count' | pluralKey: totalSessions() | translate: { count: totalSessions() } }}</span>
   }
   @if (durationWeeks) {
-    <span>{{ 'feature.course_detail.curriculum.duration_weeks' | translate: { count: durationWeeks } }}</span>
+    <span>{{ 'feature.course_detail.curriculum.duration_weeks' | pluralKey: durationWeeks | translate: { count: durationWeeks } }}</span>
   }
 </div>
 

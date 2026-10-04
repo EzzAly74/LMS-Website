@@ -25,11 +25,13 @@ import { CurriculumTabComponent } from '../curriculum-tab/curriculum-tab.compone
 import { InstructorTabComponent } from '../instructor-tab/instructor-tab.component';
 import { OverviewTabComponent } from '../overview-tab/overview-tab.component';
 import { ScheduleTabComponent } from '../schedule-tab/schedule-tab.component';
+import { PluralKeyPipe } from '../../../../shared/pipes/plural-key.pipe';
 
 @Component({
   selector: 'app-course-detail-page',
   standalone: true,
   imports: [
+    PluralKeyPipe,
     DatePipe,
     TranslatePipe,
     RouterLink,
@@ -63,6 +65,12 @@ export class CourseDetailPageComponent implements OnInit {
   protected readonly loading = signal(true);
   protected readonly activeTab = signal<CourseDetailTab>('overview');
   protected readonly knownLevel = isCourseLevel;
+
+  /** The count an include line is pluralised by, if it has one. */
+  protected countOf(params: Record<string, unknown> | undefined): number | null {
+    const n = params?.['count'];
+    return typeof n === 'number' ? n : null;
+  }
   protected readonly tabs: readonly CourseDetailTab[] = ['overview', 'curriculum', 'instructor', 'schedule'];
 
   /** True while the "Request Enrolment" confirmation dialog is open. */

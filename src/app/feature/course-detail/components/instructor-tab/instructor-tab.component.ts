@@ -7,6 +7,7 @@ import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
 import { isCourseLevel } from '../../../catalogue/models/catalogue.models';
 import { CourseDetailInstructor } from '../../models/course-detail.models';
+import { PluralKeyPipe } from '../../../../shared/pipes/plural-key.pipe';
 
 /**
  * Instructor tab (Figma 818:40243, phone 966:50318): profile card with title
@@ -16,7 +17,7 @@ import { CourseDetailInstructor } from '../../models/course-detail.models';
 @Component({
   selector: 'app-instructor-tab',
   standalone: true,
-  imports: [TranslatePipe, AvatarComponent, RouterLink, DecimalPipe],
+  imports: [PluralKeyPipe, TranslatePipe, AvatarComponent, RouterLink, DecimalPipe],
   templateUrl: './instructor-tab.component.html',
   styleUrl: './instructor-tab.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

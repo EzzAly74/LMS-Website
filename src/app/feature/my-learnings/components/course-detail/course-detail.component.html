@@ -29,7 +29,7 @@
       <div class="cd-header__meta">
         <span><i class="pi pi-desktop"></i> {{ 'feature.catalogue.delivery.' + c.course_type | translate }}</span>
         @if (c.progress.total_sessions) {
-          <span><i class="pi pi-calendar"></i> {{ 'feature.my_learnings.card.sessions' | translate: { count: c.progress.total_sessions } }}</span>
+          <span><i class="pi pi-calendar"></i> {{ 'feature.my_learnings.card.sessions' | pluralKey: c.progress.total_sessions | translate: { count: c.progress.total_sessions } }}</span>
         }
         @if (instructorNames()) {
           <span><i class="pi pi-user"></i> {{ instructorNames() }}</span>

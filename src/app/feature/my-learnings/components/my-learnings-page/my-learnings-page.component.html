@@ -25,7 +25,7 @@
           <p class="uc-card__meta">
             {{ deliveryKey(course) | translate }}
             @if (course.cohort.session_count) {
-            · {{ 'feature.my_learnings.card.sessions' | translate: { count: course.cohort.session_count } }}
+            · {{ 'feature.my_learnings.card.sessions' | pluralKey: course.cohort.session_count | translate: { count: course.cohort.session_count } }}
             }
             @if (course.cohort.start_date) {
             · {{ 'feature.my_learnings.card.started' | translate }}
