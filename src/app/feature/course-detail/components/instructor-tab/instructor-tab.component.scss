@@ -1,34 +1,146 @@
 @use 'mixins' as *;
 
+// Figma 818:40243 (desktop) / 966:50318 (phone): the same stack at every width.
+
 .instructor-card {
   display: flex;
-  align-items: center;
-  gap: var(--spacing-3xs);
-  padding: var(--spacing-14xs);
+  align-items: flex-start;
+  gap: var(--spacing-11xs);
+  padding: var(--spacing-11xs);
   border: var(--stroke-width-default) solid var(--color-neutral-400);
   border-radius: var(--radius-container-md);
+  background: var(--color-neutral-0);
+
+  &__avatar {
+    flex-shrink: 0;
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-17xs);
+    min-inline-size: 0;
+  }
 
   &__name {
     @include typography('h2', 'bold');
     color: var(--color-essential-secondary);
+    overflow-wrap: anywhere;
+  }
+
+  &__title {
+    @include typography('caption', 'bold');
+    color: var(--color-primary-700);
+    overflow-wrap: anywhere;
   }
 
   &__stats {
     display: flex;
-    gap: var(--spacing-13xs);
-    margin-top: var(--spacing-16xs);
-    @include typography('body-small', 'regular');
+    flex-wrap: wrap;
+    gap: var(--spacing-16xs) var(--spacing-12xs);
+    margin: 0;
+    padding: var(--spacing-16xs) 0 0;
+    list-style: none;
+    @include typography('caption', 'regular');
     color: var(--color-neutral-800);
 
-    i {
-      color: var(--color-status-hold-500);
-      margin-inline-end: var(--spacing-17xs);
+    li {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-16xs);
     }
+
+    img {
+      flex-shrink: 0;
+    }
+  }
+
+  &__star {
+    font-size: 10px;
+    color: var(--color-status-hold-500);
   }
 }
 
 .instructor-bio {
-  margin-top: var(--spacing-3xl);
+  margin-top: var(--spacing-12xs);
   @include typography('body-small', 'regular');
   color: var(--color-neutral-800);
+}
+
+.instructor-other {
+  margin-top: var(--spacing-12xs);
+
+  &__title {
+    margin: 0 0 var(--spacing-14xs);
+    @include typography('body-small', 'bold');
+    color: var(--color-essential-secondary);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-15xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.mini-course {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-15xs);
+  padding: var(--spacing-14xs) var(--spacing-13xs);
+  border: var(--stroke-width-default) solid var(--color-neutral-400);
+  border-radius: var(--radius-sm);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-primary-700);
+    background: var(--color-neutral-100);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-700);
+    outline-offset: 2px;
+  }
+
+  &__img {
+    flex-shrink: 0;
+    inline-size: 36px;
+    block-size: 36px;
+    border-radius: var(--radius-2xs);
+    object-fit: cover;
+
+    &--placeholder {
+      background: linear-gradient(135deg, var(--color-primary-700), var(--color-primary-500));
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-inline-size: 0;
+  }
+
+  &__name {
+    @include typography('caption', 'bold');
+    color: var(--color-essential-secondary);
+    overflow-wrap: anywhere;
+  }
+
+  // Figma #9baaab is about 2.4:1 on white; neutral-800 keeps AA (FG-51).
+  &__meta {
+    @include typography('caption', 'regular');
+    color: var(--color-neutral-800);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mini-course {
+    transition: none;
+  }
 }

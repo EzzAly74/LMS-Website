@@ -153,7 +153,7 @@
           }
           @case ('instructor') {
             @if (instructor(); as inst) {
-              <app-instructor-tab [instructor]="inst" [rating]="c.rating" />
+              <app-instructor-tab [instructor]="inst" />
             }
           }
           @case ('schedule') {

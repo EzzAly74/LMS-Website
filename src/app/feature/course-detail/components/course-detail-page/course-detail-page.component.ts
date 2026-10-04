@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -53,6 +54,7 @@ export class CourseDetailPageComponent implements OnInit {
   private readonly translate = inject(TranslateService);
   private readonly language = inject(LanguageService);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   protected readonly auth = inject(AuthService);
 
   protected readonly catalogueRoute = `/${LmsRoutes.Catalogue}`;
@@ -146,7 +148,15 @@ export class CourseDetailPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadCourse();
+    // The Instructor tab links to the instructor's other courses on this same
+    // route, which reuses this component: follow the id, not the first one.
+    let first = true;
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      if (!first) window.scrollTo({ top: 0 });
+      first = false;
+      this.activeTab.set('overview');
+      this.loadCourse();
+    });
   }
 
   /**

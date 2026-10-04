@@ -17,7 +17,15 @@ export function course(withSessions = true) {
     id: 6, title: 'Leadership Fundamentals for NAS Teams', description: '<p>Build the core skills of modern leadership.</p>',
     course_type: 'online', level: 'beginner', duration_weeks: 4, image: null, hours: 12, has_certificate: true,
     allow_attendance: true, category: null,
-    instructors: [{ id: 1, name: 'Sara Al-Mansouri', image: null, bio: null }],
+    instructors: [{
+      id: 1, name: 'Sara Al-Mansouri', title: 'Senior Learning & Development Specialist', image: null,
+      bio: '<p>Sara has 12 years of experience designing leadership programmes.</p>',
+      rating_avg: 4.8, rating_count: 243, learners_count: 1204, courses_count: 3,
+      other_courses: [
+        { id: 7, title: 'Communication & Presentation Skills', image: null, course_type: 'hybrid', level: 'beginner', duration_weeks: 3 },
+        { id: 8, title: 'Coaching for Performance with a deliberately long course name that has to wrap on a phone', image: null, course_type: 'online', level: 'intermediate', duration_weeks: 5 },
+      ],
+    }],
     qualifications: [{ id: 1, name: 'Team Leadership' }],
     rating: { avg: 4.8, count: 243, sentiment: 'positive' }, enrolled_users_count: 856, units: [],
     cohorts: [],

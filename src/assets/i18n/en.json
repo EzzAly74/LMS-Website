@@ -331,6 +331,12 @@
         "locked": "Locked until enrolment"
       },
       "instructor": {
+        "rating_value": "{{value}} rating",
+        "learners_one": "{{count}} learner",
+        "learners": "{{count}} learners",
+        "courses_one": "{{count}} course",
+        "courses": "{{count}} courses",
+        "other_courses": "Other courses by {{name}}",
         "rating": "rating"
       },
       "hero": {

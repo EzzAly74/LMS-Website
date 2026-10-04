@@ -331,6 +331,12 @@
         "locked": "مقفل حتى التسجيل"
       },
       "instructor": {
+        "rating_value": "تقييم {{value}}",
+        "learners_one": "متدرب واحد",
+        "learners": "{{count}} متدرب",
+        "courses_one": "دورة واحدة",
+        "courses": "{{count}} دورات",
+        "other_courses": "دورات أخرى للمدرب {{name}}",
         "rating": "تقييم"
       },
       "hero": {

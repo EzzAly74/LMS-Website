@@ -1,10 +1,29 @@
 import { CatalogueCategory, CourseCtaState, CourseLevel, DeliveryType } from '../../catalogue/models/catalogue.models';
 
+/** One of the instructor's other courses (Instructor tab, Figma 818:40243). */
+export interface InstructorOtherCourse {
+  id: number;
+  title: string;
+  image: string | null;
+  course_type: DeliveryType;
+  level: CourseLevel | null;
+  duration_weeks: number | null;
+}
+
 export interface CourseDetailInstructor {
   id: number;
   name: string;
+  /** Job title, in the request language; null when not set (NEW2B-5926). */
+  title: string | null;
   image: string | null;
   bio: string | null;
+  /** Across all of the instructor's courses; null when nobody has rated. */
+  rating_avg: number | null;
+  rating_count: number;
+  learners_count: number;
+  courses_count: number;
+  /** Up to three, only courses this viewer can browse. */
+  other_courses: InstructorOtherCourse[];
 }
 
 export interface CourseDetailQualification {

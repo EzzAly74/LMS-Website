@@ -2,14 +2,57 @@
   <app-avatar class="instructor-card__avatar" [name]="instructor.name" [image]="instructor.image" [size]="68" />
   <div class="instructor-card__meta">
     <p class="instructor-card__name">{{ instructor.name }}</p>
-    @if (rating) {
-      <div class="instructor-card__stats">
-        <span><i class="pi pi-star-fill"></i>{{ rating.avg.toFixed(1) }} {{ 'feature.course_detail.instructor.rating' | translate }}</span>
-      </div>
+    @if (instructor.title) {
+      <p class="instructor-card__title">{{ instructor.title }}</p>
     }
+    <ul class="instructor-card__stats">
+      @if (instructor.rating_avg !== null) {
+        <li>
+          <i class="pi pi-star-fill instructor-card__star" aria-hidden="true"></i>
+          {{ 'feature.course_detail.instructor.rating_value' | translate: { value: instructor.rating_avg.toFixed(1) } }}
+        </li>
+      }
+      <li>
+        <img src="assets/icons/course-detail/users-11.svg" width="11" height="11" alt="" />
+        {{ (instructor.learners_count === 1 ? 'feature.course_detail.instructor.learners_one' : 'feature.course_detail.instructor.learners') | translate: { count: (instructor.learners_count | number) } }}
+      </li>
+      <li>
+        <img src="assets/icons/course-detail/stack-10.svg" width="10" height="10" alt="" />
+        {{ (instructor.courses_count === 1 ? 'feature.course_detail.instructor.courses_one' : 'feature.course_detail.instructor.courses') | translate: { count: (instructor.courses_count | number) } }}
+      </li>
+    </ul>
   </div>
 </div>
 
 @if (instructor.bio) {
   <p class="instructor-bio" [innerHTML]="instructor.bio"></p>
+}
+
+@if (instructor.other_courses.length) {
+  <section class="instructor-other" [attr.aria-labelledby]="'other-by-' + instructor.id">
+    <h3 class="instructor-other__title" [id]="'other-by-' + instructor.id">
+      {{ 'feature.course_detail.instructor.other_courses' | translate: { name: firstName } }}
+    </h3>
+    <ul class="instructor-other__list">
+      @for (course of instructor.other_courses; track course.id) {
+        <li>
+          <a class="mini-course" [routerLink]="[detailRoute, course.id]">
+            @if (course.image) {
+              <img class="mini-course__img" [src]="course.image" width="36" height="36" alt="" loading="lazy" />
+            } @else {
+              <span class="mini-course__img mini-course__img--placeholder" aria-hidden="true"></span>
+            }
+            <span class="mini-course__text">
+              <span class="mini-course__name">{{ course.title }}</span>
+              <span class="mini-course__meta">
+                {{ 'feature.catalogue.delivery.' + course.course_type | translate }}
+                @if (course.level) { · {{ 'feature.catalogue.level.' + course.level | translate }} }
+                @if (course.duration_weeks) { · {{ 'feature.course_detail.curriculum.duration_weeks' | translate: { count: course.duration_weeks } }} }
+              </span>
+            </span>
+          </a>
+        </li>
+      }
+    </ul>
+  </section>
 }
