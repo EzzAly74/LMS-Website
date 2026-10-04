@@ -11,14 +11,31 @@
     font-size: var(--font-size-3xs);
   }
 
-  // Level: light chip with accent border/text (sits on the card image).
+  // Level: light chip with a per-level border and text (Figma 818:40686,
+  // NEW2B-5914). The drawn text colours are 2.3-2.7:1 on the chip, so each
+  // hue is one step darker for AA (FG-54); the borders are as drawn.
   &--level {
-    padding: var(--spacing-16xs) var(--spacing-14xs);
-    border-radius: var(--radius-container-md);
+    padding: 5px 11px;
+    border-radius: var(--radius-full);
     background: var(--color-neutral-200);
     border: var(--stroke-width-default) solid var(--color-additionally-400-24);
-    color: var(--color-additionally-700);
+    color: var(--color-accent-sky-900);
     @include typography('caption', 'medium');
+  }
+
+  &--level-beginner {
+    border-color: var(--color-additionally-500);
+    color: var(--color-accent-sky-900);
+  }
+
+  &--level-intermediate {
+    border-color: var(--color-status-orange-500-40);
+    color: var(--color-status-orange-800);
+  }
+
+  &--level-professional {
+    border-color: var(--color-status-green-500-40);
+    color: var(--color-status-green-700);
   }
 
   // Delivery: blurred dark pill with light text (top-right on the card image).

@@ -17,6 +17,9 @@ export type CertificateBadgeStatus = 'earned' | 'on_track' | 'at_risk' | 'blocke
   template: `
     <span
       class="badge badge--{{ tone }}"
+      [class.badge--level-beginner]="tone === 'level' && level === 'beginner'"
+      [class.badge--level-intermediate]="tone === 'level' && level === 'intermediate'"
+      [class.badge--level-professional]="tone === 'level' && level === 'professional'"
       [class.badge--certificate-on_track]="tone === 'certificate' && (status === 'on_track' || status === 'earned')"
       [class.badge--certificate-at_risk]="tone === 'certificate' && status === 'at_risk'"
       [class.badge--certificate-blocked]="tone === 'certificate' && status === 'blocked'"
@@ -35,4 +38,6 @@ export class BadgeComponent {
   @Input() tone: BadgeTone = 'level';
   @Input() icon?: string;
   @Input() status?: CertificateBadgeStatus;
+  /** Only for `tone="level"`: each level has its own colour (Figma 818:40686, NEW2B-5914). */
+  @Input() level?: string | null;
 }

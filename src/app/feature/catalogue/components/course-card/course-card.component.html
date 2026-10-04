@@ -13,7 +13,7 @@
       <img class="course-card__image" [src]="course.image" [alt]="course.title" loading="lazy" />
     }
     @if (levelKey) {
-      <app-badge class="course-card__badge course-card__badge--level" tone="level" [label]="levelKey | translate" />
+      <app-badge class="course-card__badge course-card__badge--level" tone="level" [level]="course.level" [label]="levelKey | translate" />
     }
     <app-badge
       class="course-card__badge course-card__badge--delivery"

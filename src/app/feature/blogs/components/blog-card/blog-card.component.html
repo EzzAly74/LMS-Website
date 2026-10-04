@@ -4,7 +4,7 @@
       <img class="blog-card__image" [src]="blog.image" [alt]="blog.title" loading="lazy" />
     }
     @if (levelKey) {
-      <app-badge class="blog-card__badge" tone="level" [label]="levelKey | translate" />
+      <app-badge class="blog-card__badge" tone="level" [level]="blog.level" [label]="levelKey | translate" />
     }
   </a>
 
