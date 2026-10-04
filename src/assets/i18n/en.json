@@ -140,6 +140,7 @@
       "about_author": "About the author",
       "related": "Related articles",
       "copy_link": "Copy link",
+      "copy_failed": "Couldn't copy the link. Copy it from the address bar.",
       "link_copied": "Link copied to clipboard",
       "link_copied_short": "Link Copied",
       "love": "Love",

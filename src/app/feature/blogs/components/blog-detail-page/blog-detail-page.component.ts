@@ -13,6 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { AuthService } from '../../../../core/auth/auth.service';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { copyText } from '../../../../core/utils/copy-text';
 import { reloadOnLanguageChange } from '../../../../core/utils/reload-on-language-change';
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
 import { ShimmerComponent } from '../../../../shared/components/shimmer/shimmer.component';
@@ -97,14 +98,15 @@ export class BlogDetailPageComponent implements OnInit {
 
   /** Copy the current page URL and flash the "Link Copied" state (Figma 1589-46544). */
   protected copyLink(): void {
-    navigator.clipboard?.writeText(window.location.href).then(
-      () => {
-        this.copied.set(true);
-        this.notify.success('feature.blogs.link_copied');
-        setTimeout(() => this.copied.set(false), 2000);
-      },
-      () => undefined,
-    );
+    void copyText(window.location.href).then((ok) => {
+      if (!ok) {
+        this.notify.error('feature.blogs.copy_failed');
+        return;
+      }
+      this.copied.set(true);
+      this.notify.success('feature.blogs.link_copied');
+      setTimeout(() => this.copied.set(false), 2000);
+    });
   }
 
   /**
