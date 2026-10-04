@@ -132,6 +132,10 @@
         "intermediate": "Intermediate",
         "professional": "Professional"
       },
+      "no_results": {
+        "title": "No blogs match",
+        "message": "Try another search, clear the filters or switch to Explore All."
+      },
       "empty": {
         "title": "No blogs yet",
         "message": "Check back soon — new articles are on the way."

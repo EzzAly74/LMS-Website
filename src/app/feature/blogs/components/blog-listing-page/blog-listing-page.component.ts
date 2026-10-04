@@ -158,11 +158,29 @@ export class BlogListingPageComponent implements OnInit {
     this.loadBlogs(false);
   }
 
+  /** A search, a filter or the Tailored scope narrows the list. */
+  protected get isNarrowed(): boolean {
+    const f = this.filters();
+    return this.searchTerm.trim() !== ''
+      || Object.values(f).some((values) => values.length > 0)
+      || this.effectiveScope() === 'tailored';
+  }
+
+  /**
+   * The title, search and scope toggle are hidden only when there are no
+   * blogs at all. A search or filter that finds nothing keeps them, so the
+   * learner can change it (human, 2026-10-04).
+   */
+  protected get showHeader(): boolean {
+    return this.loading() || this.blogs().length > 0 || this.isNarrowed;
+  }
+
   protected get emptyState(): EmptyStateConfig {
+    const key = this.isNarrowed ? 'feature.blogs.no_results' : 'feature.blogs.empty';
     return {
       icon: 'pi-book',
-      title: this.translate.instant('feature.blogs.empty.title'),
-      message: this.translate.instant('feature.blogs.empty.message'),
+      title: this.translate.instant(`${key}.title`),
+      message: this.translate.instant(`${key}.message`),
     };
   }
 

@@ -1,4 +1,5 @@
 <div class="blogs">
+  @if (showHeader) {
   <header class="blogs__header">
     <h1 class="blogs__title">{{ 'feature.blogs.title' | translate }}</h1>
     <div class="blogs__controls">
@@ -17,6 +18,7 @@
       }
     </div>
   </header>
+  }
 
   @if (!loading() && heroBlog(); as hero) {
     <app-blog-hero [blog]="hero" [flagKey]="heroFlagKey()" />
