@@ -24,7 +24,13 @@ import { ProfileService } from '../../services/profile.service';
 })
 export class QualificationsTabComponent {
   @Input({ required: true }) set qualifications(value: QualificationProgress[]) {
-    this._qualifications.set(value ?? []);
+    const list = value ?? [];
+    this._qualifications.set(list);
+    // The first qualification opens on arrival (NEW2B-5977), until the learner
+    // opens or closes one themselves; a reload keeps their choice.
+    if (!this.userToggled && list.length) {
+      this.expanded.set(new Set([list[0].id]));
+    }
   }
   @Input() loading = false;
   @Input() set search(value: string) {
@@ -38,6 +44,7 @@ export class QualificationsTabComponent {
   private readonly _qualifications = signal<QualificationProgress[]>([]);
   private readonly _search = signal('');
   private readonly expanded = signal<Set<number>>(new Set());
+  private userToggled = false;
   protected readonly downloadingId = signal<number | null>(null);
   /** Courses requested in this visit, on top of `notify_requested` from the API. */
   private readonly requested = signal<ReadonlySet<number>>(new Set());
@@ -72,6 +79,7 @@ export class QualificationsTabComponent {
   }
 
   protected toggle(id: number): void {
+    this.userToggled = true;
     const next = new Set(this.expanded());
     next.has(id) ? next.delete(id) : next.add(id);
     this.expanded.set(next);

@@ -6,7 +6,8 @@ import { Lang, mockApi, pageOverflowX } from './fixtures/api-mock';
  * NEW2B-5780: Profile > Qualifications "Notify me when the next cohort opens"
  * did nothing. It now asks for every not-yet-earned course of that
  * qualification and then says the learner will be told; after a reload the
- * API's notify_requested keeps that state. EN + AR at every width.
+ * API's notify_requested keeps that state. The first qualification is open
+ * by default (NEW2B-5977). EN + AR at every width.
  */
 const qual = (requested: boolean) => ({
   id: 3, name: 'Team Leadership', total_courses: 2, completed_courses: 0, percent: 0, earned_courses: [],
@@ -33,7 +34,8 @@ async function open(page: Page, lang: Lang, requested: boolean): Promise<number[
   });
   await page.goto('/profile');
   await page.getByRole('tab', { name: lang === 'en' ? /Qualifications/ : /المؤهلات/ }).click();
-  await page.locator('.qual-card__header').first().click();
+  // The first qualification is open on arrival (NEW2B-5977).
+  await expect(page.locator('.qual-card__header').first()).toHaveAttribute('aria-expanded', 'true');
   return posted;
 }
 
