@@ -221,6 +221,7 @@
       "email": "Email",
       "email_ph": "Work Email",
       "guests": "Guests",
+      "guest_email": "Guest {{n}} email",
       "add_guests": "Add guests",
       "remove_guest": "Remove guest",
       "phone": "Phone Number",

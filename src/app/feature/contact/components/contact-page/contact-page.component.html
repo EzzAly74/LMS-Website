@@ -27,9 +27,11 @@
             </label>
             <input id="c-name" type="text" formControlName="name" class="field__input"
               [class.field__input--error]="form.controls.name.invalid && form.controls.name.touched"
-              [placeholder]="'feature.contact.name_ph' | translate" />
+              [placeholder]="'feature.contact.name_ph' | translate"
+              maxlength="255" [attr.aria-invalid]="form.controls.name.invalid && form.controls.name.touched"
+              [attr.aria-describedby]="form.controls.name.invalid && form.controls.name.touched ? 'c-name-error' : null" />
             @if (form.controls.name.invalid && form.controls.name.touched) {
-            <span class="field__error">{{ 'feature.contact.errors.required' | translate }}</span>
+            <span class="field__error" id="c-name-error" role="alert">{{ errorKey(form.controls.name) | translate }}</span>
             }
           </div>
 
@@ -40,37 +42,47 @@
             </label>
             <input id="c-email" type="email" formControlName="email" class="field__input"
               [class.field__input--error]="form.controls.email.invalid && form.controls.email.touched"
-              [placeholder]="'feature.contact.email_ph' | translate" />
+              [placeholder]="'feature.contact.email_ph' | translate"
+              maxlength="255" [attr.aria-invalid]="form.controls.email.invalid && form.controls.email.touched"
+              [attr.aria-describedby]="form.controls.email.invalid && form.controls.email.touched ? 'c-email-error' : null" />
             @if (form.controls.email.invalid && form.controls.email.touched) {
-            <span class="field__error">{{ 'feature.contact.errors.email' | translate }}</span>
+            <span class="field__error" id="c-email-error" role="alert">{{ errorKey(form.controls.email) | translate }}</span>
             }
           </div>
 
           <!-- Guests -->
           @if (guests.length) {
-          <div class="field guests" formArrayName="guests">
-            <label class="field__label">{{ 'feature.contact.guests' | translate }}</label>
+          <div class="field guests" formArrayName="guests" role="group" aria-labelledby="c-guests-label">
+            <span class="field__label" id="c-guests-label">{{ 'feature.contact.guests' | translate }}</span>
             @for (guest of guests.controls; track guest; let i = $index) {
             <div class="guests__row">
-              <input type="email" [formControlName]="i" class="field__input"
+              <input type="email" [formControlName]="i" class="field__input" maxlength="255"
+                [id]="'c-guest-' + i"
                 [class.field__input--error]="guest.invalid && guest.touched"
+                [attr.aria-label]="('feature.contact.guest_email' | translate: { n: i + 1 })"
+                [attr.aria-invalid]="guest.invalid && guest.touched"
+                [attr.aria-describedby]="guest.invalid && guest.touched ? 'c-guest-' + i + '-error' : null"
                 [placeholder]="'feature.contact.email_ph' | translate" />
               <button type="button" class="guests__remove" (click)="removeGuest(i)"
                 [attr.aria-label]="'feature.contact.remove_guest' | translate">
-                <i class="pi pi-times"></i>
+                <i class="pi pi-times" aria-hidden="true"></i>
               </button>
             </div>
+            @if (guest.invalid && guest.touched) {
+            <span class="field__error" [id]="'c-guest-' + i + '-error'" role="alert">{{ errorKey(guest) | translate }}</span>
+            }
             }
           </div>
           }
-          <button type="button" class="booking-form__add-guests" (click)="addGuest()">
+          <button type="button" class="booking-form__add-guests" (click)="addGuest()"
+            [disabled]="guests.length >= MAX_GUESTS">
             {{ 'feature.contact.add_guests' | translate }}
           </button>
 
           <!-- Phone -->
           <div class="field">
             <label class="field__label" for="c-phone">{{ 'feature.contact.phone' | translate }}</label>
-            <input id="c-phone" type="tel" formControlName="phone" class="field__input"
+            <input id="c-phone" type="tel" formControlName="phone" class="field__input" maxlength="50"
               [placeholder]="'feature.contact.phone_ph' | translate" />
           </div>
 
@@ -81,9 +93,11 @@
             </label>
             <input id="c-job" type="text" formControlName="job_title" class="field__input"
               [class.field__input--error]="form.controls.job_title.invalid && form.controls.job_title.touched"
-              [placeholder]="'feature.contact.job_title_ph' | translate" />
+              [placeholder]="'feature.contact.job_title_ph' | translate"
+              maxlength="255" [attr.aria-invalid]="form.controls.job_title.invalid && form.controls.job_title.touched"
+              [attr.aria-describedby]="form.controls.job_title.invalid && form.controls.job_title.touched ? 'c-job-error' : null" />
             @if (form.controls.job_title.invalid && form.controls.job_title.touched) {
-            <span class="field__error">{{ 'feature.contact.errors.required' | translate }}</span>
+            <span class="field__error" id="c-job-error" role="alert">{{ errorKey(form.controls.job_title) | translate }}</span>
             }
           </div>
 
@@ -94,14 +108,16 @@
             </label>
             <input id="c-company" type="text" formControlName="company_name" class="field__input"
               [class.field__input--error]="form.controls.company_name.invalid && form.controls.company_name.touched"
-              [placeholder]="'feature.contact.company_ph' | translate" />
+              [placeholder]="'feature.contact.company_ph' | translate"
+              maxlength="255" [attr.aria-invalid]="form.controls.company_name.invalid && form.controls.company_name.touched"
+              [attr.aria-describedby]="form.controls.company_name.invalid && form.controls.company_name.touched ? 'c-company-error' : null" />
             @if (form.controls.company_name.invalid && form.controls.company_name.touched) {
-            <span class="field__error">{{ 'feature.contact.errors.required' | translate }}</span>
+            <span class="field__error" id="c-company-error" role="alert">{{ errorKey(form.controls.company_name) | translate }}</span>
             }
           </div>
 
           <button type="submit" class="booking-form__submit" [disabled]="submitting()">
-            @if (submitting()) { <i class="pi pi-spin pi-spinner"></i> }
+            @if (submitting()) { <i class="pi pi-spin pi-spinner" aria-hidden="true"></i> }
             {{ 'feature.contact.submit' | translate }}
           </button>
         </form>
@@ -109,14 +125,14 @@
         <!-- Success state -->
         <div class="success">
           <span class="success__check">
-            <img src="assets/icons/contact/success.svg" alt="Success" />
+            <img src="assets/icons/contact/success.svg" alt="" width="48" height="48" />
           </span>
           <h2 class="success__title">{{ 'feature.contact.success.title' | translate }}</h2>
           <p class="success__subtitle">{{ 'feature.contact.success.subtitle' | translate }}</p>
 
           <div class="summary">
             <p class="summary__name">{{ 'feature.contact.card_title' | translate }}</p>
-            <p class="summary__duration"><i class="pi pi-clock"></i> {{ 'feature.contact.success.duration' | translate
+            <p class="summary__duration"><i class="pi pi-clock" aria-hidden="true"></i> {{ 'feature.contact.success.duration' | translate
               }}</p>
             <div class="summary__block">
               <span class="summary__label">{{ 'feature.contact.success.description_label' | translate }}</span>
@@ -137,12 +153,12 @@
         <div class="quick-contact__links">
           @if (info()?.phone) {
           <a class="quick-contact__link" [href]="'tel:' + info()!.phone">
-            <i class="pi pi-phone"></i> {{ info()!.phone }}
+            <i class="pi pi-phone" aria-hidden="true"></i> {{ info()!.phone }}
           </a>
           }
           @if (info()?.email) {
           <a class="quick-contact__link" [href]="'mailto:' + info()!.email">
-            <i class="pi pi-envelope"></i> {{ info()!.email }}
+            <i class="pi pi-envelope" aria-hidden="true"></i> {{ info()!.email }}
           </a>
           }
         </div>
