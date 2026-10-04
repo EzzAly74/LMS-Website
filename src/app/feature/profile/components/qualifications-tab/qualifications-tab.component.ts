@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, computed, inject, signal } from '@angular/core';
+import { forkJoin } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { NotificationService } from '../../../../core/services/notification.service';
 import { EmptyStateComponent, EmptyStateConfig } from '../../../../shared/components/empty-state/empty-state.component';
 import { ShimmerComponent } from '../../../../shared/components/shimmer/shimmer.component';
-import { QualificationProgress } from '../../models/profile.models';
+import { QualificationProgress, UncoveredCourse } from '../../models/profile.models';
 import { ProfileService } from '../../services/profile.service';
 
 /**
@@ -38,6 +39,9 @@ export class QualificationsTabComponent {
   private readonly _search = signal('');
   private readonly expanded = signal<Set<number>>(new Set());
   protected readonly downloadingId = signal<number | null>(null);
+  /** Courses requested in this visit, on top of `notify_requested` from the API. */
+  private readonly requested = signal<ReadonlySet<number>>(new Set());
+  protected readonly notifyingId = signal<number | null>(null);
 
   protected readonly skeletons = Array.from({ length: 4 });
 
@@ -93,6 +97,33 @@ export class QualificationsTabComponent {
         this.downloadingId.set(null);
         this.notify.error('feature.profile.qualifications.download_failed');
       },
+    });
+  }
+
+  /** Every not-yet-earned course of this qualification is already requested. */
+  protected isWaiting(q: QualificationProgress): boolean {
+    const asked = this.requested();
+    return q.uncovered_courses.every((c) => c.notify_requested || asked.has(c.course_id));
+  }
+
+  /**
+   * "Notify me when the next cohort opens" for every course of this
+   * qualification not earned yet. It did nothing before (NEW2B-5780); the
+   * learner is now told by bell and email once a cohort they can join opens.
+   * A failed call is toasted by the error interceptor.
+   */
+  protected notifyMe(q: QualificationProgress): void {
+    if (this.notifyingId() !== null) return;
+    const todo: UncoveredCourse[] = q.uncovered_courses.filter((c) => !c.notify_requested && !this.requested().has(c.course_id));
+    if (!todo.length) return;
+    this.notifyingId.set(q.id);
+    forkJoin(todo.map((c) => this.profile.notifyWhenOpen(c.course_id))).subscribe({
+      next: () => {
+        this.requested.set(new Set([...this.requested(), ...todo.map((c) => c.course_id)]));
+        this.notifyingId.set(null);
+        this.notify.success('feature.profile.qualifications.notify_done');
+      },
+      error: () => this.notifyingId.set(null),
     });
   }
 

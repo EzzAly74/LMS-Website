@@ -84,10 +84,18 @@
                     </div>
                   </div>
                 }
-                <button type="button" class="qual-section__notify">
-                  <i class="pi pi-bell"></i>
-                  {{ 'feature.profile.qualifications.notify_me' | translate }}
-                </button>
+                @if (isWaiting(q)) {
+                  <p class="qual-section__notify qual-section__notify--done" role="status">
+                    <i class="pi pi-check" aria-hidden="true"></i>
+                    {{ 'feature.profile.qualifications.notify_waiting' | translate }}
+                  </p>
+                } @else {
+                  <button type="button" class="qual-section__notify" (click)="notifyMe(q)"
+                    [disabled]="notifyingId() === q.id" [attr.aria-busy]="notifyingId() === q.id">
+                    <i class="pi pi-bell" aria-hidden="true"></i>
+                    {{ 'feature.profile.qualifications.notify_me' | translate }}
+                  </button>
+                }
               </div>
             }
           </div>

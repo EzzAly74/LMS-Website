@@ -117,6 +117,15 @@
     cursor: pointer;
     color: var(--color-primary-700);
     @include typography("body-small", "medium");
+
+    &:hover:not([disabled]) { text-decoration: underline; }
+    &:focus-visible { outline: 2px solid var(--color-primary-700); outline-offset: 2px; }
+    &[disabled] { cursor: progress; opacity: 0.6; }
+
+    &--done {
+      cursor: default;
+      color: var(--color-neutral-800);
+    }
   }
 }
 

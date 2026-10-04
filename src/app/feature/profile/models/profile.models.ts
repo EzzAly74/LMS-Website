@@ -39,6 +39,8 @@ export interface UncoveredCourse {
   course_id: number;
   title: string;
   cohort_scheduled: boolean;
+  /** The learner already asked to be told when it opens (NEW2B-5780). */
+  notify_requested: boolean;
   also_in: string[];
 }
 

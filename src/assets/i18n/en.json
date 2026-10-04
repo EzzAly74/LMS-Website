@@ -500,6 +500,8 @@
         "cohort_scheduled": "Cohort open for enrolment",
         "download_certificate": "Download certificate",
         "download_failed": "Couldn't download the certificate. Please try again.",
+        "notify_waiting": "We'll let you know when the next cohort opens",
+        "notify_done": "Done. We'll notify you when a cohort opens.",
         "notify_me": "Notify me when the next cohort opens",
         "empty": {
           "title": "No qualifications assigned",

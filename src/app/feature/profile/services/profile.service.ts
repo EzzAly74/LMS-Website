@@ -25,6 +25,11 @@ export class ProfileService {
   private readonly api = inject(ApiService);
   private readonly base = 'learner/profile';
 
+  /** "Notify me": the learner is told by bell and email when a cohort opens (NEW2B-5780). */
+  notifyWhenOpen(courseId: number): Observable<ApiResponse<void>> {
+    return this.api.post<void>(`learner/academy/courses/${courseId}/notify-me`, {});
+  }
+
   getSummary(): Observable<ApiResponse<ProfileSummary>> {
     return this.api.get<ProfileSummary>(`${this.base}/summary`);
   }
