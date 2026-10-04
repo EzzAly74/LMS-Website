@@ -1,12 +1,12 @@
 <article class="blog-card">
-  <a class="blog-card__media" [class.blog-card__media--placeholder]="!blog.image" [routerLink]="['/blogs', blog.slug]">
+  <a class="blog-card__media" [class.blog-card__media--placeholder]="!blog.image" [routerLink]="['/blogs', blog.slug]" tabindex="-1" aria-hidden="true">
     @if (blog.image) {
-      <img class="blog-card__image" [src]="blog.image" [alt]="blog.title" loading="lazy" />
-    }
-    @if (levelKey) {
-      <app-badge class="blog-card__badge" tone="level" [level]="blog.level" [label]="levelKey | translate" />
+      <img class="blog-card__image" [src]="blog.image" alt="" width="316" height="211" loading="lazy" />
     }
   </a>
+  @if (levelKey) {
+    <app-badge class="blog-card__badge" tone="level" [level]="blog.level" [label]="levelKey | translate" />
+  }
 
   <div class="blog-card__body">
     <div class="blog-card__content">
@@ -16,8 +16,11 @@
 
       @if (blog.qualifications.length) {
         <div class="blog-card__topics">
-          @for (topic of blog.qualifications; track topic.id) {
-            <span class="blog-card__topic">{{ topic.name }}</span>
+          @for (topic of shownTopics; track topic.id) {
+            <span class="blog-card__topic" [title]="topic.name">{{ topic.name }}</span>
+          }
+          @if (hiddenTopics) {
+            <span class="blog-card__more" [title]="hiddenTopicNames" [attr.aria-label]="hiddenTopicNames">+{{ hiddenTopics }}</span>
           }
         </div>
       }
@@ -29,9 +32,15 @@
 
     <div class="blog-card__footer">
       <span class="blog-card__author">
-        <app-avatar [name]="blog.author.name" [image]="blog.author.image" />
+        <app-avatar [name]="blog.author.name" [image]="blog.author.image" [size]="20" />
         <span class="blog-card__author-name">{{ blog.author.name }}</span>
       </span>
+      @if (blog.reading_time) {
+        <span class="blog-card__read">
+          <img src="assets/icons/blogs-clock-16.svg" width="16" height="16" alt="" />
+          {{ 'feature.blogs.min_read_count' | pluralKey: blog.reading_time | translate: { count: blog.reading_time } }}
+        </span>
+      }
     </div>
   </div>
 </article>

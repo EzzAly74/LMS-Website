@@ -122,6 +122,8 @@
       "latest_in_role": "Latest in your role",
       "latest_blog": "Latest Blog",
       "min_read": "min read",
+      "min_read_count_one": "{{count}} min read",
+      "min_read_count": "{{count}} min read",
       "filters": {
         "topic": "Topic",
         "job_role": "Job Role",

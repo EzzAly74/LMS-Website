@@ -1,82 +1,103 @@
 @use "mixins" as *;
 
+// Figma 1589:45950 (NEW2B-5893): 1120 px wide in the 1248 px column, a 640 px
+// cover and a 480 px editorial column (48 x 40 padding, 24 px gaps).
+// Grey / orange text is one shade darker than drawn for AA (FG-55).
 .blog-hero {
   display: grid;
-  grid-template-columns: 1.35fr 1fr;
+  grid-template-columns: minmax(0, 640fr) minmax(0, 480fr);
+  inline-size: 100%;
+  max-inline-size: 1120px;
+  margin-inline: auto;
   overflow: hidden;
   text-decoration: none;
-  background: var(--color-essential-primary);
-  border: var(--stroke-width-default) solid var(--color-neutral-400);
-  border-radius: var(--radius-container-lg);
-  box-shadow: var(--elevation-shadow-sm);
+  background: var(--color-neutral-0);
+  border-radius: 16px;
+  box-shadow: var(--elevation-shadow-md);
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-700);
+    outline-offset: 3px;
+  }
 
   &__media {
     position: relative;
-    min-height: 320px;
+    min-block-size: 395px;
 
     &--placeholder {
-      background-image: linear-gradient(
-        130deg,
-        var(--color-primary-700) 0%,
-        var(--color-additionally-400) 100%
-      );
+      background-image: linear-gradient(130deg, var(--color-primary-700) 0%, var(--color-additionally-400) 100%);
     }
   }
 
   &__image {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
+    inline-size: 100%;
+    block-size: 100%;
     object-fit: cover;
   }
 
   &__flag {
     position: absolute;
-    top: var(--spacing-15xs);
-    inset-inline-start: var(--spacing-15xs);
-    padding: var(--spacing-17xs) var(--spacing-15xs);
-    border-radius: var(--radius-control-xs);
-    background: var(--color-secondary-200, #fbe8cf);
-    color: var(--color-secondary-800, #a85e05);
-    @include typography("caption", "medium");
+    inset-block-start: 8px;
+    inset-inline-start: 8px;
+    padding: 2px 7px;
+    border-radius: 8px;
+    background: var(--color-status-orange-50);
+    color: var(--color-status-orange-800);
+    @include typography("body-small", "bold");
   }
 
   &__content {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-14xs);
-    padding: var(--spacing-9xs);
     justify-content: center;
-    background: #fff;
+    gap: 24px;
+    padding: 40px 48px;
+    min-inline-size: 0;
   }
 
   &__topics {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-16xs);
+    align-items: center;
+    gap: 4px;
+    min-inline-size: 0;
   }
 
   &__topic {
-    padding: var(--spacing-17xs) var(--spacing-15xs);
-    border-radius: var(--radius-control-xs);
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    padding: 2px 7px;
+    border-radius: var(--radius-full);
     background: var(--color-primary-200);
-    color: var(--color-primary-800);
-    @include typography("caption", "medium");
+    color: var(--color-primary-900);
+    @include typography("body-small", "bold");
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
+  &__more {
+    flex-shrink: 0;
+    @include typography("body-small", "regular");
+    color: var(--color-essential-secondary);
+  }
+
+  // 32 / 38.8 bold.
   &__title {
-    @include typography("h1", "bold");
+    @include typography("large-heading", "bold");
     color: var(--color-essential-secondary);
     margin: 0;
+    overflow-wrap: anywhere;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
+  // 18 / 21.6, three lines.
   &__excerpt {
-    @include typography("body", "regular");
+    @include typography("h2", "regular");
     color: var(--color-neutral-800);
     margin: 0;
     display: -webkit-box;
@@ -88,39 +109,58 @@
   &__meta {
     display: flex;
     align-items: center;
-    gap: var(--spacing-15xs);
-    margin-top: var(--spacing-15xs);
+    gap: 16px;
   }
 
   &__meta-text {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    min-inline-size: 0;
   }
 
   &__author {
-    @include typography("body-small", "medium");
+    @include typography("subtitle", "bold");
     color: var(--color-essential-secondary);
   }
 
   &__sub {
-    @include typography("caption", "regular");
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    @include typography("body-small", "regular");
     color: var(--color-neutral-800);
+  }
+
+  // The whole card is a link: keep the meta in its own colour.
+  &__sub > span:not(.blog-hero__dot) {
+    color: inherit;
+  }
+
+  &__dot {
+    inline-size: 4px;
+    block-size: 4px;
+    border-radius: 2px;
+    background: var(--color-neutral-500);
   }
 
   &:hover .blog-hero__title {
     text-decoration: underline;
   }
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
 
     &__media {
-      min-height: 200px;
+      min-block-size: 220px;
     }
+
     &__content {
-      padding: var(--spacing-11xs);
+      padding: 24px;
+      gap: 16px;
     }
+
     &__title {
       @include typography("h1-small", "bold");
     }

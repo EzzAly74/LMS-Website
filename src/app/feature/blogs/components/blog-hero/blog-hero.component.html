@@ -1,7 +1,7 @@
 <a class="blog-hero" [routerLink]="['/blogs', blog.slug]">
   <div class="blog-hero__media" [class.blog-hero__media--placeholder]="!blog.image">
     @if (blog.image) {
-      <img class="blog-hero__image" [src]="blog.image" [alt]="blog.title" />
+      <img class="blog-hero__image" [src]="blog.image" alt="" width="640" height="395" fetchpriority="high" />
     }
     <span class="blog-hero__flag">{{ flagKey | translate }}</span>
   </div>
@@ -9,8 +9,11 @@
   <div class="blog-hero__content">
     @if (blog.qualifications.length) {
       <div class="blog-hero__topics">
-        @for (topic of blog.qualifications; track topic.id) {
-          <span class="blog-hero__topic">{{ topic.name }}</span>
+        @for (topic of shownTopics; track topic.id) {
+          <span class="blog-hero__topic" [title]="topic.name">{{ topic.name }}</span>
+        }
+        @if (hiddenTopics) {
+          <span class="blog-hero__more">+{{ hiddenTopics }}</span>
         }
       </div>
     }
@@ -25,11 +28,13 @@
         <span class="blog-hero__author">{{ blog.author.name }}</span>
         <span class="blog-hero__sub">
           @if (blog.published_at) {
-            {{ blog.published_at | date: 'mediumDate' }}
+            <span>{{ blog.published_at | date: 'mediumDate' }}</span>
           }
-          @if (blog.published_at && blog.reading_time) { &middot; }
+          @if (blog.published_at && blog.reading_time) {
+            <span class="blog-hero__dot" aria-hidden="true"></span>
+          }
           @if (blog.reading_time) {
-            {{ blog.reading_time }} {{ 'feature.blogs.min_read' | translate }}
+            <span>{{ 'feature.blogs.min_read_count' | pluralKey: blog.reading_time | translate: { count: blog.reading_time } }}</span>
           }
         </span>
       </div>

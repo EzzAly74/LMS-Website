@@ -122,6 +122,10 @@
       "latest_in_role": "الأحدث في مجالك",
       "latest_blog": "أحدث مدونة",
       "min_read": "دقيقة قراءة",
+      "min_read_count_one": "دقيقة قراءة واحدة",
+      "min_read_count_two": "دقيقتا قراءة",
+      "min_read_count_few": "{{count}} دقائق قراءة",
+      "min_read_count": "{{count}} دقيقة قراءة",
       "filters": {
         "topic": "الموضوع",
         "job_role": "المسمى الوظيفي",

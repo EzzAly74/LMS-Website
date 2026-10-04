@@ -1,36 +1,52 @@
 @use "mixins" as *;
 
 .blogs {
+  // Figma 1589:45934 / 1589:46653 (NEW2B-5893): a 1248 px column at 1440
+  // (96 px each side); header -> hero 24 px, hero -> list 64 px.
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-11xs);
+  gap: 24px;
   padding: var(--spacing-9xs) 0;
-  max-width: 90%;
+  inline-size: min(1248px, calc(100% - 32px));
   margin-inline: auto;
 
   &__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     flex-wrap: wrap;
-    gap: var(--spacing-13xs);
+    gap: 16px;
   }
 
   &__title {
     @include typography("h1", "bold");
     color: var(--color-essential-secondary);
     margin: 0;
+    flex: 0 0 auto;
   }
 
+  // Search takes the rest of the row, the scope switch sits at its end.
   &__controls {
     display: flex;
     align-items: center;
-    gap: var(--spacing-14xs);
-    flex-wrap: wrap;
+    gap: 16px;
+    flex: 1 1 480px;
+    min-inline-size: 0;
   }
 
   &__search {
-    flex: 1 1 320px;
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
+
+  // The list starts 64 px under the hero (40 more than the column gap).
+  app-blog-hero + .catalogue-layout {
+    margin-block-start: 40px;
+  }
+
+  @media (max-width: 620px) {
+    &__controls {
+      flex-wrap: wrap;
+    }
   }
 }
 
@@ -38,7 +54,7 @@
   display: grid;
   grid-template-columns: 248px 1fr;
   align-items: start;
-  gap: var(--spacing-11xs);
+  gap: 24px;
 
   // No results: drop the filter column entirely and center the empty state
   // across the whole page width (Figma review: order59).
@@ -77,8 +93,9 @@
   display: grid;
   // minmax(0, 1fr) keeps every column exactly equal — a plain 1fr lets a card
   // with wider intrinsic content stretch its track and shrink its siblings.
+  // Figma: 316 px cards, 14 px apart, rows 49 px apart.
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--spacing-11xs);
+  gap: 49px 14px;
 
   @media (max-width: 1200px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
