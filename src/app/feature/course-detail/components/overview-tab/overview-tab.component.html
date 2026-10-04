@@ -32,8 +32,8 @@
     <ul class="qualification-list">
       @for (q of qualifications; track q.id) {
         <li class="qualification-list__item">
-          <span class="qualification-list__icon"><i class="pi pi-verified"></i></span>
-          <div>
+          <span class="qualification-list__icon"><img src="assets/icons/course-detail/award-16.svg" width="16" height="16" alt="" /></span>
+          <div class="qualification-list__text">
             <p class="qualification-list__name">{{ q.name }}</p>
             @if (q.description) {
               <p class="qualification-list__desc">{{ q.description }}</p>

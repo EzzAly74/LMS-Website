@@ -11,7 +11,7 @@
 
     <nav class="app-nav__links" aria-label="Primary">
       <a [routerLink]="'/' + routes.Catalogue" routerLinkActive="is-active">
-        {{ "core.nav.catalogue" | translate }}
+        {{ "core.nav.explore" | translate }}
       </a>
       @if (auth.isAuthenticated()) {
         <a [routerLink]="'/' + routes.MyLearnings" routerLinkActive="is-active">
@@ -158,7 +158,7 @@
             routerLinkActive="is-active"
             (click)="closeMobileMenu()"
           >
-            <span>{{ "core.nav.catalogue" | translate }}</span>
+            <span>{{ "core.nav.explore" | translate }}</span>
           </a>
           @if (auth.isAuthenticated()) {
             <a

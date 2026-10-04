@@ -60,6 +60,9 @@
 
   &__title {
     @include typography('subtitle', 'bold');
+    // A name with no spaces (a pasted code) breaks inside the card (NEW2B-5769).
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
 
     a {
       color: var(--color-essential-secondary);

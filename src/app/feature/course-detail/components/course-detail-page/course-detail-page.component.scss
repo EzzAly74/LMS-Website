@@ -15,8 +15,16 @@
 
 .breadcrumb {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--spacing-16xs);
+  min-inline-size: 0;
+
+  // The course name may be one unbroken word (NEW2B-5769).
+  > span:last-child {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
   @include typography("body-small", "regular");
   color: var(--color-neutral-700);
 
@@ -59,17 +67,26 @@
 .enrolment-card { grid-area: card; }
 
 .detail-hero__main {
-  .detail-hero__eyebrow {
+  // Figma 818:40243: the delivery / level chip and the "Earns:" tags are the
+  // same sky pill. Text is sky-900, not the drawn #58a7bf (2.6:1, FG-53).
+  .detail-hero__eyebrow,
+  .detail-hero__qtag {
     display: inline-flex;
     align-items: center;
-    gap: var(--spacing-16xs);
-    margin-top: var(--spacing-13xs);
-    @include typography("caption", "bold");
-    color: var(--color-primary-700);
-    letter-spacing: var(--font-tracking-label);
+    gap: var(--spacing-17xs);
+    padding: 4px 11px;
+    border: var(--stroke-width-default) solid var(--color-additionally-500);
+    border-radius: var(--radius-full);
+    background: var(--color-additionally-400-08);
+    color: var(--color-accent-sky-900);
+    @include typography("caption", "medium");
+  }
 
-    i {
-      font-size: 8px;
+  .detail-hero__eyebrow {
+    margin-top: var(--spacing-13xs);
+
+    img {
+      flex-shrink: 0;
     }
   }
 
@@ -77,6 +94,7 @@
     margin-top: var(--spacing-13xs);
     @include typography("h1", "bold");
     color: var(--color-essential-secondary);
+    overflow-wrap: anywhere; // NEW2B-5769
   }
 
   .detail-hero__desc {
@@ -112,16 +130,13 @@
     align-items: center;
     gap: var(--spacing-16xs);
     margin-top: var(--spacing-13xs);
-    @include typography("body-small", "regular");
+    @include typography("caption", "regular");
     color: var(--color-neutral-800);
   }
 
   .detail-hero__qtag {
-    padding: var(--spacing-17xs) var(--spacing-15xs);
-    border-radius: var(--radius-full);
-    background: var(--color-primary-200);
-    color: var(--color-primary-900);
-    @include typography("body-small", "bold");
+    padding-block: 5px;
+    overflow-wrap: anywhere;
   }
 }
 
