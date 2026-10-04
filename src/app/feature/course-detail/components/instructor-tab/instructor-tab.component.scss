@@ -132,7 +132,7 @@
     overflow-wrap: anywhere;
   }
 
-  // Figma #9baaab is about 2.4:1 on white; neutral-800 keeps AA (FG-51).
+  // Figma #9baaab is about 2.4:1 on white; neutral-800 keeps AA (FG-52).
   &__meta {
     @include typography('caption', 'regular');
     color: var(--color-neutral-800);
