@@ -17,6 +17,7 @@ import {
   EnrolmentDialogComponent,
   EnrolmentDialogCourse,
 } from '../../../catalogue/components/enrolment-dialog/enrolment-dialog.component';
+import { isCourseLevel } from '../../../catalogue/models/catalogue.models';
 import { CourseDetail, CourseDetailTab } from '../../models/course-detail.models';
 import { CourseDetailService } from '../../services/course-detail.service';
 import { CourseDetailSkeletonComponent } from '../course-detail-skeleton/course-detail-skeleton.component';
@@ -61,6 +62,7 @@ export class CourseDetailPageComponent implements OnInit {
   protected readonly course = signal<CourseDetail | null>(null);
   protected readonly loading = signal(true);
   protected readonly activeTab = signal<CourseDetailTab>('overview');
+  protected readonly knownLevel = isCourseLevel;
   protected readonly tabs: readonly CourseDetailTab[] = ['overview', 'curriculum', 'instructor', 'schedule'];
 
   /** True while the "Request Enrolment" confirmation dialog is open. */

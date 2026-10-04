@@ -46,7 +46,7 @@
               <span class="mini-course__name">{{ course.title }}</span>
               <span class="mini-course__meta">
                 {{ 'feature.catalogue.delivery.' + course.course_type | translate }}
-                @if (course.level) { · {{ 'feature.catalogue.level.' + course.level | translate }} }
+                @if (knownLevel(course.level)) { · {{ 'feature.catalogue.level.' + course.level | translate }} }
                 @if (course.duration_weeks) { · {{ 'feature.course_detail.curriculum.duration_weeks' | translate: { count: course.duration_weeks } }} }
               </span>
             </span>

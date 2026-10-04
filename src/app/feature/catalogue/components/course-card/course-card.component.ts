@@ -7,7 +7,7 @@ import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { RatingStarsComponent } from '../../../../shared/components/rating-stars/rating-stars.component';
-import { CatalogueCourse } from '../../models/catalogue.models';
+import { CatalogueCourse, isCourseLevel } from '../../models/catalogue.models';
 
 /**
  * Course card for the catalogue grid. Lives in the catalogue feature for now;
@@ -43,7 +43,7 @@ export class CourseCardComponent {
   }
 
   protected get levelKey(): string | null {
-    return this.course.level ? `feature.catalogue.level.${this.course.level}` : null;
+    return isCourseLevel(this.course.level) ? `feature.catalogue.level.${this.course.level}` : null;
   }
 
   protected get ctaLabelKey(): string {

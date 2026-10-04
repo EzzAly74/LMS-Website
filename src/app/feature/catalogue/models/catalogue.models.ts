@@ -1,7 +1,13 @@
 /** Course delivery mode. */
 export type DeliveryType = 'online' | 'offline' | 'hybrid' | 'external_link';
 
-export type CourseLevel = 'beginner' | 'intermediate' | 'professional';
+export const COURSE_LEVELS = ['beginner', 'intermediate', 'professional'] as const;
+export type CourseLevel = (typeof COURSE_LEVELS)[number];
+
+/** A level this app can name; an unknown (legacy) value is not shown as a raw key. */
+export function isCourseLevel(value: string | null | undefined): value is CourseLevel {
+  return (COURSE_LEVELS as readonly string[]).includes(value ?? '');
+}
 
 /** Bucketed calendar duration, used by the Duration filter. */
 export type DurationBucket = '1_2_weeks' | '2_4_weeks' | '4_8_weeks' | '8_plus_weeks';

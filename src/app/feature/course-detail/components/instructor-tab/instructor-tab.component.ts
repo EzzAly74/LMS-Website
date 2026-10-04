@@ -5,6 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { LmsRoutes } from '../../../../core/enums/lms-routes.enum';
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
+import { isCourseLevel } from '../../../catalogue/models/catalogue.models';
 import { CourseDetailInstructor } from '../../models/course-detail.models';
 
 /**
@@ -25,6 +26,8 @@ export class InstructorTabComponent {
 
   /** `catalogue/:id` without the parameter. */
   protected readonly detailRoute = '/' + LmsRoutes.CourseDetail.replace('/:id', '');
+
+  protected readonly knownLevel = isCourseLevel;
 
   /** The first name, for "Other courses by Sara". */
   protected get firstName(): string {

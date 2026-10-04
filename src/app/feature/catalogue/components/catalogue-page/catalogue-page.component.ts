@@ -23,6 +23,7 @@ import {
 import {
   CatalogueCourse,
   CatalogueFilterMeta,
+  COURSE_LEVELS,
   CourseLevel,
   DeliveryType,
   DurationBucket,
@@ -35,7 +36,7 @@ import { EnrolmentDialogComponent } from '../enrolment-dialog/enrolment-dialog.c
 
 const PER_PAGE = 12;
 const TYPE_VALUES: DeliveryType[] = ['online', 'offline', 'hybrid'];
-const LEVEL_VALUES: CourseLevel[] = ['beginner', 'intermediate', 'professional'];
+const LEVEL_VALUES: CourseLevel[] = [...COURSE_LEVELS];
 const DURATION_VALUES: DurationBucket[] = ['1_2_weeks', '2_4_weeks', '4_8_weeks', '8_plus_weeks'];
 const SORT_VALUES: SortOption[] = ['most_relevant', 'highest_rated', 'soonest_start', 'newest'];
 
