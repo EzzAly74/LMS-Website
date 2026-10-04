@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Injector, Input, afterNextRender, computed, inject, signal, viewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -55,6 +55,8 @@ export class ProfileSidebarComponent {
   protected readonly showPasscode = signal(false);
   protected readonly otpDigits = signal<string[]>(Array(this.PASSCODE_LENGTH).fill(''));
   protected readonly passcode = computed(() => this.otpDigits().join(''));
+  private readonly otpGroup = viewChild<ElementRef<HTMLElement>>('otpGroup');
+  private readonly injector = inject(Injector);
   protected readonly marking = signal(false);
   protected readonly markError = signal<string | null>(null);
   /** Set locally once the learner marks present, to flip the CTA immediately. */
@@ -273,6 +275,7 @@ export class ProfileSidebarComponent {
     const digits = [...this.otpDigits()];
     digits[index] = digit;
     this.otpDigits.set(digits);
+    if (digit) this.markError.set(null); // typing a new code clears the last refusal
     this.markError.set(null);
     input.value = digit;
 
@@ -344,13 +347,25 @@ export class ProfileSidebarComponent {
           this.loadSessions(course); // refresh the attendance list
         } else {
           // Wrong passcode returns HTTP 200 with status:error (mobile parity).
-          this.markError.set(res?.message ?? this.translate.instant('feature.profile.sidebar.mark_error'));
+          this.failPasscode(res?.message ?? this.translate.instant('feature.profile.sidebar.mark_error'));
         }
       },
       error: (err) => {
         this.marking.set(false);
-        this.markError.set(err?.error?.message ?? this.translate.instant('feature.profile.sidebar.mark_error'));
+        this.failPasscode(err?.error?.message ?? this.translate.instant('feature.profile.sidebar.mark_error'));
       },
+    });
+  }
+
+  /**
+   * A refused code: show why, empty every box and put the cursor back in the
+   * first one, so the learner types the new code straight away (NEW2B-5797).
+   */
+  private failPasscode(message: string): void {
+    this.markError.set(message);
+    this.otpDigits.set(Array(this.PASSCODE_LENGTH).fill(''));
+    afterNextRender(() => this.otpGroup()?.nativeElement.querySelector<HTMLInputElement>('.otp__box')?.focus(), {
+      injector: this.injector,
     });
   }
 

@@ -65,7 +65,7 @@
         </label>
 
         <!-- OTP-style digit boxes — one input per character (mobile S-06 flow). -->
-        <div class="otp" role="group" aria-labelledby="passcode-otp-label" (paste)="onOtpPaste($event)">
+        <div #otpGroup class="otp" role="group" aria-labelledby="passcode-otp-label" (paste)="onOtpPaste($event)">
           @for (digit of otpDigits(); track $index) {
             <input
               type="text"
@@ -83,7 +83,7 @@
         </div>
 
         @if (markError(); as err) {
-          <p class="passcode__error"><i class="pi pi-exclamation-circle"></i> {{ err }}</p>
+          <p class="passcode__error" role="alert"><i class="pi pi-exclamation-circle" aria-hidden="true"></i> {{ err }}</p>
         }
         <button
           type="submit"
