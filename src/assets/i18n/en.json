@@ -333,13 +333,17 @@
         "qualifications_earned": "Qualifications earned"
       },
       "curriculum": {
-        "locked_note": "Full module content is visible after enrolment. Module names and session counts shown below.",
-        "modules_count": "{{count}} modules",
-        "sessions_count_one": "{{count}} session total",
-        "sessions_count": "{{count}} sessions total",
         "duration_weeks_one": "{{count}} week",
         "duration_weeks": "{{count}} weeks",
-        "locked": "Locked until enrolment"
+        "modules_label_one": "module",
+        "modules_label": "modules",
+        "sessions_label_one": "session total",
+        "sessions_label": "sessions total",
+        "duration_label": "duration",
+        "related_contents_one": "{{count}} related content",
+        "related_contents": "{{count}} related contents",
+        "session": "Session {{n}}",
+        "no_sessions": "The session plan will appear here once a cohort is scheduled."
       },
       "instructor": {
         "rating_value": "{{value}} rating",

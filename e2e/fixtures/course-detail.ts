@@ -1,12 +1,24 @@
 /** Course detail payload (GET learner/academy/courses/{id}) for the Website specs. */
 
-export const session = (id: number, date: string, from: string, to: string, minutes: number, location: string | null, status: 'completed' | 'upcoming') => ({
-  id, title: `S${id}`, session_date: date, time_from: from, time_to: to, location, duration_minutes: minutes, status,
+export const session = (id: number, date: string, from: string, to: string, minutes: number, location: string | null, status: 'completed' | 'upcoming', content_ids: number[] = []) => ({
+  id, title: `S${id}`, session_date: date, time_from: from, time_to: to, location, duration_minutes: minutes, status, content_ids,
 });
 
+/** Course modules (`units`); sessions list the ones they cover in `content_ids` (D-079). */
+export const units = [
+  'Understanding team roles and strengths',
+  'Building trust and psychological safety',
+  'Effective communication strategies',
+  'Motivating diverse team members',
+  'Delegation that develops people',
+].map((title, i) => ({
+  id: 101 + i, title, content_type: 'article', label_key: 'enums.module_content_type.article', duration_minutes: 30,
+  learner_scope: 'all', session_id: null, require_completion: false,
+}));
+
 export const sessions = [
-  session(1, '2026-06-12', '09:00:00', '11:30:00', 150, 'Hybrid · HQ Auditorium', 'completed'),
-  session(2, '2026-06-14', '13:00:00', '15:30:00', 150, 'Virtual', 'completed'),
+  session(1, '2026-06-12', '09:00:00', '11:30:00', 150, 'Hybrid · HQ Auditorium', 'completed', [101, 102]),
+  session(2, '2026-06-14', '13:00:00', '15:30:00', 150, 'Virtual', 'completed', [101, 102, 103, 104]),
   session(3, '2026-06-19', '10:00:00', '12:30:00', 150, 'Hybrid · Room 4B', 'upcoming'),
   session(4, '2026-06-26', '09:00:00', '11:30:00', 150, null, 'upcoming'),
   session(5, '2026-06-30', '11:00:00', '13:00:00', 120, 'Hybrid · HQ Auditorium', 'upcoming'),
@@ -27,7 +39,7 @@ export function course(withSessions = true) {
       ],
     }],
     qualifications: [{ id: 1, name: 'Team Leadership' }],
-    rating: { avg: 4.8, count: 243, sentiment: 'positive' }, enrolled_users_count: 856, units: [],
+    rating: { avg: 4.8, count: 243, sentiment: 'positive' }, enrolled_users_count: 856, units,
     cohorts: [],
     anchor_cohort: {
       id: 20, name: 'First Group', effective_status: 'open_for_enrollment', start_date: '2026-08-10', end_date: '2026-09-07',

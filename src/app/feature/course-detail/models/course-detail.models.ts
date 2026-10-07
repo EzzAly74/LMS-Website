@@ -45,8 +45,6 @@ export interface CourseUnit {
   content_type: string;
   label_key: string;
   duration_minutes: number | null;
-  learner_scope: string;
-  session_id: number | null;
   require_completion: boolean;
 }
 
@@ -60,6 +58,8 @@ export interface CohortSession {
   /** Derived by the API from the session's end (Figma 2027:97810). */
   duration_minutes: number | null;
   status: 'completed' | 'upcoming' | null;
+  /** Ids of the course `units` this session covers (cohort schedule sheet, D-079). */
+  content_ids: number[];
 }
 
 export interface CohortBlock {

@@ -149,7 +149,7 @@
             />
           }
           @case ('curriculum') {
-            <app-curriculum-tab [units]="c.units" [durationWeeks]="c.duration_weeks" />
+            <app-curriculum-tab [units]="c.units" [sessions]="c.anchor_cohort?.sessions ?? []" [durationWeeks]="c.duration_weeks" />
           }
           @case ('instructor') {
             @if (instructor(); as inst) {

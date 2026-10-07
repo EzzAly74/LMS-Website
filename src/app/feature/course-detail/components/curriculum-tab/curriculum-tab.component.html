@@ -1,26 +1,63 @@
-<div class="curr-note">
-  <i class="pi pi-info-circle"></i>
-  <span>{{ 'feature.course_detail.curriculum.locked_note' | translate }}</span>
-</div>
-
-<div class="curr-summary">
-  <span>{{ 'feature.course_detail.curriculum.modules_count' | translate: { count: totalUnits() } }}</span>
-  @if (totalSessions() > 0) {
-    <span>{{ 'feature.course_detail.curriculum.sessions_count' | pluralKey: totalSessions() | translate: { count: totalSessions() } }}</span>
+<p class="curr-sum">
+  <span><b>{{ totalUnits() }}</b> {{ 'feature.course_detail.curriculum.modules_label' | pluralKey: totalUnits() | translate }}</span>
+  @if (rows().length) {
+    <span><b>{{ rows().length }}</b> {{ 'feature.course_detail.curriculum.sessions_label' | pluralKey: rows().length | translate }}</span>
   }
   @if (durationWeeks) {
-    <span>{{ 'feature.course_detail.curriculum.duration_weeks' | pluralKey: durationWeeks | translate: { count: durationWeeks } }}</span>
+    <span><b>{{ 'feature.course_detail.curriculum.duration_weeks' | pluralKey: durationWeeks | translate: { count: durationWeeks } }}</b> {{ 'feature.course_detail.curriculum.duration_label' | translate }}</span>
   }
-</div>
+</p>
 
-<ol class="module-list">
-  @for (unit of orderedUnits; track unit.id; let i = $index) {
-    <li class="module-list__item">
-      <span class="module-list__number">{{ i + 1 }}</span>
-      <span class="module-list__name">{{ unit.title }}</span>
-      @if (unit.require_completion) {
-        <i class="pi pi-lock module-list__lock" [attr.aria-label]="'feature.course_detail.curriculum.locked' | translate"></i>
-      }
-    </li>
-  }
-</ol>
+@if (rows().length) {
+  <ul class="mlist">
+    @for (row of rows(); track row.id) {
+      <li class="mitm">
+        @if (row.contents.length) {
+          <h3 class="mitm__heading">
+            <button
+              type="button"
+              class="mhd mhd--toggle"
+              [id]="'curr-session-' + row.id"
+              [attr.aria-expanded]="open().has(row.id)"
+              [attr.aria-controls]="'curr-session-' + row.id + '-content'"
+              (click)="toggle(row.id)"
+            >
+              <span class="mhd__name">{{ 'feature.course_detail.curriculum.session' | translate: { n: row.number } }}</span>
+              <span class="mhd__count">{{ 'feature.course_detail.curriculum.related_contents' | pluralKey: row.contents.length | translate: { count: row.contents.length } }}</span>
+              <img
+                class="mhd__caret"
+                [class.mhd__caret--open]="open().has(row.id)"
+                [src]="open().has(row.id) ? 'assets/icons/course-detail/caret-down-teal-16.svg' : 'assets/icons/course-detail/caret-down-16.svg'"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </button>
+          </h3>
+          @if (open().has(row.id)) {
+            <ul
+              class="mcontent"
+              [id]="'curr-session-' + row.id + '-content'"
+              role="list"
+              [attr.aria-labelledby]="'curr-session-' + row.id"
+            >
+              @for (content of row.contents; track content.id) {
+                <li class="mcontent__row">
+                  <img src="assets/icons/course-detail/list-checks-16.svg" width="16" height="16" alt="" />
+                  <span>{{ content.title }}</span>
+                </li>
+              }
+            </ul>
+          }
+        } @else {
+          <div class="mhd">
+            <span class="mhd__name">{{ 'feature.course_detail.curriculum.session' | translate: { n: row.number } }}</span>
+            <span class="mhd__count">{{ 'feature.course_detail.curriculum.related_contents' | pluralKey: 0 | translate: { count: 0 } }}</span>
+          </div>
+        }
+      </li>
+    }
+  </ul>
+} @else {
+  <p class="curr-empty">{{ 'feature.course_detail.curriculum.no_sessions' | translate }}</p>
+}
