@@ -74,10 +74,11 @@
             }
           </div>
           }
-          <button type="button" class="booking-form__add-guests" (click)="addGuest()"
-            [disabled]="guests.length >= MAX_GUESTS">
+          @if (guests.length < MAX_GUESTS) {
+          <button type="button" class="booking-form__add-guests" (click)="addGuest()">
             {{ 'feature.contact.add_guests' | translate }}
           </button>
+          }
 
           <!-- Phone -->
           <div class="field">

@@ -111,11 +111,15 @@ test.describe('behaviour', () => {
     await expect(page.locator('#c-name')).toHaveValue('Hesham Adly');
   });
 
-  test('no more than 20 guests can be added', async ({ page }) => {
+  test('no more than 5 guests can be added', async ({ page }) => {
     await open(page, 'en');
     const add = page.locator('.booking-form__add-guests');
-    for (let i = 0; i < 20; i++) await add.click();
-    await expect(page.locator('.guests__row')).toHaveCount(20);
-    await expect(add).toBeDisabled();
+    for (let i = 0; i < 5; i++) await add.click();
+    await expect(page.locator('.guests__row')).toHaveCount(5);
+    // At the limit the Add guests button is removed (human, 2026-10-07).
+    await expect(add).toHaveCount(0);
+    // Removing a guest brings it back.
+    await page.locator('.guests__remove').first().click();
+    await expect(add).toBeVisible();
   });
 });

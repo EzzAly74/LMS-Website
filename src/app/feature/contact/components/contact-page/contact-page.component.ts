@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit, afterNextRender, inject, signal } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -8,7 +8,7 @@ import { ContactInfo } from '../../models/contact.models';
 import { ContactService } from '../../services/contact.service';
 
 /** Guests the server accepts (ContactRequestRequest::MAX_GUESTS). */
-const MAX_GUESTS = 20;
+const MAX_GUESTS = 5;
 
 /**
  * An address the server will mail: `Validators.email` accepts `name@domain`,
@@ -36,6 +36,7 @@ export class ContactPageComponent implements OnInit {
   private readonly contact = inject(ContactService);
   private readonly notify = inject(NotificationService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly injector = inject(Injector);
   protected readonly MAX_GUESTS = MAX_GUESTS;
 
   protected readonly info = signal<ContactInfo | null>(null);
@@ -68,6 +69,9 @@ export class ContactPageComponent implements OnInit {
     this.guests.push(
       this.fb.control('', { nonNullable: true, validators: [Validators.required, mailableEmail, Validators.maxLength(255)] }),
     );
+    // Focus the new field: at the limit the Add guests button that had focus is removed.
+    const id = `c-guest-${this.guests.length - 1}`;
+    afterNextRender(() => document.getElementById(id)?.focus(), { injector: this.injector });
   }
 
   protected removeGuest(index: number): void {
